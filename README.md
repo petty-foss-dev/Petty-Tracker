@@ -18,7 +18,7 @@ Enve Keep is a free, open source app for iOS and Android that helps you keep the
 
 Records stay on your device, and iOS receipt recognition runs on the iPhone. No account, ads, analytics, paid subscriptions, or paid feature tiers.
 
-**[Build the apps](#build-and-run)** · **[iOS guide](ios/README.md)** · **[Android guide](android/README.md)** · **[Report a bug](https://github.com/opisaac9001/Enve-Keep/issues/new/choose)**
+**[Build the apps](#build-and-run)** · **[iOS guide](ios/README.md)** · **[Android guide](android/README.md)** · **[Report a bug](https://github.com/petty-foss-dev/Enve-Keep/issues/new/choose)**
 
 Both native apps live in this repository: `ios/` uses SwiftUI and `android/` uses Kotlin and Jetpack Compose. Their original Git histories are preserved.
 
@@ -90,7 +90,7 @@ Backups without receipts use the shared version 1 format. Receipt backups use ve
 The source for both apps is available now. There are currently no packaged releases in this repository; build from source to try them.
 
 ```sh
-git clone https://github.com/opisaac9001/Enve-Keep.git
+git clone https://github.com/petty-foss-dev/Enve-Keep.git
 cd Enve-Keep
 ```
 

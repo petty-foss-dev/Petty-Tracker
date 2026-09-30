@@ -1,6 +1,6 @@
 # Enve Keep repository guide
 
-This repository contains the native iOS and Android apps. Use `main` with origin `https://github.com/opisaac9001/Enve-Keep.git`. Run Git commands from the repository root and platform build commands from `ios/` or `android/`.
+This repository contains the native iOS and Android apps. Use `main` with origin `https://github.com/petty-foss-dev/Enve-Keep.git`. Run Git commands from the repository root and platform build commands from `ios/` or `android/`.
 
 Before making changes, check the path, origin, branch, and working tree, then read the matching platform's `CLAUDE.md`. Preserve unrelated work. Keep changes limited to the requested outcome.
 

@@ -4,7 +4,7 @@ Thanks for helping improve Enve Keep. Both apps are free, keep records on the de
 
 ## Report a bug
 
-Open an [issue](https://github.com/opisaac9001/Enve-Keep/issues/new/choose) with the platform, OS version, device or simulator, steps to reproduce, and expected versus actual behavior. Include the app commit or version when you know it.
+Open an [issue](https://github.com/petty-foss-dev/Enve-Keep/issues/new/choose) with the platform, OS version, device or simulator, steps to reproduce, and expected versus actual behavior. Include the app commit or version when you know it.
 
 Use fictional or redacted receipts and screenshots. Remove names, addresses, payment details, document numbers, and other personal information before posting. For recognition bugs, include the relevant redacted text and the field that was misread.
 
