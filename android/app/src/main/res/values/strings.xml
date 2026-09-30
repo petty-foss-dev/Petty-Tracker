@@ -265,7 +265,7 @@
     <string name="settings_about">About</string>
     <string name="about_version">Enve Keep %1$s</string>
     <string name="about_privacy">Your records and files are stored only on this device. Enve Keep has no internet access, accounts, analytics or ads.</string>
-    <string name="about_license">Free and open source software under the MIT License.</string>
+    <string name="about_license">Free and open source software under the GNU Affero General Public License v3.0 only.</string>
 
     <string name="notification_channel_name">Deadline reminders</string>
     <string name="notification_channel_description">Warranty, renewal and expiry reminders</string>

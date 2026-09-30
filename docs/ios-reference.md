@@ -1,6 +1,6 @@
 # Feature and backup reference
 
-A free, open source iPhone app for keeping track of product warranties, subscriptions, document expiry dates and receipts. Everything stays on your phone. It is the iOS companion to [Enve Keep for Android](https://github.com/opisaac9001/Enve-Keep-Android). Backups without receipts work across both apps; receipts use a newer iOS backup format.
+A free, open source iPhone app for keeping track of product warranties, subscriptions, document expiry dates and receipts. Everything stays on your phone. The native apps live in [ios/](../ios/) and [android/](../android/). Backups without receipts work across both apps; receipts use a newer iOS backup format.
 
 ## Features
 
@@ -44,7 +44,7 @@ xcodebuild -project EnveKeep.xcodeproj -scheme EnveKeep \
 
 Minimum iOS version: 17.0.
 
-The app (`com.enve.keep`) and its share extension (`com.enve.keep.share`) share the App Group `group.com.enve.keep`, declared in `EnveKeep/EnveKeep.entitlements` and `ShareExtension/ShareExtension.entitlements`. Simulator builds need no setup. To run on a device, choose your team for both targets in Xcode; with automatic signing, Xcode registers both bundle IDs and the App Group. If you change the bundle ID prefix, use a matching App Group ID in both entitlements files and in `SharedInbox.appGroup`.
+Run the commands above from `ios/`. The app (`com.enve.keep`) and its share extension (`com.enve.keep.share`) share the App Group `group.com.enve.keep`, declared in `EnveKeep/EnveKeep.entitlements` and `ShareExtension/ShareExtension.entitlements`. Simulator builds need no setup. To run on a device, choose your team for both targets in Xcode. Your signing setup must support the two bundle IDs and the App Group. If you change the bundle ID prefix, use a matching App Group ID in both entitlements files and in `SharedInbox.appGroup`.
 
 ## Project layout
 

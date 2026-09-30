@@ -1,27 +1,30 @@
 <p align="center">
-  <img src="EnveKeep/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="88" alt="Enve Keep app icon">
+  <img src="ios/EnveKeep/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="88" alt="Enve Keep app icon">
 </p>
 
-<h1 align="center">Enve Keep for iOS</h1>
+<h1 align="center">Enve Keep</h1>
 
 <p align="center"><strong>Your receipts, warranties, subscriptions, and important dates. In one place.</strong></p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-2F6F62" alt="License: AGPL-3.0-only"></a>
   <img src="https://img.shields.io/badge/iOS-17%2B-222222?logo=apple" alt="Requires iOS 17 or later">
+  <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?logo=android&logoColor=white" alt="Requires Android 8.0 or later">
   <img src="https://img.shields.io/badge/built_with-SwiftUI-F05138?logo=swift&logoColor=white" alt="Built with SwiftUI">
   <a href="https://buymeacoffee.com/envebookplayer"><img src="https://img.shields.io/badge/Buy_Me_a_Coffee-support_the_project-FFDD00?logo=buymeacoffee&logoColor=000000" alt="Support on Buy Me a Coffee"></a>
 </p>
 
-Enve Keep is a free, open source iPhone app that helps you keep the paperwork behind everyday purchases organized. Scan a receipt, find it later by merchant or trip, and keep proof of purchase beside the product it belongs to. Get reminders before a warranty ends, a subscription renews, or a document expires.
+Enve Keep is a free, open source app for iOS and Android that helps you keep the paperwork behind everyday purchases organized. Keep proof of purchase beside the product it belongs to, and get reminders before a warranty ends, a subscription renews, or a document expires. On iOS, scan and itemize receipts, then find them later by merchant, category, trip, or your own custom fields.
 
-Records and receipt recognition stay on your iPhone. No account, ads, analytics, subscriptions, or paid feature tiers.
+Records stay on your device, and iOS receipt recognition runs on the iPhone. No account, ads, analytics, paid subscriptions, or paid feature tiers.
 
-**[Build the app](#build-and-run)** · **[Feature reference](docs/REFERENCE.md)** · **[Report a bug](https://github.com/opisaac9001/Enve-Keep-iOS/issues/new/choose)** · **[Android companion](https://github.com/opisaac9001/Enve-Keep-Android)**
+**[Build the apps](#build-and-run)** · **[iOS guide](ios/README.md)** · **[Android guide](android/README.md)** · **[Report a bug](https://github.com/opisaac9001/Enve-Keep/issues/new/choose)**
+
+Both native apps live in this repository: `ios/` uses SwiftUI and `android/` uses Kotlin and Jetpack Compose. Their original Git histories are preserved.
 
 ## A look inside
 
-Real screenshots from the iPhone Air simulator, using fictional demo records.
+Real iOS screenshots from the iPhone Air simulator, using fictional demo records.
 
 <table>
   <tr>
@@ -44,7 +47,20 @@ Real screenshots from the iPhone Air simulator, using fictional demo records.
 
 [View a receipt's store, payment, trip, and fuel details](docs/screenshots/details.png).
 
-## What you can do
+## Platform support
+
+| Feature | iOS | Android |
+| --- | --- | --- |
+| Warranties, subscriptions, documents, and attachments | Yes | Yes |
+| Search, local reminders, themes, and ZIP backups | Yes | Yes |
+| Receipt scanning, OCR, and itemization | Yes | — |
+| Receipt categories, routes, custom fields, and review inbox | Yes | — |
+| Receipt CSV and warranty claim PDF exports | Yes | — |
+| Receipt Share extension and Scan Receipt App Intent | Yes | — |
+
+Android can attach receipt images or PDFs to products; it does not scan or itemize them.
+
+## What you can do on iOS
 
 | Area | Features |
 | --- | --- |
@@ -63,21 +79,27 @@ OCR can make mistakes, especially with handwriting. Every extracted field is edi
 
 ## Privacy and backups
 
-The app makes no network requests. Your records and attachments live in local storage; Apple Vision processes receipt images on the device. Shared files wait in the app's local shared inbox until you save or discard them.
+The iOS app makes no network requests, and the Android app does not request Internet permission. Your records and attachments live in local storage; Apple Vision processes iOS receipt images on the device. Files shared into iOS wait in the app's local shared inbox until you save or discard them.
 
-**Export backups regularly.** Records and attachments are excluded from automatic iCloud device backups. You choose when to share a receipt, CSV, claim PDF, or ZIP backup.
+**Export backups regularly.** Records and attachments are excluded from automatic cloud backups on both platforms and from Android device-to-device transfer. You choose when to share a file or export a ZIP backup.
 
-Backups without receipts use the Android-compatible version 1 format. Receipt backups use version 3 and can be restored by current iOS builds. Existing version 2 iOS backups still import. Android does not currently support receipts and rejects receipt backups. See the [backup reference](docs/REFERENCE.md#backup-format) for details.
+Backups without receipts use the shared version 1 format. Receipt backups use version 3 and can be restored by current iOS builds. Existing version 2 iOS backups still import. Android does not currently support receipts and rejects receipt backups. See the [backup reference](docs/ios-reference.md#backup-format) for details.
 
 ## Build and run
 
-The source is available now. There is currently no packaged iOS release in this repository; build it with Xcode to try it.
+The source for both apps is available now. There are currently no packaged releases in this repository; build from source to try them.
+
+```sh
+git clone https://github.com/opisaac9001/Enve-Keep.git
+cd Enve-Keep
+```
+
+### iOS
 
 You need a Mac with **Xcode 26 or later** and **[XcodeGen](https://github.com/yonaskolb/XcodeGen)**. The deployment target is **iOS 17.0**. Swift Package Manager resolves the pinned ZIPFoundation dependency.
 
 ```sh
-git clone https://github.com/opisaac9001/Enve-Keep-iOS.git
-cd Enve-Keep-iOS
+cd ios
 xcodegen generate
 open EnveKeep.xcodeproj
 ```
@@ -96,11 +118,32 @@ For a physical iPhone, select your development team for both **EnveKeep** and **
 
 The latest feature verification passed **135 tests on iOS 17 and iOS 27 simulators**, with no build warnings. Route and custom field browsing, CSV sharing, claim PDF preview, and the Photos share extension were exercised in Simulator. Camera capture, handwriting on real receipts, and Shortcut discovery still need physical iPhone verification.
 
+### Android
+
+Use **JDK 17 or later**, the Android SDK with **compile SDK 36.1**, and Android Studio or the included Gradle wrapper. The minimum is **Android 8.0 (API 26)**. Run these commands from the repository root:
+
+```sh
+cd android
+export ANDROID_HOME=/path/to/Android/sdk
+./gradlew :app:assembleDebug :app:testDebugUnitTest
+```
+
+The debug APK is written to `android/app/build/outputs/apk/debug/app-debug.apk`. With an Android device connected, run `./gradlew :app:installDebug` from `android/`. The combined checkout builds without warnings and passes **18 Android unit tests**. The debug app was installed and its Settings screen checked on a Pixel 7a. See the [Android guide](android/README.md) for its features and project layout.
+
+### Repository layout
+
+| Folder | Contents |
+| --- | --- |
+| `ios/` | SwiftUI app, Share extension, XcodeGen project, and iOS tests |
+| `android/` | Compose app, Gradle wrapper, Room schemas, and Android tests |
+| `docs/` | Feature and backup reference, screenshots, and dependency licenses |
+| `.github/` | Issue forms, pull request template, and Sponsor configuration |
+
 ## Contribute
 
 Bug reports, accessibility improvements, documentation, and focused pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md). Please use fictional or redacted receipts in issues and screenshots.
 
-The [feature and backup reference](docs/REFERENCE.md) explains the data format and project layout. This repository contains the iOS app; the [Android companion](https://github.com/opisaac9001/Enve-Keep-Android) has its own repository.
+The [iOS feature and backup reference](docs/ios-reference.md) explains the receipt data format. Platform build details live beside each app. The former separate platform repositories have been superseded by this combined repository.
 
 ## Support the project
 
@@ -112,4 +155,4 @@ Enve Keep is free. If you'd like to help fund development, you can [buy me a cof
 
 Enve Keep's original source is licensed under the **GNU Affero General Public License v3.0 only** (`AGPL-3.0-only`), matching Enve Book Player. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).
 
-Third-party components retain their own licenses. ZIPFoundation is MIT licensed; its attribution and license are retained in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Third-party components retain their own licenses. The iOS and Android dependency notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

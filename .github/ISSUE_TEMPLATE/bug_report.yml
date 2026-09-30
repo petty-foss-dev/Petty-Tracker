@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a problem with Enve Keep for iOS.
+description: Report a problem with Enve Keep for iOS or Android.
 labels: [bug]
 body:
   - type: markdown
@@ -8,8 +8,8 @@ body:
   - type: input
     id: environment
     attributes:
-      label: Device and iOS version
-      placeholder: "iPhone 15, iOS 18.6; app commit or version if known"
+      label: Platform, device, and OS version
+      placeholder: "iPhone 15, iOS 18.6; or Pixel 7a, Android 15; app commit or version if known"
     validations:
       required: true
   - type: textarea

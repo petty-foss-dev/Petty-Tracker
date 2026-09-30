@@ -1,10 +1,10 @@
 # Contributing to Enve Keep
 
-Thanks for helping improve Enve Keep. The app is free, keeps records on the device, and uses native iOS APIs. Contributions should preserve those choices.
+Thanks for helping improve Enve Keep. Both apps are free, keep records on the device, and use native platform APIs. Contributions should preserve those choices.
 
 ## Report a bug
 
-Open an [issue](https://github.com/opisaac9001/Enve-Keep-iOS/issues/new/choose) with the iOS version, device or simulator, steps to reproduce, and expected versus actual behavior. Include the app commit or version when you know it.
+Open an [issue](https://github.com/opisaac9001/Enve-Keep/issues/new/choose) with the platform, OS version, device or simulator, steps to reproduce, and expected versus actual behavior. Include the app commit or version when you know it.
 
 Use fictional or redacted receipts and screenshots. Remove names, addresses, payment details, document numbers, and other personal information before posting. For recognition bugs, include the relevant redacted text and the field that was misread.
 
@@ -16,15 +16,15 @@ Original contributions are accepted under `AGPL-3.0-only`, the project's license
 
 ## Develop locally
 
-Follow the [README setup](README.md#build-and-run). Use Swift 6, SwiftUI, and the iOS 17 minimum target. Run `xcodegen generate` after changing `project.yml`.
+Follow the [README setup](README.md#build-and-run). Run iOS commands from `ios/` and Android commands from `android/`. Use Swift 6 and SwiftUI with the iOS 17 minimum target, or Kotlin and Compose with the Android API 26 minimum. Run `xcodegen generate` inside `ios/` after changing `project.yml`. Platform-specific implementation guidance is in each folder's `CLAUDE.md`.
 
 Keep receipt parsing conservative: retain the original OCR text, leave ambiguous fields blank, and keep all extracted fields editable. Preserve the backup contract and add a format version when a change would otherwise lose data in older readers.
 
 ## Verify your change
 
-- Build the app and share extension, and resolve new errors and warnings.
+- Build the affected platform (including the iOS Share extension), and resolve new errors and warnings.
 - Run relevant tests for changes to parsing, persistence, backup, dates, or exports.
-- Exercise changed screens in Simulator, including accessibility labels and light/dark appearance where relevant.
+- Exercise changed screens on a simulator, emulator, or device, including accessibility labels and light/dark appearance where relevant.
 - Test camera behavior on a physical iPhone and state when device verification is still outstanding.
 - Update documentation for changes to user behavior or setup.
 

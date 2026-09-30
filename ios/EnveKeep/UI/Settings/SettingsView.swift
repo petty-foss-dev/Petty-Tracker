@@ -108,7 +108,7 @@ struct SettingsView: View {
                 Text("Your records and files are stored only on this device. Enve Keep has no internet access, accounts, analytics or ads.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
-                Text("Free and open source software under the MIT License.")
+                Text("Free and open source software under the GNU Affero General Public License v3.0 only.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

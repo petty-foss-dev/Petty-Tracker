@@ -1,6 +1,8 @@
-# Enve Keep
+# Enve Keep for Android
 
 A free, open source Android app for keeping track of product warranties, subscriptions and document expiry dates. Everything stays on your phone.
+
+Part of the shared [Enve Keep repository](../README.md). The iOS app is in [../ios/](../ios/). Android can attach receipt images and PDFs to products; scanning, OCR, and itemization are currently iOS-only.
 
 Inspired by the [Stash it project post](https://www.reddit.com/r/vibecoding/comments/1wtouy3/warranty_subscriptions_and_documents_expiry/). Enve Keep is an independent implementation with its own code and design.
 
@@ -42,4 +44,4 @@ Minimum Android version: 8.0 (API 26).
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+GNU Affero General Public License v3.0 only (`AGPL-3.0-only`). See [LICENSE](../LICENSE), [NOTICE.md](../NOTICE.md), and [third-party notices](../THIRD_PARTY_NOTICES.md).
