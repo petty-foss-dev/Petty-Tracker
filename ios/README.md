@@ -1,6 +1,6 @@
-# Enve Keep for iOS
+# petty: Tracker for iOS
 
-The native iPhone app in the shared [Enve Keep repository](../README.md). Built with Swift 6 and SwiftUI for iOS 17 or later.
+The native iPhone app in the shared [petty: Tracker repository](../README.md). Built with Swift 6 and SwiftUI for iOS 17 or later.
 
 Keep warranties, subscriptions, documents, and receipts on your device. iOS includes receipt scanning and OCR, line items, fuel details, routes and custom fields, a review inbox, product links, CSV and warranty claim PDF exports, and a Share extension.
 
@@ -27,6 +27,4 @@ For a physical iPhone, set your development team on both EnveKeep and EnveKeepSh
 
 ## License and support
 
-Original source is licensed under [AGPL-3.0-only](../LICENSE), matching Enve Book Player. See [third-party notices](../THIRD_PARTY_NOTICES.md).
-
-[Buy Me a Coffee](https://buymeacoffee.com/envebookplayer) supports development. The app's features are free.
+Original source is licensed under [AGPL-3.0-only](../LICENSE). See [third-party notices](../THIRD_PARTY_NOTICES.md).

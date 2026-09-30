@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an improvement to Enve Keep.
+description: Suggest an improvement to petty: Tracker.
 labels: [enhancement]
 body:
   - type: textarea

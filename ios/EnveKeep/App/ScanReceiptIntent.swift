@@ -2,7 +2,7 @@ import AppIntents
 
 struct ScanReceiptIntent: AppIntent {
     static let title: LocalizedStringResource = "Scan Receipt"
-    static let description: IntentDescription? = IntentDescription("Opens Enve Keep on Receipts with the document scanner ready.")
+    static let description: IntentDescription? = IntentDescription("Opens petty: Tracker on Receipts with the document scanner ready.")
     static let openAppWhenRun = true
 
     @MainActor

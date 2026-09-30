@@ -1,7 +1,7 @@
 import Foundation
 import UniformTypeIdentifiers
 
-/// Files shared from other apps, kept in the App Group container until Enve Keep turns them into receipts.
+/// Files shared from other apps, kept in the App Group container until petty: Tracker turns them into receipts.
 /// The share extension only adds complete batches here; it never touches `keep.json`.
 struct SharedInbox: Sendable {
     static let appGroup = "group.com.enve.keep"

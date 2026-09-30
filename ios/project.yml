@@ -45,7 +45,7 @@ targets:
     info:
       path: EnveKeep/Info.plist
       properties:
-        CFBundleDisplayName: Enve Keep
+        CFBundleDisplayName: "petty: Tracker"
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSRequiresIPhoneOS: true
@@ -81,7 +81,7 @@ targets:
     info:
       path: ShareExtension/Info.plist
       properties:
-        CFBundleDisplayName: Save to Enve Keep
+        CFBundleDisplayName: "Save to petty: Tracker"
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:

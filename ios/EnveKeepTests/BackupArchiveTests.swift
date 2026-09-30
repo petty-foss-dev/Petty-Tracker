@@ -189,7 +189,7 @@ struct BackupArchiveTests {
         let directory = try temporaryDirectory()
         var foreign = TestZip()
         foreign.add(BackupArchive.manifestName, #"{"format":"other","exportedAt":"x"}"#)
-        #expect(throws: BackupError.invalid("Not an Enve Keep backup")) {
+        #expect(throws: BackupError.invalid("Not a petty: Tracker backup")) {
             try BackupArchive.read(from: foreign.write(in: directory), staging: directory.appending(path: "a"))
         }
 

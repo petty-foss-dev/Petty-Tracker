@@ -38,7 +38,7 @@ struct SettingsView: View {
                 }
                 if store.settings.remindersEnabled && notificationStatus == .denied {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("Notifications are turned off for Enve Keep.")
+                        Text("Notifications are turned off for petty: Tracker.")
                             .foregroundStyle(Color.keepPast)
                         Button("Open Settings") {
                             if let url = URL(string: UIApplication.openNotificationSettingsURLString) { openURL(url) }
@@ -99,13 +99,13 @@ struct SettingsView: View {
             } header: {
                 Text("Backup")
             } footer: {
-                Text("Export saves every record, receipt, attachment and setting to a single ZIP file you choose. Import replaces everything on this iPhone with the contents of a backup. Backups without receipts work with Enve Keep for Android too. Once you keep receipts, backups use a newer format that Enve Keep for Android can't import.")
+                Text("Export saves every record, receipt, attachment and setting to a single ZIP file you choose. Import replaces everything on this iPhone with the contents of a backup. Backups without receipts work with petty: Tracker for Android too. Once you keep receipts, backups use a newer format that petty: Tracker for Android can't import.")
             }
             .disabled(busy)
 
             Section("About") {
                 LabeledContent("Version", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")
-                Text("Your records and files are stored only on this device. Enve Keep has no internet access, accounts, analytics or ads.")
+                Text("Your records and files are stored only on this device. petty: Tracker has no internet access, accounts, analytics or ads.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 Text("Free and open source software under the GNU Affero General Public License v3.0 only.")
@@ -120,7 +120,7 @@ struct SettingsView: View {
             Button("Replace", role: .destructive) { commit(staged) }
             Button("Cancel", role: .cancel) { BackupService(store: store).discard(staged) }
         } message: { staged in
-            Text("Everything currently in Enve Keep will be replaced by the backup (\(Formats.count(staged.recordCount, "record", "records")), \(Formats.count(staged.attachmentCount, "attachment", "attachments"))). Export first if you want to keep a copy.")
+            Text("Everything currently in petty: Tracker will be replaced by the backup (\(Formats.count(staged.recordCount, "record", "records")), \(Formats.count(staged.attachmentCount, "attachment", "attachments"))). Export first if you want to keep a copy.")
         }
         .alert(notice ?? "", isPresented: Binding(get: { notice != nil }, set: { if !$0 { notice = nil } })) {
             Button("OK") {}
@@ -190,7 +190,7 @@ struct SettingsView: View {
             do {
                 staged = try await BackupService(store: store).stage(url)
             } catch let error as BackupError {
-                errorMessage = String(localized: "That file is not a valid Enve Keep backup (\(error.localizedDescription)). Nothing was changed.")
+                errorMessage = String(localized: "That file is not a valid petty: Tracker backup (\(error.localizedDescription)). Nothing was changed.")
             } catch {
                 errorMessage = String(localized: "The backup could not be read. Nothing was changed. \(error.localizedDescription)")
             }

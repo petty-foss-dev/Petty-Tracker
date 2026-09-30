@@ -337,7 +337,7 @@ private struct ReceiptEditForm: View {
                         quickCapture.finish(item)
                     }
                 } message: {
-                    Text("Review later keeps it under Receipts. Deleting removes it from Enve Keep.")
+                    Text("Review later keeps it under Receipts. Deleting removes it from petty: Tracker.")
                 }
         }
         ToolbarItem(placement: .confirmationAction) {

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="ios/EnveKeep/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="88" alt="Enve Keep app icon">
+  <img src="ios/EnveKeep/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="88" alt="petty: Tracker app icon">
 </p>
 
-<h1 align="center">Enve Keep</h1>
+<h1 align="center">petty: Tracker</h1>
 
 <p align="center"><strong>Your receipts, warranties, subscriptions, and important dates. In one place.</strong></p>
 
@@ -11,14 +11,13 @@
   <img src="https://img.shields.io/badge/iOS-17%2B-222222?logo=apple" alt="Requires iOS 17 or later">
   <img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?logo=android&logoColor=white" alt="Requires Android 8.0 or later">
   <img src="https://img.shields.io/badge/built_with-SwiftUI-F05138?logo=swift&logoColor=white" alt="Built with SwiftUI">
-  <a href="https://buymeacoffee.com/envebookplayer"><img src="https://img.shields.io/badge/Buy_Me_a_Coffee-support_the_project-FFDD00?logo=buymeacoffee&logoColor=000000" alt="Support on Buy Me a Coffee"></a>
 </p>
 
-Enve Keep is a free, open source app for iOS and Android that helps you keep the paperwork behind everyday purchases organized. Keep proof of purchase beside the product it belongs to, and get reminders before a warranty ends, a subscription renews, or a document expires. On iOS, scan and itemize receipts, then find them later by merchant, category, trip, or your own custom fields.
+petty: Tracker is a free, open source app for iOS and Android that helps you keep the paperwork behind everyday purchases organized. Keep proof of purchase beside the product it belongs to, and get reminders before a warranty ends, a subscription renews, or a document expires. On iOS, scan and itemize receipts, then find them later by merchant, category, trip, or your own custom fields.
 
 Records stay on your device, and iOS receipt recognition runs on the iPhone. No account, ads, analytics, paid subscriptions, or paid feature tiers.
 
-**[Build the apps](#build-and-run)** · **[iOS guide](ios/README.md)** · **[Android guide](android/README.md)** · **[Report a bug](https://github.com/petty-foss-dev/Enve-Keep/issues/new/choose)**
+**[Build the apps](#build-and-run)** · **[iOS guide](ios/README.md)** · **[Android guide](android/README.md)** · **[Report a bug](https://github.com/petty-foss-dev/Petty-Tracker/issues/new/choose)**
 
 Both native apps live in this repository: `ios/` uses SwiftUI and `android/` uses Kotlin and Jetpack Compose. Their original Git histories are preserved.
 
@@ -71,7 +70,7 @@ Android can attach receipt images or PDFs to products; it does not scan or itemi
 | **Keep warranties** | Product details, serial numbers, warranty dates, attachments, and linked receipts. Create a product from a receipt item and export a warranty claim PDF. |
 | **Track recurring costs** | Flexible subscription cycles, renewal dates, cancellation, and local reminders. |
 | **Remember document dates** | Issuer, reference number, issue and expiry dates, notes, and attachments. |
-| **Capture and export** | Share images and PDFs into Enve Keep, use the Scan Receipt App Intent, export the current receipt results as CSV, or back up records and attachments to a ZIP. |
+| **Capture and export** | Share images and PDFs into petty: Tracker, use the Scan Receipt App Intent, export the current receipt results as CSV, or back up records and attachments to a ZIP. |
 
 For example, open **Receipts → Browse → Fuel**, narrow by a route, then add **Vehicle = Civic** or a date range. Export just those matching receipts for a trip or reimbursement.
 
@@ -90,8 +89,8 @@ Backups without receipts use the shared version 1 format. Receipt backups use ve
 The source for both apps is available now. There are currently no packaged releases in this repository; build from source to try them.
 
 ```sh
-git clone https://github.com/petty-foss-dev/Enve-Keep.git
-cd Enve-Keep
+git clone https://github.com/petty-foss-dev/Petty-Tracker.git
+cd Petty-Tracker
 ```
 
 ### iOS
@@ -145,14 +144,8 @@ Bug reports, accessibility improvements, documentation, and focused pull request
 
 The [iOS feature and backup reference](docs/ios-reference.md) explains the receipt data format. Platform build details live beside each app. The former separate platform repositories have been superseded by this combined repository.
 
-## Support the project
-
-Enve Keep is free. If you'd like to help fund development, you can [buy me a coffee](https://buymeacoffee.com/envebookplayer). Support is optional and doesn't unlock features. Reporting a useful bug or contributing a fix helps too.
-
-<a href="https://buymeacoffee.com/envebookplayer"><img src="https://img.shields.io/badge/Buy_Me_a_Coffee-support_Enve-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000" alt="Buy Me a Coffee"></a>
-
 ## License
 
-Enve Keep's original source is licensed under the **GNU Affero General Public License v3.0 only** (`AGPL-3.0-only`), matching Enve Book Player. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).
+petty: Tracker's original source is licensed under the **GNU Affero General Public License v3.0 only** (`AGPL-3.0-only`). See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).
 
 Third-party components retain their own licenses. The iOS and Android dependency notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

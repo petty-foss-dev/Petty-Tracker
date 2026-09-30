@@ -78,7 +78,7 @@ enum ReceiptCSV {
         let folder = FileManager.default.temporaryDirectory.appending(path: "csv", directoryHint: .isDirectory)
         try? FileManager.default.removeItem(at: folder)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        let url = folder.appending(path: "Enve Keep receipts \(today.iso).csv")
+        let url = folder.appending(path: "Petty Tracker receipts \(today.iso).csv")
         try Data(("\u{FEFF}" + make(receipts)).utf8).write(to: url, options: .atomic)
         return url
     }

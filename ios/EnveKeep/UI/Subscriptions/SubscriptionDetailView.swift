@@ -102,7 +102,7 @@ struct SubscriptionDetailView: View {
                 }
             }
         } message: {
-            Text("Enve Keep stops reminding you about renewals. This does not cancel anything with the provider.")
+            Text("petty: Tracker stops reminding you about renewals. This does not cancel anything with the provider.")
         }
         .confirmationDialog("Delete \(subscription.name)?", isPresented: $confirmDelete, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {

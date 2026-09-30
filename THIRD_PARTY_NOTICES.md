@@ -1,6 +1,6 @@
 # Third-party notices
 
-Third-party components retain their own licenses, separate from Enve Keep's original source.
+Third-party components retain their own licenses, separate from petty: Tracker's original source.
 
 ## iOS
 

@@ -67,7 +67,7 @@ enum BackupError: LocalizedError, Equatable {
     }
 }
 
-/// ZIP layout shared with Enve Keep Android: `backup.json` plus flat `attachments/<safe name>` entries.
+/// ZIP layout shared with petty: Tracker Android: `backup.json` plus flat `attachments/<safe name>` entries.
 enum BackupArchive {
     static let manifestName = "backup.json"
     static let attachmentPrefix = "attachments/"
@@ -182,9 +182,9 @@ enum BackupArchive {
     }
 
     static func validate(_ manifest: BackupManifest, files: Set<String>) throws {
-        guard manifest.format == BackupManifest.format else { throw BackupError.invalid("Not an Enve Keep backup") }
+        guard manifest.format == BackupManifest.format else { throw BackupError.invalid("Not a petty: Tracker backup") }
         guard manifest.version <= BackupManifest.detailsVersion else {
-            throw BackupError.invalid("Backup was made by a newer version of Enve Keep")
+            throw BackupError.invalid("Backup was made by a newer version of petty: Tracker")
         }
         guard manifest.version >= BackupManifest.receiptsVersion
                 || (manifest.receipts.isEmpty && manifest.receiptAttachments.isEmpty)

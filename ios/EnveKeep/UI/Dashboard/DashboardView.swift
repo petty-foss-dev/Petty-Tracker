@@ -81,7 +81,7 @@ struct DashboardView: View {
             }
         }
         .keepListStyle()
-        .navigationTitle("Enve Keep")
+        .navigationTitle("petty: Tracker")
         .searchable(text: $query, prompt: "Search everything")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -202,7 +202,7 @@ private struct ReminderPromptSection: View {
             VStack(alignment: .leading, spacing: 8) {
                 Label("Get reminded in time", systemImage: "bell.badge")
                     .font(.headline)
-                Text("Allow notifications so Enve Keep can tell you before warranties end, subscriptions renew and documents expire.")
+                Text("Allow notifications so petty: Tracker can tell you before warranties end, subscriptions renew and documents expire.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 HStack {

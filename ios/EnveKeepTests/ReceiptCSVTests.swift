@@ -134,7 +134,7 @@ struct ReceiptCSVTests {
         let url = try ReceiptCSV.write(receipts, today: day("2026-09-29"))
         let data = try Data(contentsOf: url)
 
-        #expect(url.lastPathComponent == "Enve Keep receipts 2026-09-29.csv")
+        #expect(url.lastPathComponent == "Petty Tracker receipts 2026-09-29.csv")
         #expect(data.starts(with: [0xEF, 0xBB, 0xBF]))
         #expect(String(decoding: data.dropFirst(3), as: UTF8.self) == ReceiptCSV.make(receipts))
     }

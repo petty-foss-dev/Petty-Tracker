@@ -33,7 +33,7 @@ struct ClaimPacket: Sendable {
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = [
             kCGPDFContextTitle as String: title,
-            kCGPDFContextCreator as String: "Enve Keep",
+            kCGPDFContextCreator as String: "petty: Tracker",
         ]
 
         // TextKit 1 lays the summary out across as many pages as it needs.
@@ -98,7 +98,7 @@ struct ClaimPacket: Sendable {
 
         append(String(localized: "Warranty claim"), Self.labelAttributes)
         append(product.name, Self.titleAttributes)
-        append(String(localized: "Prepared \(Formats.date(today)) with Enve Keep"), Self.captionAttributes)
+        append(String(localized: "Prepared \(Formats.date(today)) with petty: Tracker"), Self.captionAttributes)
 
         heading(String(localized: "Product"))
         row(String(localized: "Name"), product.name)

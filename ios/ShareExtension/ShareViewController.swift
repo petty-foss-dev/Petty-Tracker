@@ -63,7 +63,7 @@ final class ShareModel {
             return .failed(String(localized: "Share up to \(SharedInbox.maxItemsPerShare) files at a time."))
         }
         guard let inbox = SharedInbox.appGroupInbox() else {
-            return .failed(String(localized: "Enve Keep's shared storage is unavailable. Reinstall Enve Keep and try again."))
+            return .failed(String(localized: "petty: Tracker's shared storage is unavailable. Reinstall petty: Tracker and try again."))
         }
         let batch = try inbox.beginBatch()
         do {
@@ -107,7 +107,7 @@ private struct ShareView: View {
                 switch model.phase {
                 case .saving:
                     ProgressView()
-                    Text("Saving to Enve Keep…")
+                    Text("Saving to petty: Tracker…")
                         .foregroundStyle(.secondary)
                 case .saved(let count, let skipped):
                     Image(systemName: "checkmark.circle.fill")
@@ -116,7 +116,7 @@ private struct ShareView: View {
                         .accessibilityHidden(true)
                     Text(count == 1 ? "Saved 1 file" : "Saved \(count) files")
                         .font(.headline)
-                    Text("Open Enve Keep to check each receipt before it is added.")
+                    Text("Open petty: Tracker to check each receipt before it is added.")
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
                     if skipped > 0 {
@@ -141,7 +141,7 @@ private struct ShareView: View {
             }
             .padding(24)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .navigationTitle("Save to Enve Keep")
+            .navigationTitle("Save to petty: Tracker")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 if case .saving = model.phase {

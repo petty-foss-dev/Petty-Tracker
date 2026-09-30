@@ -1,10 +1,10 @@
-# Enve Keep for Android
+# petty: Tracker for Android
 
 A free, open source Android app for keeping track of product warranties, subscriptions and document expiry dates. Everything stays on your phone.
 
-Part of the shared [Enve Keep repository](../README.md). The iOS app is in [../ios/](../ios/). Android can attach receipt images and PDFs to products; scanning, OCR, and itemization are currently iOS-only.
+Part of the shared [petty: Tracker repository](../README.md). The iOS app is in [../ios/](../ios/). Android can attach receipt images and PDFs to products; scanning, OCR, and itemization are currently iOS-only.
 
-Inspired by the [Stash it project post](https://www.reddit.com/r/vibecoding/comments/1wtouy3/warranty_subscriptions_and_documents_expiry/). Enve Keep is an independent implementation with its own code and design.
+Inspired by the [Stash it project post](https://www.reddit.com/r/vibecoding/comments/1wtouy3/warranty_subscriptions_and_documents_expiry/). petty: Tracker is an independent implementation with its own code and design.
 
 ## Features
 
@@ -20,7 +20,7 @@ Inspired by the [Stash it project post](https://www.reddit.com/r/vibecoding/comm
 
 ## Privacy
 
-Enve Keep does not request the Internet permission. It has no accounts, servers, analytics, ads or in-app purchases. Your records and files are stored only in the app's private storage on your device and are excluded from Android cloud backup and device-to-device transfer; the only way data leaves the app is when you export a backup or share a file yourself.
+petty: Tracker does not request the Internet permission. It has no accounts, servers, analytics, ads or in-app purchases. Your records and files are stored only in the app's private storage on your device and are excluded from Android cloud backup and device-to-device transfer; the only way data leaves the app is when you export a backup or share a file yourself.
 
 ## Building
 

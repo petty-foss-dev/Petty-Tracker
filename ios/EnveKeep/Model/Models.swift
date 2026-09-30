@@ -1,6 +1,6 @@
 import Foundation
 
-// Field names, defaults and JSON shapes mirror Enve Keep Android so backups interoperate.
+// Field names, defaults and JSON shapes mirror petty: Tracker Android so backups interoperate.
 // Encoding writes every key, with explicit nulls, the way kotlinx.serialization does with encodeDefaults.
 
 struct Product: Identifiable, Hashable, Sendable {
@@ -90,7 +90,7 @@ struct ClockTime: Hashable, Comparable, Sendable {
     static func < (lhs: ClockTime, rhs: ClockTime) -> Bool { (lhs.hour, lhs.minute) < (rhs.hour, rhs.minute) }
 }
 
-/// Receipts are iOS-only and travel in version 3 backups, which Enve Keep for Android rejects as newer.
+/// Receipts are iOS-only and travel in version 3 backups, which petty: Tracker for Android rejects as newer.
 struct Receipt: Identifiable, Hashable, Sendable {
     var id: Int64 = 0
     var merchant: String

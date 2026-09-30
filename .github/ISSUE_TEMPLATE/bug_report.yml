@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a problem with Enve Keep for iOS or Android.
+description: Report a problem with petty: Tracker for iOS or Android.
 labels: [bug]
 body:
   - type: markdown

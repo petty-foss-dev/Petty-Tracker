@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Enve Keep</string>
+    <string name="app_name">petty: Tracker</string>
 
     <string name="tab_home">Home</string>
     <string name="tab_warranties">Warranties</string>
@@ -62,7 +62,7 @@
     <string name="coming_up_empty">Nothing due within your reminder windows.</string>
     <string name="section_overview">Overview</string>
     <string name="reminder_prompt_title">Get reminded in time</string>
-    <string name="reminder_prompt_body">Allow notifications so Enve Keep can tell you before warranties end, subscriptions renew and documents expire.</string>
+    <string name="reminder_prompt_body">Allow notifications so petty: Tracker can tell you before warranties end, subscriptions renew and documents expire.</string>
 
     <string name="products_empty_title">No products yet</string>
     <string name="products_empty_body">Add purchases to keep receipts, serial numbers and warranty dates together for when you need to make a claim.</string>
@@ -221,7 +221,7 @@
     </plurals>
 
     <string name="cancel_subscription_title">Mark as canceled?</string>
-    <string name="cancel_subscription_body">Enve Keep stops reminding you about renewals. This does not cancel anything with the provider.</string>
+    <string name="cancel_subscription_body">petty: Tracker stops reminding you about renewals. This does not cancel anything with the provider.</string>
     <string name="delete_title">Delete %1$s?</string>
     <string name="delete_product_body">The product and its receipts and photos will be removed from this device.</string>
     <string name="delete_subscription_body">The subscription will be removed from this device.</string>
@@ -236,7 +236,7 @@
     <string name="settings_reminders">Reminders</string>
     <string name="settings_reminders_toggle">Deadline reminders</string>
     <string name="settings_reminders_toggle_body">Notify before dates arrive and on the day</string>
-    <string name="settings_notifications_blocked">Notifications are turned off for Enve Keep.</string>
+    <string name="settings_notifications_blocked">Notifications are turned off for petty: Tracker.</string>
     <string name="settings_lead_warranty">Warranties</string>
     <string name="settings_lead_subscription">Subscription renewals</string>
     <string name="settings_lead_document">Document expiry</string>
@@ -244,7 +244,7 @@
         <item quantity="one">%d day before</item>
         <item quantity="other">%d days before</item>
     </plurals>
-    <string name="settings_reminder_schedule">Enve Keep checks your dates once a day, around 9 AM.</string>
+    <string name="settings_reminder_schedule">petty: Tracker checks your dates once a day, around 9 AM.</string>
     <string name="settings_defaults">Defaults</string>
     <string name="settings_backup">Backup</string>
     <string name="settings_backup_body">Export saves every record, attachment and setting to a single ZIP file you choose. Import replaces everything on this device with the contents of a backup.</string>
@@ -258,13 +258,13 @@
         <item quantity="one">%d attachment</item>
         <item quantity="other">%d attachments</item>
     </plurals>
-    <string name="backup_invalid">That file is not a valid Enve Keep backup. Nothing was changed.</string>
+    <string name="backup_invalid">That file is not a valid petty: Tracker backup. Nothing was changed.</string>
     <string name="backup_failed">The backup could not be completed</string>
     <string name="import_confirm_title">Replace all data?</string>
-    <string name="import_confirm_body">Everything currently in Enve Keep will be replaced by the backup. Export first if you want to keep a copy.</string>
+    <string name="import_confirm_body">Everything currently in petty: Tracker will be replaced by the backup. Export first if you want to keep a copy.</string>
     <string name="settings_about">About</string>
-    <string name="about_version">Enve Keep %1$s</string>
-    <string name="about_privacy">Your records and files are stored only on this device. Enve Keep has no internet access, accounts, analytics or ads.</string>
+    <string name="about_version">petty: Tracker %1$s</string>
+    <string name="about_privacy">Your records and files are stored only on this device. petty: Tracker has no internet access, accounts, analytics or ads.</string>
     <string name="about_license">Free and open source software under the GNU Affero General Public License v3.0 only.</string>
 
     <string name="notification_channel_name">Deadline reminders</string>

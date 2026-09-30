@@ -119,9 +119,9 @@ object BackupArchive {
     }
 
     private fun validate(manifest: BackupManifest, files: Set<String>) {
-        if (manifest.format != BackupManifest.FORMAT) throw InvalidBackupException("Not an Enve Keep backup")
+        if (manifest.format != BackupManifest.FORMAT) throw InvalidBackupException("Not a petty: Tracker backup")
         if (manifest.version > BackupManifest.VERSION) {
-            throw InvalidBackupException("Backup was made by a newer version of Enve Keep")
+            throw InvalidBackupException("Backup was made by a newer version of petty: Tracker")
         }
         fun requireUnique(ids: List<Long>, label: String) {
             if (ids.toSet().size != ids.size || ids.any { it <= 0 }) throw InvalidBackupException("Invalid $label ids")
