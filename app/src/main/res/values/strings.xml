@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Enve Keep</string>
+
+    <string name="tab_home">Home</string>
+    <string name="tab_warranties">Warranties</string>
+    <string name="tab_subscriptions">Subscriptions</string>
+    <string name="tab_documents">Documents</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_new_product">New product</string>
+    <string name="title_edit_product">Edit product</string>
+    <string name="title_new_subscription">New subscription</string>
+    <string name="title_edit_subscription">Edit subscription</string>
+    <string name="title_new_document">New document</string>
+    <string name="title_edit_document">Edit document</string>
+
+    <string name="kind_warranty">Warranty</string>
+    <string name="kind_subscription">Subscription</string>
+    <string name="kind_document">Document</string>
+
+    <string name="action_add">Add</string>
+    <string name="action_add_product">Add product</string>
+    <string name="action_add_subscription">Add subscription</string>
+    <string name="action_add_document">Add document</string>
+    <string name="action_add_file">Add file</string>
+    <string name="action_take_photo">Take photo</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_allow_notifications">Allow notifications</string>
+    <string name="action_not_now">Not now</string>
+    <string name="action_back">Back</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_close">Close</string>
+    <string name="action_save">Save</string>
+    <string name="action_ok">OK</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_discard">Discard</string>
+    <string name="action_replace">Replace</string>
+    <string name="action_search">Search</string>
+    <string name="action_clear_search">Clear search</string>
+    <string name="action_choose_date">Choose %1$s</string>
+    <string name="action_clear_date">Clear %1$s</string>
+    <string name="action_share_details">Share details</string>
+    <string name="action_share_named">Share %1$s</string>
+    <string name="action_remove_named">Remove %1$s</string>
+    <string name="action_mark_renewed">Mark renewed</string>
+    <string name="action_mark_renewed_named">Mark %1$s renewed</string>
+    <string name="action_mark_canceled">Mark canceled</string>
+    <string name="action_reactivate">Reactivate</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+
+    <string name="add_sheet_title">What do you want to keep?</string>
+    <string name="add_product_hint">Receipt, serial number and warranty</string>
+    <string name="add_subscription_hint">Price, billing cycle and next renewal</string>
+    <string name="add_document_hint">Passport, licence, insurance or ID</string>
+
+    <string name="welcome_title">Keep it all in one place</string>
+    <string name="welcome_body">Track warranties, subscriptions and document expiry dates. Everything stays on this phone.</string>
+    <string name="section_needs_attention">Needs attention</string>
+    <string name="section_coming_up">Coming up</string>
+    <string name="coming_up_empty">Nothing due within your reminder windows.</string>
+    <string name="section_overview">Overview</string>
+    <string name="reminder_prompt_title">Get reminded in time</string>
+    <string name="reminder_prompt_body">Allow notifications so Enve Keep can tell you before warranties end, subscriptions renew and documents expire.</string>
+
+    <string name="products_empty_title">No products yet</string>
+    <string name="products_empty_body">Add purchases to keep receipts, serial numbers and warranty dates together for when you need to make a claim.</string>
+    <string name="subscriptions_empty_title">No subscriptions yet</string>
+    <string name="subscriptions_empty_body">Add the services you pay for to see what renews next and roughly what they cost each month.</string>
+    <string name="documents_empty_title">No documents yet</string>
+    <string name="documents_empty_body">Add passports, licences, insurance policies and other documents to be reminded before they expire.</string>
+    <string name="no_matches_title">No matches</string>
+    <string name="no_matches_body">Try a different search or filter.</string>
+
+    <string name="search_products">Search products</string>
+    <string name="search_subscriptions">Search subscriptions</string>
+    <string name="search_documents">Search documents</string>
+    <string name="search_everything">Search everything</string>
+    <string name="search_hint_title">Search your records</string>
+    <string name="search_hint_body">Find products, serial numbers, retailers, subscriptions and documents.</string>
+
+    <string name="filter_all">All</string>
+    <string name="filter_covered">Covered</string>
+    <string name="filter_ending">Ending soon</string>
+    <string name="filter_expired">Expired</string>
+    <string name="filter_active">Active</string>
+    <string name="filter_canceled">Canceled</string>
+    <string name="filter_valid">Valid</string>
+    <string name="filter_expiring">Expiring soon</string>
+
+    <string name="relative_today">today</string>
+    <string name="relative_tomorrow">tomorrow</string>
+    <string name="relative_yesterday">yesterday</string>
+    <plurals name="relative_in_days">
+        <item quantity="one">in %d day</item>
+        <item quantity="other">in %d days</item>
+    </plurals>
+    <plurals name="relative_days_ago">
+        <item quantity="one">%d day ago</item>
+        <item quantity="other">%d days ago</item>
+    </plurals>
+
+    <string name="deadline_warranty_future">Warranty ends %1$s</string>
+    <string name="deadline_warranty_past">Warranty ended %1$s</string>
+    <string name="deadline_subscription_future">Renews %1$s</string>
+    <string name="deadline_subscription_past">Renewal was due %1$s</string>
+    <string name="deadline_document_future">Expires %1$s</string>
+    <string name="deadline_document_past">Expired %1$s</string>
+
+    <string name="section_details">Details</string>
+    <string name="section_purchase">Purchase</string>
+    <string name="section_warranty">Warranty</string>
+    <string name="section_receipts">Receipts and files</string>
+    <string name="section_attachments">Attachments</string>
+    <string name="section_dates">Dates</string>
+    <string name="section_scans">Scans and files</string>
+
+    <string name="field_product_name">Product name</string>
+    <string name="field_brand">Brand</string>
+    <string name="field_model">Model</string>
+    <string name="field_serial">Serial number</string>
+    <string name="field_purchase_date">Purchase date</string>
+    <string name="field_retailer">Retailer</string>
+    <string name="field_price">Price</string>
+    <string name="field_currency">Currency</string>
+    <string name="field_warranty_expires">Warranty ends</string>
+    <string name="field_notes">Notes</string>
+    <string name="field_subscription_name">Service name</string>
+    <string name="field_billing_cycle">Billing cycle</string>
+    <string name="field_every">Every</string>
+    <string name="field_period">Period</string>
+    <string name="field_next_renewal">Next renewal</string>
+    <string name="field_monthly_cost">Monthly cost</string>
+    <string name="field_document_title">Document name</string>
+    <string name="field_issuer">Issued by</string>
+    <string name="field_reference">Document number</string>
+    <string name="field_issued_on">Issue date</string>
+    <string name="field_expires_on">Expiry date</string>
+
+    <string name="error_required">Required</string>
+    <string name="error_price">Enter an amount such as 12.50</string>
+    <string name="error_currency">Use a 3-letter code such as USD</string>
+    <string name="error_cycle">Enter 1–999</string>
+    <string name="error_no_camera_app">No camera app is available</string>
+    <string name="error_no_viewer">No app on this device can open this file</string>
+    <string name="attachment_import_failed">A file could not be added</string>
+    <string name="warning_warranty_before_purchase">This is before the purchase date</string>
+    <string name="warning_expiry_before_issue">This is before the issue date</string>
+
+    <string name="warranty_active">Under warranty</string>
+    <string name="warranty_expired">Warranty ended</string>
+    <string name="warranty_no_date">No warranty date</string>
+    <string name="warranty_remaining_percent">%1$d%% of the warranty period left</string>
+    <string name="warranty_length_from_purchase">Set length from purchase date</string>
+    <string name="warranty_length_from_today">Set length from today</string>
+    <plurals name="years">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
+    <string name="attachments_none_product">No receipts or photos. Edit the product to add them.</string>
+    <string name="attachments_none_document">No scans or files. Edit the document to add them.</string>
+    <string name="share_product_subject">Product details: %1$s</string>
+
+    <string name="document_valid">Valid</string>
+    <string name="document_expires_today">Expires today</string>
+    <string name="document_expiring_soon">Expiring soon</string>
+    <string name="document_expired">Expired</string>
+    <string name="document_no_expiry">No expiry date</string>
+
+    <string name="subscription_canceled_on">Canceled %1$s</string>
+    <string name="next_renewal_on">Next renewal %1$s</string>
+    <string name="renewal_date_on">Renewal date %1$s</string>
+    <string name="next_renewal_hint">Future renewals follow this date, keeping month-end dates at month end</string>
+    <string name="renewal_passed_hint">The renewal date has passed. Mark it renewed to move to the next billing date.</string>
+    <string name="price_per_cycle">%1$s · %2$s</string>
+    <string name="per_month_estimate">≈ %1$s per month</string>
+    <plurals name="active_subscriptions">
+        <item quantity="one">%d active subscription</item>
+        <item quantity="other">%d active subscriptions</item>
+    </plurals>
+    <plurals name="products_count">
+        <item quantity="one">%d product</item>
+        <item quantity="other">%d products</item>
+    </plurals>
+    <plurals name="documents_count">
+        <item quantity="one">%d document</item>
+        <item quantity="other">%d documents</item>
+    </plurals>
+    <plurals name="cycle_days">
+        <item quantity="one">Every day</item>
+        <item quantity="other">Every %d days</item>
+    </plurals>
+    <plurals name="cycle_weeks">
+        <item quantity="one">Every week</item>
+        <item quantity="other">Every %d weeks</item>
+    </plurals>
+    <plurals name="cycle_months">
+        <item quantity="one">Every month</item>
+        <item quantity="other">Every %d months</item>
+    </plurals>
+    <plurals name="cycle_years">
+        <item quantity="one">Every year</item>
+        <item quantity="other">Every %d years</item>
+    </plurals>
+    <plurals name="unit_days">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
+    <plurals name="unit_weeks">
+        <item quantity="one">week</item>
+        <item quantity="other">weeks</item>
+    </plurals>
+    <plurals name="unit_months">
+        <item quantity="one">month</item>
+        <item quantity="other">months</item>
+    </plurals>
+    <plurals name="unit_years">
+        <item quantity="one">year</item>
+        <item quantity="other">years</item>
+    </plurals>
+
+    <string name="cancel_subscription_title">Mark as canceled?</string>
+    <string name="cancel_subscription_body">Enve Keep stops reminding you about renewals. This does not cancel anything with the provider.</string>
+    <string name="delete_title">Delete %1$s?</string>
+    <string name="delete_product_body">The product and its receipts and photos will be removed from this device.</string>
+    <string name="delete_subscription_body">The subscription will be removed from this device.</string>
+    <string name="delete_document_body">The document and its scans will be removed from this device.</string>
+    <string name="discard_title">Discard changes?</string>
+    <string name="discard_body">Your edits and any newly added files will be lost.</string>
+
+    <string name="settings_appearance">Appearance</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="settings_reminders">Reminders</string>
+    <string name="settings_reminders_toggle">Deadline reminders</string>
+    <string name="settings_reminders_toggle_body">Notify before dates arrive and on the day</string>
+    <string name="settings_notifications_blocked">Notifications are turned off for Enve Keep.</string>
+    <string name="settings_lead_warranty">Warranties</string>
+    <string name="settings_lead_subscription">Subscription renewals</string>
+    <string name="settings_lead_document">Document expiry</string>
+    <plurals name="days_before">
+        <item quantity="one">%d day before</item>
+        <item quantity="other">%d days before</item>
+    </plurals>
+    <string name="settings_reminder_schedule">Enve Keep checks your dates once a day, around 9 AM.</string>
+    <string name="settings_defaults">Defaults</string>
+    <string name="settings_backup">Backup</string>
+    <string name="settings_backup_body">Export saves every record, attachment and setting to a single ZIP file you choose. Import replaces everything on this device with the contents of a backup.</string>
+    <string name="backup_exported">Backup saved</string>
+    <string name="backup_imported">Restored %1$s and %2$s</string>
+    <plurals name="records_count">
+        <item quantity="one">%d record</item>
+        <item quantity="other">%d records</item>
+    </plurals>
+    <plurals name="attachments_count">
+        <item quantity="one">%d attachment</item>
+        <item quantity="other">%d attachments</item>
+    </plurals>
+    <string name="backup_invalid">That file is not a valid Enve Keep backup. Nothing was changed.</string>
+    <string name="backup_failed">The backup could not be completed</string>
+    <string name="import_confirm_title">Replace all data?</string>
+    <string name="import_confirm_body">Everything currently in Enve Keep will be replaced by the backup. Export first if you want to keep a copy.</string>
+    <string name="settings_about">About</string>
+    <string name="about_version">Enve Keep %1$s</string>
+    <string name="about_privacy">Your records and files are stored only on this device. Enve Keep has no internet access, accounts, analytics or ads.</string>
+    <string name="about_license">Free and open source software under the MIT License.</string>
+
+    <string name="notification_channel_name">Deadline reminders</string>
+    <string name="notification_channel_description">Warranty, renewal and expiry reminders</string>
+    <string name="notification_warranty_soon">Warranty ending: %1$s</string>
+    <string name="notification_warranty_today">Warranty ends today: %1$s</string>
+    <string name="notification_warranty_due">Warranty ended: %1$s</string>
+    <string name="notification_subscription_soon">Renewal coming up: %1$s</string>
+    <string name="notification_subscription_due">Renewal due: %1$s</string>
+    <string name="notification_document_soon">Document expiring: %1$s</string>
+    <string name="notification_document_today">Document expires today: %1$s</string>
+    <string name="notification_document_due">Document expired: %1$s</string>
+</resources>
