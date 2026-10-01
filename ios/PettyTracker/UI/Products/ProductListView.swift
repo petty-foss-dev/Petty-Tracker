@@ -89,7 +89,7 @@ struct ProductRow: View {
         HStack(spacing: 12) {
             RecordIcon(symbol: RecordKind.warranty.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
-                Text(product.name).font(.body.weight(.semibold)).fontDesign(.serif)
+                Text(product.name).font(.body.weight(.semibold))
                 let subtitle = [product.brand, product.model].filter { !$0.isEmpty }.joined(separator: " · ")
                 if !subtitle.isEmpty {
                     Text(subtitle).font(.subheadline).foregroundStyle(.secondary)

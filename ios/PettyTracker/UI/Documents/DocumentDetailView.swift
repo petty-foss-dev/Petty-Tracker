@@ -34,7 +34,6 @@ struct DocumentDetailView: View {
                     if let expires = document.expiresOn {
                         Text(Formats.deadline(.document, days: today.days(until: expires)))
                             .font(.title3.weight(.semibold))
-                            .fontDesign(.serif)
                     }
                 }
                 .padding(.vertical, 4)

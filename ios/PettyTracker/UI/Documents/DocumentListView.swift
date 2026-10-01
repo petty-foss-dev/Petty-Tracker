@@ -89,7 +89,7 @@ struct DocumentRow: View {
         HStack(spacing: 12) {
             RecordIcon(symbol: RecordKind.document.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
-                Text(document.title).font(.body.weight(.semibold)).fontDesign(.serif)
+                Text(document.title).font(.body.weight(.semibold))
                 if !document.issuer.isEmpty {
                     Text(document.issuer).font(.subheadline).foregroundStyle(.secondary)
                 }

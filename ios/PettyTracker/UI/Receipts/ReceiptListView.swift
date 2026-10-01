@@ -345,7 +345,7 @@ struct ReceiptRow: View {
             }
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 4) {
-                    Text(receipt.merchant).font(.body.weight(.semibold)).fontDesign(.serif)
+                    Text(receipt.merchant).font(.body.weight(.semibold))
                     if needsReview {
                         Image(systemName: "exclamationmark.circle.fill")
                             .font(.caption)

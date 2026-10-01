@@ -35,7 +35,6 @@ struct SubscriptionDetailView: View {
                     if let price = subscription.price {
                         Text(Money.format(price, currency: subscription.currency))
                             .font(.largeTitle.weight(.semibold))
-                            .fontDesign(.serif)
                     }
                     Text(Formats.cycle(count: subscription.cycleCount, unit: subscription.cycleUnit))
                         .foregroundStyle(.secondary)

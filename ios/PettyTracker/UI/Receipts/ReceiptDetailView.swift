@@ -390,7 +390,6 @@ private struct ReceiptHeader: View {
             }
             Text(receipt.total.map { Money.format($0, currency: receipt.currency) } ?? String(localized: "No total"))
                 .font(.largeTitle.weight(.semibold))
-                .fontDesign(.serif)
                 .monospacedDigit()
                 .foregroundStyle(receipt.total == nil ? .secondary : .primary)
             if !receipt.tags.isEmpty {

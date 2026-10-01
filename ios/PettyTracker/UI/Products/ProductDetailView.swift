@@ -221,7 +221,6 @@ private struct WarrantyHeader: View {
             if let expires = product.warrantyExpires {
                 Text(Formats.deadline(.warranty, days: today.days(until: expires)))
                     .font(.title3.weight(.semibold))
-                    .fontDesign(.serif)
                 if let remaining {
                     ProgressView(value: remaining)
                         .tint(status.tint)

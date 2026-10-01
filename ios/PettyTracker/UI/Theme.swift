@@ -1,24 +1,23 @@
 import SwiftUI
 
-/// The Hearth palette shared with Enve Book Player: warm Ink and Paper surfaces around an ember accent.
+/// The Petty palette: cool grays around a blue-green accent, plain and functional.
 extension Color {
-    static let trackerBackground = Color(light: 0xF7F2E9, dark: 0x0C0A09, pureBlack: 0x000000)
-    static let trackerElevated = Color(light: 0xFFFFFF, dark: 0x191512, pureBlack: 0x0C0C0D)
-    static let trackerText = Color(light: 0x231F1B, dark: 0xF0E9DC)
+    static let trackerBackground = Color(light: 0xF3F5F6, dark: 0x0E1113, pureBlack: 0x000000)
+    static let trackerElevated = Color(light: 0xFFFFFF, dark: 0x181D20, pureBlack: 0x0B0D0E)
+    static let trackerText = Color(light: 0x1B2328, dark: 0xE6EBEE)
     static let trackerHairline = Color(uiColor: UIColor { traits in
-        traits.userInterfaceStyle == .dark ? .white.withAlphaComponent(0.1) : .black.withAlphaComponent(0.08)
+        traits.userInterfaceStyle == .dark ? .white.withAlphaComponent(0.09) : .black.withAlphaComponent(0.08)
     })
-    /// Ember, deepened on Paper so it keeps contrast against the light background.
-    static let trackerAccent = Color(light: 0x89520F, dark: 0xF5921A)
-    static let trackerOnAccent = Color(light: 0xFFF7EA, dark: 0x1A120A)
-    static let trackerPrimaryContainer = Color(light: 0xFDEEDA, dark: 0x412C13)
-    static let trackerOnPrimaryContainer = Color(light: 0x89520F, dark: 0xF5921A)
-    static let trackerOK = Color(light: 0x4F7942, dark: 0x8FBF7F)
-    static let trackerOKContainer = Color(light: 0xE6ECE5, dark: 0x2E3426)
-    static let trackerSoon = Color(light: 0x93601B, dark: 0xE0A458)
-    static let trackerSoonContainer = Color(light: 0xEEE6DB, dark: 0x3D2F1F)
-    static let trackerPast = Color(light: 0xA8453A, dark: 0xD06A5C)
-    static let trackerPastContainer = Color(light: 0xF3E5E3, dark: 0x3E2621)
+    static let trackerAccent = Color(light: 0x0F7A8A, dark: 0x4FC1C9)
+    static let trackerOnAccent = Color(light: 0xFFFFFF, dark: 0x0B1F22)
+    static let trackerPrimaryContainer = Color(light: 0xE2F1F3, dark: 0x173238)
+    static let trackerOnPrimaryContainer = Color(light: 0x0F6573, dark: 0x7FD3D9)
+    static let trackerOK = Color(light: 0x2F7D55, dark: 0x6CC79A)
+    static let trackerOKContainer = Color(light: 0xE3F1E9, dark: 0x1C3229)
+    static let trackerSoon = Color(light: 0x9A6400, dark: 0xE2B04A)
+    static let trackerSoonContainer = Color(light: 0xF6EEDC, dark: 0x362C17)
+    static let trackerPast = Color(light: 0xB23A31, dark: 0xEE8277)
+    static let trackerPastContainer = Color(light: 0xF7E4E2, dark: 0x3A201E)
 
     init(light: UInt32, dark: UInt32, pureBlack: UInt32? = nil) {
         self.init(uiColor: UIColor { traits in
@@ -40,22 +39,6 @@ extension Color {
 enum Appearance {
     /// Device-only preference for true-black dark surfaces on OLED screens; not part of backups.
     static let pureBlackKey = "appearance.pureBlack"
-
-    /// Serif navigation titles in the Hearth style; SwiftUI has no modifier for navigation bar fonts.
-    @MainActor
-    static func configureNavigationBars() {
-        let text = UIColor(Color.trackerText)
-        let appearance = UINavigationBar.appearance()
-        appearance.largeTitleTextAttributes = [.font: serif(.largeTitle, weight: .bold), .foregroundColor: text]
-        appearance.titleTextAttributes = [.font: serif(.headline, weight: .semibold), .foregroundColor: text]
-    }
-
-    @MainActor
-    private static func serif(_ style: UIFont.TextStyle, weight: UIFont.Weight) -> UIFont {
-        let base = UIFont.systemFont(ofSize: UIFont.preferredFont(forTextStyle: style).pointSize, weight: weight)
-        let font = base.fontDescriptor.withDesign(.serif).map { UIFont(descriptor: $0, size: 0) } ?? base
-        return UIFontMetrics(forTextStyle: style).scaledFont(for: font)
-    }
 }
 
 extension ThemeMode {
@@ -95,14 +78,14 @@ extension RecordKind {
 }
 
 extension View {
-    /// The warm canvas and card surfaces shared by every list and form.
+    /// The canvas and card surfaces shared by every list and form.
     func trackerListStyle() -> some View {
         scrollContentBackground(.hidden)
             .background(Color.trackerBackground)
     }
 }
 
-/// A list whose rows sit on Hearth's elevated surface rather than the system's neutral grey.
+/// A list whose rows sit on the Petty elevated surface rather than the system default.
 struct TrackerList<Content: View>: View {
     @ViewBuilder let content: Content
 
@@ -126,7 +109,7 @@ struct TrackerForm<Content: View>: View {
     }
 }
 
-/// Small uppercase section label, Hearth's overline.
+/// Small uppercase section label.
 struct Overline: View {
     let text: Text
 

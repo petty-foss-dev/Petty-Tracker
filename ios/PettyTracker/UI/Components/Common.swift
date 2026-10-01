@@ -71,7 +71,6 @@ struct DeadlineRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(deadline.title)
                     .font(.body.weight(.semibold))
-                    .fontDesign(.serif)
                     .foregroundStyle(.primary)
                 Text(phrase)
                     .font(.subheadline)

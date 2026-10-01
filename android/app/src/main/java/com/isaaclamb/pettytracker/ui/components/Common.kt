@@ -41,7 +41,6 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -176,7 +175,7 @@ fun RecordCard(
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     title,
-                    style = MaterialTheme.typography.titleMedium.copy(fontFamily = FontFamily.Serif, fontWeight = FontWeight.SemiBold),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -196,13 +195,13 @@ fun RecordCard(
     }
 }
 
-/** Hearth's card shape and elevated warm surface, shared by record, detail and attachment cards. */
+/** Card shape and elevated surface shared by record, detail and attachment cards. */
 val CardShape = RoundedCornerShape(20.dp)
 
 @Composable
 fun elevatedCardColors() = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
 
-/** Hearth's overline: a small, tracked, uppercase section label. */
+/** A small, tracked, uppercase section label. */
 @Composable
 fun SectionHeader(text: String, modifier: Modifier = Modifier, action: (@Composable () -> Unit)? = null) {
     Row(

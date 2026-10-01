@@ -166,7 +166,6 @@ private struct WelcomeSection: View {
                     .accessibilityHidden(true)
                 Text("Keep it all in one place")
                     .font(.title2.weight(.semibold))
-                    .fontDesign(.serif)
                     .accessibilityAddTraits(.isHeader)
                 Text("Track warranties, subscriptions and document expiry dates. Everything stays on this iPhone.")
                     .foregroundStyle(.secondary)
@@ -273,7 +272,6 @@ private struct SummaryTiles: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
                 .font(.title2.weight(.semibold).monospacedDigit())
-                .fontDesign(.serif)
                 .foregroundStyle(tint)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)

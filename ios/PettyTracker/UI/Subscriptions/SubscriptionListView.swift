@@ -46,7 +46,6 @@ struct SubscriptionListView: View {
                             ForEach(totals, id: \.currency) { total in
                                 Text("≈ \(Money.format(total.amount, currency: total.currency))")
                                     .font(.title2.weight(.semibold))
-                                    .fontDesign(.serif)
                             }
                             Text(Formats.count(all.filter(\.isActive).count, "active subscription", "active subscriptions"))
                                 .font(.footnote)
@@ -116,7 +115,7 @@ struct SubscriptionRow: View {
         HStack(spacing: 12) {
             RecordIcon(symbol: RecordKind.subscription.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
-                Text(subscription.name).font(.body.weight(.semibold)).fontDesign(.serif)
+                Text(subscription.name).font(.body.weight(.semibold))
                 if let canceled = subscription.canceledOn {
                     Text("Canceled \(Formats.date(canceled))").font(.subheadline).foregroundStyle(.secondary)
                 } else {
