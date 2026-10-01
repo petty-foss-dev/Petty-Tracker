@@ -8,6 +8,7 @@ struct DocumentDetailView: View {
     @State private var confirmDelete = false
     @State private var errorMessage: String?
     @State private var openedAttachment: OpenedAttachment?
+    @State private var removingAttachment: Attachment?
 
     var body: some View {
         if let document = store.document(documentId) {
@@ -56,7 +57,7 @@ struct DocumentDetailView: View {
                     emptyText: "Add a photo or scan so the document is on hand when you need it.",
                     opened: $openedAttachment,
                     errorMessage: $errorMessage,
-                    onDelete: { attachment in perform { try store.removeAttachment(attachment) } }
+                    onDelete: { removingAttachment = $0 }
                 )
                 AttachmentAddMenu { added in perform { try store.addAttachments(added, to: .document, documentId) } }
             }
@@ -83,6 +84,16 @@ struct DocumentDetailView: View {
             }
         } message: {
             Text("The document and its scans will be removed from this device.")
+        }
+        .confirmationDialog(
+            "Remove \(removingAttachment?.displayName ?? "")?",
+            isPresented: Binding(get: { removingAttachment != nil }, set: { if !$0 { removingAttachment = nil } }),
+            titleVisibility: .visible,
+            presenting: removingAttachment
+        ) { attachment in
+            Button("Remove", role: .destructive) { perform { try store.removeAttachment(attachment) } }
+        } message: { _ in
+            Text("The file will be deleted from this device.")
         }
         .errorAlert($errorMessage)
     }

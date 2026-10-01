@@ -8,6 +8,7 @@ struct ProductDetailView: View {
     @State private var confirmDelete = false
     @State private var errorMessage: String?
     @State private var openedAttachment: OpenedAttachment?
+    @State private var removingAttachment: Attachment?
     @State private var pickingReceipt = false
     @State private var confirmPacketWithoutReceipt = false
     @State private var preparingPacket = false
@@ -53,7 +54,7 @@ struct ProductDetailView: View {
                     emptyText: "Add a photo of the product, its serial label or the manual.",
                     opened: $openedAttachment,
                     errorMessage: $errorMessage,
-                    onDelete: { attachment in perform { try store.removeAttachment(attachment) } }
+                    onDelete: { removingAttachment = $0 }
                 )
                 AttachmentAddMenu { added in perform { try store.addAttachments(added, to: .product, productId) } }
             }
@@ -111,6 +112,16 @@ struct ProductDetailView: View {
             }
         } message: {
             Text("The product and its files and photos will be removed from this device. A linked receipt is kept.")
+        }
+        .confirmationDialog(
+            "Remove \(removingAttachment?.displayName ?? "")?",
+            isPresented: Binding(get: { removingAttachment != nil }, set: { if !$0 { removingAttachment = nil } }),
+            titleVisibility: .visible,
+            presenting: removingAttachment
+        ) { attachment in
+            Button("Remove", role: .destructive) { perform { try store.removeAttachment(attachment) } }
+        } message: { _ in
+            Text("The file will be deleted from this device.")
         }
         .errorAlert($errorMessage)
     }
