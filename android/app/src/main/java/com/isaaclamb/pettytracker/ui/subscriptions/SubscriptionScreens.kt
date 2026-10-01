@@ -54,6 +54,7 @@ import com.isaaclamb.pettytracker.ui.SubscriptionEditRoute
 import com.isaaclamb.pettytracker.ui.components.ConfirmDialog
 import com.isaaclamb.pettytracker.ui.components.CurrencyField
 import com.isaaclamb.pettytracker.ui.components.DateField
+import com.isaaclamb.pettytracker.ui.components.DetailCard
 import com.isaaclamb.pettytracker.ui.components.DetailRow
 import com.isaaclamb.pettytracker.ui.components.DetailScaffold
 import com.isaaclamb.pettytracker.ui.components.EditScaffold
@@ -242,21 +243,25 @@ fun SubscriptionDetailScreen(navController: NavController) {
             }
         }
         SectionHeader(stringResource(R.string.section_details))
-        SelectionContainer {
-            Column {
-                DetailRow(stringResource(R.string.field_price), subscription.priceText())
-                val price = subscription.price
-                if (price != null && !(subscription.cycleUnit == CycleUnit.MONTHS && subscription.cycleCount == 1)) {
+        DetailCard {
+            DetailRow(stringResource(R.string.field_price), subscription.priceText())
+            val price = subscription.price
+            if (price != null) {
+                val monthly = Renewals.monthlyCost(price, subscription.cycleCount, subscription.cycleUnit)
+                if (!(subscription.cycleUnit == CycleUnit.MONTHS && subscription.cycleCount == 1)) {
                     DetailRow(
                         stringResource(R.string.field_monthly_cost),
-                        stringResource(
-                            R.string.per_month_estimate,
-                            Money.format(Renewals.monthlyCost(price, subscription.cycleCount, subscription.cycleUnit), subscription.currency),
-                        ),
+                        stringResource(R.string.per_month_estimate, Money.format(monthly, subscription.currency)),
                     )
                 }
-                DetailRow(stringResource(R.string.field_billing_cycle), cycleText(subscription.cycleCount, subscription.cycleUnit))
+                if (!(subscription.cycleUnit == CycleUnit.YEARS && subscription.cycleCount == 1)) {
+                    DetailRow(
+                        stringResource(R.string.field_yearly_cost),
+                        stringResource(R.string.per_year_estimate, Money.format(monthly * BigDecimal(12), subscription.currency)),
+                    )
+                }
             }
+            DetailRow(stringResource(R.string.field_billing_cycle), cycleText(subscription.cycleCount, subscription.cycleUnit))
         }
         if (subscription.notes.isNotBlank()) {
             SectionHeader(stringResource(R.string.field_notes))

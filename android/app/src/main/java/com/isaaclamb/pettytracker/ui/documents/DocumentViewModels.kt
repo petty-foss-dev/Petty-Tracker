@@ -18,6 +18,7 @@ import com.isaaclamb.pettytracker.domain.matches
 import com.isaaclamb.pettytracker.domain.sortRank
 import com.isaaclamb.pettytracker.ui.AttachmentDraft
 import com.isaaclamb.pettytracker.ui.AttachmentFormViewModel
+import com.isaaclamb.pettytracker.ui.RecordDetailViewModel
 import com.isaaclamb.pettytracker.ui.DocumentDetailRoute
 import com.isaaclamb.pettytracker.ui.DocumentEditRoute
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,9 +76,8 @@ data class DocumentDetailState(
     val leadDays: Int = 0,
 )
 
-class DocumentDetailViewModel(private val app: TrackerApplication, handle: SavedStateHandle) : ViewModel() {
-    private val id = handle.toRoute<DocumentDetailRoute>().id
-    val attachmentStore = app.container.attachmentStore
+class DocumentDetailViewModel(app: TrackerApplication, handle: SavedStateHandle) :
+    RecordDetailViewModel(app, OwnerType.DOCUMENT, handle.toRoute<DocumentDetailRoute>().id) {
 
     val state: StateFlow<DocumentDetailState> = combine(
         app.container.repository.document(id),

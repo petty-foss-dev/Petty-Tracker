@@ -6,19 +6,17 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.material.icons.outlined.NotificationsActive
@@ -27,15 +25,12 @@ import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -46,24 +41,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.isaaclamb.pettytracker.R
+import com.isaaclamb.pettytracker.domain.Money
 import com.isaaclamb.pettytracker.domain.RecordKind
 import com.isaaclamb.pettytracker.reminders.ReminderNotifications
 import com.isaaclamb.pettytracker.reminders.ReminderScheduler
-import com.isaaclamb.pettytracker.domain.Money
-import com.isaaclamb.pettytracker.ui.TrackerNavigationBar
 import com.isaaclamb.pettytracker.ui.SearchRoute
 import com.isaaclamb.pettytracker.ui.SettingsRoute
 import com.isaaclamb.pettytracker.ui.Tab
+import com.isaaclamb.pettytracker.ui.TrackerNavigationBar
 import com.isaaclamb.pettytracker.ui.components.EmptyState
 import com.isaaclamb.pettytracker.ui.components.RecordCard
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
@@ -71,16 +68,16 @@ import com.isaaclamb.pettytracker.ui.components.deadlineText
 import com.isaaclamb.pettytracker.ui.components.icon
 import com.isaaclamb.pettytracker.ui.components.label
 import com.isaaclamb.pettytracker.ui.createRecord
-import com.isaaclamb.pettytracker.ui.trackerViewModel
 import com.isaaclamb.pettytracker.ui.openRecord
 import com.isaaclamb.pettytracker.ui.selectTab
+import com.isaaclamb.pettytracker.ui.theme.LocalStatusColors
+import com.isaaclamb.pettytracker.ui.trackerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(navController: NavController) {
     val viewModel = trackerViewModel { app, _ -> DashboardViewModel(app) }
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var choosingType by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -97,15 +94,6 @@ fun DashboardScreen(navController: NavController) {
             )
         },
         bottomBar = { TrackerNavigationBar(navController) },
-        floatingActionButton = {
-            if (!state.isEmpty) {
-                ExtendedFloatingActionButton(
-                    onClick = { choosingType = true },
-                    icon = { Icon(Icons.Outlined.Add, contentDescription = null) },
-                    text = { Text(stringResource(R.string.action_add)) },
-                )
-            }
-        },
     ) { padding ->
         if (!state.loaded) return@Scaffold
         LazyColumn(
@@ -113,7 +101,7 @@ fun DashboardScreen(navController: NavController) {
                 start = 16.dp,
                 end = 16.dp,
                 top = padding.calculateTopPadding() + 4.dp,
-                bottom = padding.calculateBottomPadding() + 88.dp,
+                bottom = padding.calculateBottomPadding() + 24.dp,
             ),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier.fillMaxSize(),
@@ -125,110 +113,159 @@ fun DashboardScreen(navController: NavController) {
                 item { WelcomeState(onCreate = { navController.createRecord(it) }) }
                 return@LazyColumn
             }
+            item {
+                SummaryTiles(state, onMonthlyClick = { navController.selectTab(Tab.SUBSCRIPTIONS) })
+            }
+            item { QuickAddRow(onCreate = { navController.createRecord(it) }) }
             if (state.pastDue.isNotEmpty()) {
                 item { SectionHeader(stringResource(R.string.section_needs_attention)) }
                 items(state.pastDue, key = { "past-${it.deadline.kind}-${it.deadline.id}" }) { entry ->
-                    val deadline = entry.deadline
-                    RecordCard(
-                        kind = deadline.kind,
-                        title = deadline.title,
-                        subtitle = stringResource(deadline.kind.label),
-                        status = entry.status,
-                        statusText = deadlineText(deadline.kind, deadline.date),
-                        onClick = { navController.openRecord(deadline.kind, deadline.id) },
-                        trailing = if (deadline.kind == RecordKind.SUBSCRIPTION) {
-                            {
-                                IconButton(onClick = { viewModel.markRenewed(deadline.id) }) {
-                                    Icon(
-                                        Icons.Outlined.CheckCircle,
-                                        contentDescription = stringResource(R.string.action_mark_renewed_named, deadline.title),
-                                    )
-                                }
-                            }
-                        } else {
-                            null
-                        },
-                    )
+                    DeadlineCard(entry, navController, onMarkRenewed = viewModel::markRenewed)
                 }
             }
-            item { SectionHeader(stringResource(R.string.section_coming_up)) }
-            if (state.upcoming.isEmpty()) {
+            state.upcoming.forEach { (band, entries) ->
+                item(key = "band-$band") { SectionHeader(stringResource(band.title)) }
+                items(entries, key = { "soon-${it.deadline.kind}-${it.deadline.id}" }) { entry ->
+                    DeadlineCard(entry, navController)
+                }
+            }
+            if (state.pastDue.isEmpty() && state.upcoming.isEmpty()) {
                 item {
                     Text(
                         stringResource(R.string.coming_up_empty),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 4.dp),
-                    )
-                }
-            }
-            items(state.upcoming, key = { "soon-${it.deadline.kind}-${it.deadline.id}" }) { entry ->
-                val deadline = entry.deadline
-                RecordCard(
-                    kind = deadline.kind,
-                    title = deadline.title,
-                    subtitle = stringResource(deadline.kind.label),
-                    status = entry.status,
-                    statusText = deadlineText(deadline.kind, deadline.date),
-                    onClick = { navController.openRecord(deadline.kind, deadline.id) },
-                )
-            }
-            item { SectionHeader(stringResource(R.string.section_overview)) }
-            item {
-                CategoryCard(
-                    tab = Tab.WARRANTIES,
-                    count = pluralStringResource(R.plurals.products_count, state.warranties.count, state.warranties.count),
-                    detail = state.warranties.next?.let { deadlineText(RecordKind.WARRANTY, it.date) + " · " + it.title },
-                    onClick = { navController.selectTab(Tab.WARRANTIES) },
-                )
-            }
-            item {
-                val spend = state.monthlyTotals.entries.sortedBy { it.key }
-                    .joinToString(" + ") { (currency, amount) -> Money.format(amount, currency) }
-                CategoryCard(
-                    tab = Tab.SUBSCRIPTIONS,
-                    count = pluralStringResource(R.plurals.active_subscriptions, state.subscriptions.count, state.subscriptions.count),
-                    detail = listOfNotNull(
-                        spend.takeIf { it.isNotEmpty() }?.let { stringResource(R.string.per_month_estimate, it) },
-                        state.subscriptions.next?.let { deadlineText(RecordKind.SUBSCRIPTION, it.date) + " · " + it.title },
-                    ).joinToString("\n").ifEmpty { null },
-                    onClick = { navController.selectTab(Tab.SUBSCRIPTIONS) },
-                )
-            }
-            item {
-                CategoryCard(
-                    tab = Tab.DOCUMENTS,
-                    count = pluralStringResource(R.plurals.documents_count, state.documents.count, state.documents.count),
-                    detail = state.documents.next?.let { deadlineText(RecordKind.DOCUMENT, it.date) + " · " + it.title },
-                    onClick = { navController.selectTab(Tab.DOCUMENTS) },
-                )
-            }
-        }
-    }
-
-    if (choosingType) {
-        ModalBottomSheet(onDismissRequest = { choosingType = false }) {
-            Column(Modifier.navigationBarsPadding().padding(bottom = 16.dp)) {
-                Text(
-                    stringResource(R.string.add_sheet_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                )
-                RecordKind.entries.forEach { kind ->
-                    ListItem(
-                        headlineContent = { Text(stringResource(kind.addLabel)) },
-                        supportingContent = { Text(stringResource(kind.addHint)) },
-                        leadingContent = { Icon(kind.icon, contentDescription = null) },
-                        modifier = Modifier.clickable(role = Role.Button) {
-                            choosingType = false
-                            navController.createRecord(kind)
-                        },
+                        modifier = Modifier.padding(vertical = 8.dp),
                     )
                 }
             }
         }
     }
 }
+
+private val DashboardBand.title: Int
+    get() = when (this) {
+        DashboardBand.WEEK -> R.string.section_next_7_days
+        DashboardBand.MONTH -> R.string.section_next_30_days
+        DashboardBand.LATER -> R.string.section_later
+    }
+
+@Composable
+private fun DeadlineCard(entry: DashboardEntry, navController: NavController, onMarkRenewed: ((Long) -> Unit)? = null) {
+    val deadline = entry.deadline
+    RecordCard(
+        kind = deadline.kind,
+        title = deadline.title,
+        subtitle = null,
+        status = entry.status,
+        statusText = deadlineText(deadline.kind, deadline.date),
+        onClick = { navController.openRecord(deadline.kind, deadline.id) },
+        trailing = if (onMarkRenewed != null && deadline.kind == RecordKind.SUBSCRIPTION) {
+            {
+                IconButton(onClick = { onMarkRenewed(deadline.id) }) {
+                    Icon(
+                        Icons.Outlined.CheckCircle,
+                        contentDescription = stringResource(R.string.action_mark_renewed_named, deadline.title),
+                    )
+                }
+            }
+        } else {
+            null
+        },
+    )
+}
+
+@Composable
+private fun SummaryTiles(state: DashboardState, onMonthlyClick: () -> Unit) {
+    val statusColors = LocalStatusColors.current
+    val spend = state.monthlyTotals.entries.minByOrNull { it.key }
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+        SummaryTile(
+            value = state.pastDue.size.toString(),
+            label = stringResource(R.string.tile_overdue),
+            color = if (state.pastDue.isEmpty()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.error,
+            modifier = Modifier.weight(1f),
+        )
+        SummaryTile(
+            value = state.upcomingCount.toString(),
+            label = stringResource(R.string.tile_due_soon),
+            color = if (state.upcomingCount == 0) MaterialTheme.colorScheme.onSurface else statusColors.soon,
+            modifier = Modifier.weight(1f),
+        )
+        SummaryTile(
+            value = spend?.let { Money.format(it.value, it.key) } ?: "–",
+            label = if (state.monthlyTotals.size > 1 && spend != null) {
+                stringResource(R.string.tile_per_month_currency, spend.key)
+            } else {
+                stringResource(R.string.tile_per_month)
+            },
+            color = MaterialTheme.colorScheme.onSurface,
+            onClick = onMonthlyClick,
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+private fun SummaryTile(value: String, label: String, color: Color, modifier: Modifier = Modifier, onClick: (() -> Unit)? = null) {
+    val shape = RoundedCornerShape(16.dp)
+    val content: @Composable () -> Unit = {
+        Column(Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
+            Text(
+                value,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = color,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+    if (onClick != null) {
+        Surface(onClick = onClick, shape = shape, color = MaterialTheme.colorScheme.surfaceContainerHigh, modifier = modifier, content = content)
+    } else {
+        Surface(shape = shape, color = MaterialTheme.colorScheme.surfaceContainerHigh, modifier = modifier.semantics(mergeDescendants = true) {}, content = content)
+    }
+}
+
+@Composable
+private fun QuickAddRow(onCreate: (RecordKind) -> Unit) {
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+        RecordKind.entries.forEach { kind ->
+            val description = stringResource(kind.addLabel)
+            Surface(
+                onClick = { onCreate(kind) },
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.weight(1f).semantics { contentDescription = description },
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.padding(vertical = 14.dp),
+                ) {
+                    Icon(kind.icon, contentDescription = null)
+                    Text(stringResource(kind.quickAddLabel), style = MaterialTheme.typography.labelLarge, maxLines = 1)
+                }
+            }
+        }
+    }
+}
+
+private val RecordKind.quickAddLabel: Int
+    get() = when (this) {
+        RecordKind.WARRANTY -> R.string.quick_add_product
+        RecordKind.SUBSCRIPTION -> R.string.kind_subscription
+        RecordKind.DOCUMENT -> R.string.kind_document
+    }
 
 private val RecordKind.addLabel: Int
     get() = when (this) {
@@ -236,39 +273,6 @@ private val RecordKind.addLabel: Int
         RecordKind.SUBSCRIPTION -> R.string.action_add_subscription
         RecordKind.DOCUMENT -> R.string.action_add_document
     }
-
-private val RecordKind.addHint: Int
-    get() = when (this) {
-        RecordKind.WARRANTY -> R.string.add_product_hint
-        RecordKind.SUBSCRIPTION -> R.string.add_subscription_hint
-        RecordKind.DOCUMENT -> R.string.add_document_hint
-    }
-
-@Composable
-private fun CategoryCard(tab: Tab, count: String, detail: String?, onClick: () -> Unit) {
-    OutlinedCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            modifier = Modifier.padding(16.dp),
-        ) {
-            Icon(tab.icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(stringResource(tab.label), style = MaterialTheme.typography.titleMedium)
-                Text(count, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                if (detail != null) {
-                    Text(
-                        detail,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
 private fun WelcomeState(onCreate: (RecordKind) -> Unit) {

@@ -39,9 +39,10 @@ import com.isaaclamb.pettytracker.ui.DocumentDetailRoute
 import com.isaaclamb.pettytracker.ui.DocumentEditRoute
 import com.isaaclamb.pettytracker.ui.Formats
 import com.isaaclamb.pettytracker.ui.components.AttachmentEditor
-import com.isaaclamb.pettytracker.ui.components.AttachmentList
+import com.isaaclamb.pettytracker.ui.components.DetailAttachments
 import com.isaaclamb.pettytracker.ui.components.ConfirmDialog
 import com.isaaclamb.pettytracker.ui.components.DateField
+import com.isaaclamb.pettytracker.ui.components.DetailCard
 import com.isaaclamb.pettytracker.ui.components.DetailRow
 import com.isaaclamb.pettytracker.ui.components.DetailScaffold
 import com.isaaclamb.pettytracker.ui.components.EditScaffold
@@ -53,6 +54,7 @@ import com.isaaclamb.pettytracker.ui.components.NoMatches
 import com.isaaclamb.pettytracker.ui.components.RecordCard
 import com.isaaclamb.pettytracker.ui.components.SearchField
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
+import com.isaaclamb.pettytracker.ui.components.StatusSection
 import com.isaaclamb.pettytracker.ui.components.TabScaffold
 import com.isaaclamb.pettytracker.ui.components.deadlineText
 import com.isaaclamb.pettytracker.ui.trackerViewModel
@@ -89,16 +91,19 @@ fun DocumentListScreen(navController: NavController) {
         if (state.items.isEmpty()) {
             item { NoMatches() }
         }
-        items(state.items, key = { it.document.id }) { item ->
-            RecordCard(
-                kind = RecordKind.DOCUMENT,
-                title = item.document.title,
-                subtitle = item.document.subtitle(),
-                status = item.status,
-                statusText = item.document.expiresOn?.let { deadlineText(RecordKind.DOCUMENT, it) }
-                    ?: stringResource(R.string.document_no_expiry),
-                onClick = { navController.navigate(DocumentDetailRoute(item.document.id)) },
-            )
+        StatusSection.group(state.items) { it.status }.forEach { (section, items) ->
+            item(key = "section-$section") { SectionHeader(stringResource(section.title(RecordKind.DOCUMENT))) }
+            items(items, key = { it.document.id }) { item ->
+                RecordCard(
+                    kind = RecordKind.DOCUMENT,
+                    title = item.document.title,
+                    subtitle = item.document.subtitle(),
+                    status = item.status,
+                    statusText = item.document.expiresOn?.let { deadlineText(RecordKind.DOCUMENT, it) }
+                        ?: stringResource(R.string.document_no_expiry),
+                    onClick = { navController.navigate(DocumentDetailRoute(item.document.id)) },
+                )
+            }
         }
     }
 }
@@ -173,24 +178,14 @@ fun DocumentDetailScreen(navController: NavController) {
             }
         }
         SectionHeader(stringResource(R.string.section_details))
-        SelectionContainer {
-            Column {
-                DetailRow(stringResource(R.string.field_issuer), document.issuer)
-                DetailRow(stringResource(R.string.field_reference), document.reference)
-                DetailRow(stringResource(R.string.field_issued_on), document.issuedOn?.let(Formats::date))
-                DetailRow(stringResource(R.string.field_expires_on), document.expiresOn?.let(Formats::date))
-            }
+        DetailCard {
+            DetailRow(stringResource(R.string.field_issuer), document.issuer)
+            DetailRow(stringResource(R.string.field_reference), document.reference)
+            DetailRow(stringResource(R.string.field_issued_on), document.issuedOn?.let(Formats::date))
+            DetailRow(stringResource(R.string.field_expires_on), document.expiresOn?.let(Formats::date))
         }
         SectionHeader(stringResource(R.string.section_attachments))
-        if (state.attachments.isEmpty()) {
-            Text(
-                stringResource(R.string.attachments_none_document),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        } else {
-            AttachmentList(state.attachments, viewModel.attachmentStore)
-        }
+        DetailAttachments(viewModel, state.attachments, stringResource(R.string.attachments_none_document))
         if (document.notes.isNotBlank()) {
             SectionHeader(stringResource(R.string.field_notes))
             SelectionContainer { Text(document.notes, style = MaterialTheme.typography.bodyLarge) }

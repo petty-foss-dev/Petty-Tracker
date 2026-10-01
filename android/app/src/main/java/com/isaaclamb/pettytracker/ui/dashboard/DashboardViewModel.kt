@@ -21,16 +21,24 @@ import java.time.LocalDate
 
 data class DashboardEntry(val deadline: Deadline, val status: DeadlineStatus)
 
-data class CategorySummary(val count: Int = 0, val next: Deadline? = null)
+enum class DashboardBand {
+    WEEK, MONTH, LATER;
+
+    companion object {
+        fun of(days: Long) = when {
+            days <= 7 -> WEEK
+            days <= 30 -> MONTH
+            else -> LATER
+        }
+    }
+}
 
 data class DashboardState(
     val loaded: Boolean = false,
     val isEmpty: Boolean = true,
     val pastDue: List<DashboardEntry> = emptyList(),
-    val upcoming: List<DashboardEntry> = emptyList(),
-    val warranties: CategorySummary = CategorySummary(),
-    val subscriptions: CategorySummary = CategorySummary(),
-    val documents: CategorySummary = CategorySummary(),
+    val upcoming: List<Pair<DashboardBand, List<DashboardEntry>>> = emptyList(),
+    val upcomingCount: Int = 0,
     val monthlyTotals: Map<String, BigDecimal> = emptyMap(),
     val remindersEnabled: Boolean = false,
     val reminderPromptDismissed: Boolean = true,
@@ -58,20 +66,14 @@ class DashboardViewModel(private val app: TrackerApplication) : ViewModel() {
                 (it.deadline.kind != RecordKind.WARRANTY || it.deadline.daysFrom(today) >= -RECENT_WARRANTY_DAYS)
         }.reversed()
         val upcoming = entries.filter { it.status == DeadlineStatus.TODAY || it.status == DeadlineStatus.SOON }
-
-        fun summary(kind: RecordKind, count: Int) = CategorySummary(
-            count = count,
-            next = deadlines.filter { it.kind == kind && !it.date.isBefore(today) }.minByOrNull { it.date },
-        )
+        val banded = upcoming.groupBy { DashboardBand.of(it.deadline.daysFrom(today)) }
 
         DashboardState(
             loaded = true,
             isEmpty = products.isEmpty() && subscriptions.isEmpty() && documents.isEmpty(),
             pastDue = pastDue,
-            upcoming = upcoming,
-            warranties = summary(RecordKind.WARRANTY, products.size),
-            subscriptions = summary(RecordKind.SUBSCRIPTION, subscriptions.count { it.isActive }),
-            documents = summary(RecordKind.DOCUMENT, documents.size),
+            upcoming = DashboardBand.entries.mapNotNull { band -> banded[band]?.let { band to it } },
+            upcomingCount = upcoming.size,
             monthlyTotals = monthlyTotals(subscriptions),
             remindersEnabled = settings.remindersEnabled,
             reminderPromptDismissed = settings.reminderPromptDismissed,

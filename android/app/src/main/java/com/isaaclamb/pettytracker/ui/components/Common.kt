@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Autorenew
@@ -89,6 +90,33 @@ fun deadlineText(kind: RecordKind, date: LocalDate, today: LocalDate = LocalDate
 }
 
 private const val RELATIVE_WINDOW_DAYS = 60
+
+/** List sections in reading order: what needs action, what's fine, what has no date, what's over. */
+enum class StatusSection {
+    SOON, OK, UNDATED, PAST;
+
+    fun title(kind: RecordKind): Int = when (this) {
+        SOON -> if (kind == RecordKind.DOCUMENT) R.string.filter_expiring else R.string.filter_ending
+        OK -> if (kind == RecordKind.DOCUMENT) R.string.filter_valid else R.string.filter_covered
+        UNDATED -> if (kind == RecordKind.DOCUMENT) R.string.document_no_expiry else R.string.warranty_no_date
+        PAST -> if (kind == RecordKind.DOCUMENT) R.string.filter_expired else R.string.section_ended
+    }
+
+    companion object {
+        fun of(status: DeadlineStatus) = when (status) {
+            DeadlineStatus.TODAY, DeadlineStatus.SOON -> SOON
+            DeadlineStatus.OK -> OK
+            DeadlineStatus.NONE -> UNDATED
+            DeadlineStatus.PAST -> PAST
+        }
+
+        /** Splits items into non-empty sections, keeping each section's order. */
+        fun <T> group(items: List<T>, status: (T) -> DeadlineStatus): List<Pair<StatusSection, List<T>>> {
+            val grouped = items.groupBy { of(status(it)) }
+            return entries.mapNotNull { section -> grouped[section]?.let { section to it } }
+        }
+    }
+}
 
 @Composable
 fun statusColors(status: DeadlineStatus): Pair<Color, Color> {
@@ -283,6 +311,16 @@ fun ConfirmDialog(
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
     )
+}
+
+/** Groups a detail screen's label/value rows on one card, with the values selectable. */
+@Composable
+fun DetailCard(content: @Composable () -> Unit) {
+    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+        SelectionContainer {
+            Column(Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) { content() }
+        }
+    }
 }
 
 @Composable

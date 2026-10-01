@@ -19,6 +19,7 @@ import com.isaaclamb.pettytracker.domain.sortRank
 import com.isaaclamb.pettytracker.domain.matches
 import com.isaaclamb.pettytracker.ui.AttachmentDraft
 import com.isaaclamb.pettytracker.ui.AttachmentFormViewModel
+import com.isaaclamb.pettytracker.ui.RecordDetailViewModel
 import com.isaaclamb.pettytracker.ui.ProductDetailRoute
 import com.isaaclamb.pettytracker.ui.ProductEditRoute
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,9 +77,8 @@ data class ProductDetailState(
     val leadDays: Int = 0,
 )
 
-class ProductDetailViewModel(private val app: TrackerApplication, handle: SavedStateHandle) : ViewModel() {
-    private val id = handle.toRoute<ProductDetailRoute>().id
-    val attachmentStore = app.container.attachmentStore
+class ProductDetailViewModel(app: TrackerApplication, handle: SavedStateHandle) :
+    RecordDetailViewModel(app, OwnerType.PRODUCT, handle.toRoute<ProductDetailRoute>().id) {
 
     val state: StateFlow<ProductDetailState> = combine(
         app.container.repository.product(id),

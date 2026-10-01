@@ -18,7 +18,6 @@
     <string name="kind_subscription">Subscription</string>
     <string name="kind_document">Document</string>
 
-    <string name="action_add">Add</string>
     <string name="action_add_product">Add product</string>
     <string name="action_add_subscription">Add subscription</string>
     <string name="action_add_document">Add document</string>
@@ -43,6 +42,9 @@
     <string name="action_share_details">Share details</string>
     <string name="action_share_named">Share %1$s</string>
     <string name="action_remove_named">Remove %1$s</string>
+    <string name="action_remove">Remove</string>
+    <string name="remove_attachment_title">Remove %1$s?</string>
+    <string name="remove_attachment_body">The file will be deleted from this device.</string>
     <string name="action_mark_renewed">Mark renewed</string>
     <string name="action_mark_renewed_named">Mark %1$s renewed</string>
     <string name="action_mark_canceled">Mark canceled</string>
@@ -50,17 +52,19 @@
     <string name="action_export">Export</string>
     <string name="action_import">Import</string>
 
-    <string name="add_sheet_title">What do you want to keep?</string>
-    <string name="add_product_hint">Receipt, serial number and warranty</string>
-    <string name="add_subscription_hint">Price, billing cycle and next renewal</string>
-    <string name="add_document_hint">Passport, licence, insurance or ID</string>
 
     <string name="welcome_title">Keep it all in one place</string>
     <string name="welcome_body">Track warranties, subscriptions and document expiry dates. Everything stays on this phone.</string>
+    <string name="section_next_7_days">Next 7 days</string>
+    <string name="section_next_30_days">Next 30 days</string>
+    <string name="section_later">Later</string>
+    <string name="tile_overdue">Overdue</string>
+    <string name="tile_due_soon">Due soon</string>
+    <string name="tile_per_month">Per month</string>
+    <string name="tile_per_month_currency">Per month, %1$s</string>
+    <string name="quick_add_product">Product</string>
     <string name="section_needs_attention">Needs attention</string>
-    <string name="section_coming_up">Coming up</string>
     <string name="coming_up_empty">Nothing due within your reminder windows.</string>
-    <string name="section_overview">Overview</string>
     <string name="reminder_prompt_title">Get reminded in time</string>
     <string name="reminder_prompt_body">Allow notifications so petty: Tracker can tell you before warranties end, subscriptions renew and documents expire.</string>
 
@@ -87,6 +91,7 @@
     <string name="filter_active">Active</string>
     <string name="filter_canceled">Canceled</string>
     <string name="filter_valid">Valid</string>
+    <string name="section_ended">Ended</string>
     <string name="filter_expiring">Expiring soon</string>
 
     <string name="relative_today">today</string>
@@ -132,6 +137,7 @@
     <string name="field_period">Period</string>
     <string name="field_next_renewal">Next renewal</string>
     <string name="field_monthly_cost">Monthly cost</string>
+    <string name="field_yearly_cost">Yearly cost</string>
     <string name="field_document_title">Document name</string>
     <string name="field_issuer">Issued by</string>
     <string name="field_reference">Document number</string>
@@ -158,8 +164,8 @@
         <item quantity="one">%d year</item>
         <item quantity="other">%d years</item>
     </plurals>
-    <string name="attachments_none_product">No receipts or photos. Edit the product to add them.</string>
-    <string name="attachments_none_document">No scans or files. Edit the document to add them.</string>
+    <string name="attachments_none_product">Add a photo of the product, its receipt, serial label or manual.</string>
+    <string name="attachments_none_document">Add a photo or scan so the document is on hand when you need it.</string>
     <string name="share_product_subject">Product details: %1$s</string>
 
     <string name="document_valid">Valid</string>
@@ -174,18 +180,11 @@
     <string name="next_renewal_hint">Future renewals follow this date, keeping month-end dates at month end</string>
     <string name="renewal_passed_hint">The renewal date has passed. Mark it renewed to move to the next billing date.</string>
     <string name="price_per_cycle">%1$s · %2$s</string>
+    <string name="per_year_estimate">≈ %1$s per year</string>
     <string name="per_month_estimate">≈ %1$s per month</string>
     <plurals name="active_subscriptions">
         <item quantity="one">%d active subscription</item>
         <item quantity="other">%d active subscriptions</item>
-    </plurals>
-    <plurals name="products_count">
-        <item quantity="one">%d product</item>
-        <item quantity="other">%d products</item>
-    </plurals>
-    <plurals name="documents_count">
-        <item quantity="one">%d document</item>
-        <item quantity="other">%d documents</item>
     </plurals>
     <plurals name="cycle_days">
         <item quantity="one">Every day</item>

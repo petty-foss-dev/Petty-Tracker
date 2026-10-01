@@ -13,6 +13,8 @@ import androidx.exifinterface.media.ExifInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 /** Imported files live under filesDir/attachments with random names; only granted URIs leave the app. */
@@ -57,14 +59,22 @@ class AttachmentStore(private val context: Context) {
     /** Reserves a file for the camera to write into. */
     fun newPhotoFile(): File = file(newFileName("jpg"))
 
-    fun photoAttachment(file: File, ownerType: OwnerType, displayName: String) = Attachment(
-        ownerType = ownerType,
-        ownerId = 0,
-        displayName = displayName,
-        mimeType = "image/jpeg",
-        fileName = file.name,
-        sizeBytes = file.length(),
-    )
+    /** The camera's photo as an attachment, or null after removing the reserved file if nothing was taken. */
+    fun capturedPhoto(fileName: String, success: Boolean, ownerType: OwnerType): Attachment? {
+        val file = file(fileName)
+        if (!success || file.length() == 0L) {
+            file.delete()
+            return null
+        }
+        return Attachment(
+            ownerType = ownerType,
+            ownerId = 0,
+            displayName = "Photo ${LocalDateTime.now().format(PHOTO_NAME_FORMAT)}.jpg",
+            mimeType = "image/jpeg",
+            fileName = file.name,
+            sizeBytes = file.length(),
+        )
+    }
 
     fun delete(fileNames: Collection<String>) {
         fileNames.forEach { file(it).delete() }
@@ -107,5 +117,6 @@ class AttachmentStore(private val context: Context) {
         const val DIRECTORY = "attachments"
         private const val ORPHAN_AGE_MILLIS = 24L * 60 * 60 * 1000
         private val EXTENSION = Regex("[A-Za-z0-9]{1,10}")
+        private val PHOTO_NAME_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH.mm.ss")
     }
 }

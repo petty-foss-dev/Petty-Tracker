@@ -46,10 +46,11 @@ import com.isaaclamb.pettytracker.ui.Formats
 import com.isaaclamb.pettytracker.ui.ProductDetailRoute
 import com.isaaclamb.pettytracker.ui.ProductEditRoute
 import com.isaaclamb.pettytracker.ui.components.AttachmentEditor
-import com.isaaclamb.pettytracker.ui.components.AttachmentList
+import com.isaaclamb.pettytracker.ui.components.DetailAttachments
 import com.isaaclamb.pettytracker.ui.components.ConfirmDialog
 import com.isaaclamb.pettytracker.ui.components.CurrencyField
 import com.isaaclamb.pettytracker.ui.components.DateField
+import com.isaaclamb.pettytracker.ui.components.DetailCard
 import com.isaaclamb.pettytracker.ui.components.DetailRow
 import com.isaaclamb.pettytracker.ui.components.DetailScaffold
 import com.isaaclamb.pettytracker.ui.components.EditScaffold
@@ -61,6 +62,7 @@ import com.isaaclamb.pettytracker.ui.components.NoMatches
 import com.isaaclamb.pettytracker.ui.components.RecordCard
 import com.isaaclamb.pettytracker.ui.components.SearchField
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
+import com.isaaclamb.pettytracker.ui.components.StatusSection
 import com.isaaclamb.pettytracker.ui.components.TabScaffold
 import com.isaaclamb.pettytracker.ui.components.deadlineText
 import com.isaaclamb.pettytracker.ui.components.shareText
@@ -99,16 +101,19 @@ fun ProductListScreen(navController: NavController) {
         if (state.items.isEmpty()) {
             item { NoMatches() }
         }
-        items(state.items, key = { it.product.id }) { item ->
-            RecordCard(
-                kind = RecordKind.WARRANTY,
-                title = item.product.name,
-                subtitle = item.product.subtitle(),
-                status = item.status,
-                statusText = item.product.warrantyExpires?.let { deadlineText(RecordKind.WARRANTY, it) }
-                    ?: stringResource(R.string.warranty_no_date),
-                onClick = { navController.navigate(ProductDetailRoute(item.product.id)) },
-            )
+        StatusSection.group(state.items) { it.status }.forEach { (section, items) ->
+            item(key = "section-$section") { SectionHeader(stringResource(section.title(RecordKind.WARRANTY))) }
+            items(items, key = { it.product.id }) { item ->
+                RecordCard(
+                    kind = RecordKind.WARRANTY,
+                    title = item.product.name,
+                    subtitle = item.product.subtitle(),
+                    status = item.status,
+                    statusText = item.product.warrantyExpires?.let { deadlineText(RecordKind.WARRANTY, it) }
+                        ?: stringResource(R.string.warranty_no_date),
+                    onClick = { navController.navigate(ProductDetailRoute(item.product.id)) },
+                )
+            }
         }
     }
 }
@@ -155,26 +160,16 @@ fun ProductDetailScreen(navController: NavController) {
     ) {
         WarrantyCard(product, state.leadDays)
         SectionHeader(stringResource(R.string.section_details))
-        SelectionContainer {
-            Column {
-                DetailRow(stringResource(R.string.field_brand), product.brand)
-                DetailRow(stringResource(R.string.field_model), product.model)
-                DetailRow(stringResource(R.string.field_serial), product.serialNumber)
-                DetailRow(stringResource(R.string.field_purchase_date), product.purchaseDate?.let(Formats::date))
-                DetailRow(stringResource(R.string.field_retailer), product.retailer)
-                DetailRow(stringResource(R.string.field_price), product.price?.let { Money.format(it, product.currency) })
-            }
+        DetailCard {
+            DetailRow(stringResource(R.string.field_brand), product.brand)
+            DetailRow(stringResource(R.string.field_model), product.model)
+            DetailRow(stringResource(R.string.field_serial), product.serialNumber)
+            DetailRow(stringResource(R.string.field_purchase_date), product.purchaseDate?.let(Formats::date))
+            DetailRow(stringResource(R.string.field_retailer), product.retailer)
+            DetailRow(stringResource(R.string.field_price), product.price?.let { Money.format(it, product.currency) })
         }
         SectionHeader(stringResource(R.string.section_attachments))
-        if (state.attachments.isEmpty()) {
-            Text(
-                stringResource(R.string.attachments_none_product),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        } else {
-            AttachmentList(state.attachments, viewModel.attachmentStore)
-        }
+        DetailAttachments(viewModel, state.attachments, stringResource(R.string.attachments_none_product))
         if (product.notes.isNotBlank()) {
             SectionHeader(stringResource(R.string.field_notes))
             SelectionContainer { Text(product.notes, style = MaterialTheme.typography.bodyLarge) }
@@ -230,7 +225,7 @@ private fun WarrantyCard(product: Product, leadDays: Int) {
                 val used = ChronoUnit.DAYS.between(start, today).coerceIn(0, total.toLong()).toFloat()
                 val percentLeft = ((1 - used / total) * 100).toInt()
                 LinearProgressIndicator(
-                    progress = { used / total },
+                    progress = { 1 - used / total },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Text(

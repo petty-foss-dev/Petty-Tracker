@@ -48,6 +48,21 @@ class TrackerRepository(
         }
     }
 
+    /** Attaches files already copied into the store, deleting the copies if the insert fails. */
+    suspend fun addAttachments(type: OwnerType, ownerId: Long, added: List<Attachment>) {
+        try {
+            dao.insertAttachments(added.map { it.copy(id = 0, ownerType = type, ownerId = ownerId) })
+        } catch (e: Exception) {
+            attachmentStore.delete(added.map { it.fileName })
+            throw e
+        }
+    }
+
+    suspend fun removeAttachment(attachment: Attachment) {
+        dao.deleteAttachments(listOf(attachment))
+        attachmentStore.delete(listOf(attachment.fileName))
+    }
+
     suspend fun referencedFileNames(): Set<String> = dao.attachmentFileNames().toSet()
 
     private suspend fun saveWithAttachments(

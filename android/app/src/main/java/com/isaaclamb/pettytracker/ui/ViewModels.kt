@@ -23,8 +23,6 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 inline fun <reified VM : ViewModel> trackerViewModel(
@@ -101,13 +99,7 @@ abstract class AttachmentFormViewModel<F : Any>(
     fun newPhotoFile(): File = attachmentStore.newPhotoFile()
 
     fun onPhotoResult(fileName: String, success: Boolean) {
-        val file = attachmentStore.file(fileName)
-        if (success && file.length() > 0) {
-            val name = "Photo ${LocalDateTime.now().format(PHOTO_NAME_FORMAT)}.jpg"
-            add(attachmentStore.photoAttachment(file, ownerType, name))
-        } else {
-            file.delete()
-        }
+        attachmentStore.capturedPhoto(fileName, success, ownerType)?.let(::add)
     }
 
     fun remove(attachment: Attachment) {
@@ -129,8 +121,46 @@ abstract class AttachmentFormViewModel<F : Any>(
     override fun onCleared() {
         if (!saved) attachmentStore.delete(form.draft().added.map { it.fileName })
     }
+}
 
-    private companion object {
-        val PHOTO_NAME_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH.mm.ss")
+/** A record's detail screen, which adds and removes attachments without opening the editor. */
+abstract class RecordDetailViewModel(
+    protected val app: TrackerApplication,
+    private val ownerType: OwnerType,
+    protected val id: Long,
+) : ViewModel() {
+    val attachmentStore = app.container.attachmentStore
+
+    var importing by mutableStateOf(false)
+        private set
+
+    var message by mutableStateOf<Int?>(null)
+
+    fun addFiles(uris: List<Uri>) {
+        if (uris.isEmpty()) return
+        viewModelScope.launch {
+            importing = true
+            val imported = uris.mapNotNull { uri ->
+                runCatching { attachmentStore.import(uri, ownerType) }
+                    .onFailure { message = R.string.attachment_import_failed }
+                    .getOrNull()
+            }
+            attach(imported)
+            importing = false
+        }
+    }
+
+    fun onPhotoResult(fileName: String, success: Boolean) {
+        attachmentStore.capturedPhoto(fileName, success, ownerType)?.let { viewModelScope.launch { attach(listOf(it)) } }
+    }
+
+    fun remove(attachment: Attachment) {
+        viewModelScope.launch { app.container.repository.removeAttachment(attachment) }
+    }
+
+    private suspend fun attach(attachments: List<Attachment>) {
+        if (attachments.isEmpty()) return
+        runCatching { app.container.repository.addAttachments(ownerType, id, attachments) }
+            .onFailure { message = R.string.attachment_import_failed }
     }
 }
