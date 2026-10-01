@@ -92,7 +92,7 @@ private fun AttachmentRow(
     onClick: () -> Unit,
     actions: @Composable () -> Unit,
 ) {
-    OutlinedCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+    OutlinedCard(onClick = onClick, colors = elevatedCardColors(), shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),

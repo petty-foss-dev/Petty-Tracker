@@ -36,7 +36,14 @@ private val Context.dataStore by preferencesDataStore("settings")
 class SettingsRepository(private val context: Context) {
     val settings: Flow<Settings> = context.dataStore.data.map { it.toSettings() }
 
+    /** Device-only display preference, kept out of [Settings] so it never travels in backups. */
+    val pureBlack: Flow<Boolean> = context.dataStore.data.map { it[PURE_BLACK] ?: false }
+
     suspend fun current(): Settings = settings.first()
+
+    suspend fun setPureBlack(enabled: Boolean) {
+        context.dataStore.edit { it[PURE_BLACK] = enabled }
+    }
 
     suspend fun update(transform: (Settings) -> Settings) {
         context.dataStore.edit { prefs ->
@@ -72,5 +79,6 @@ class SettingsRepository(private val context: Context) {
         val DOCUMENT_LEAD = intPreferencesKey("document_lead_days")
         val CURRENCY = stringPreferencesKey("default_currency")
         val PROMPT_DISMISSED = booleanPreferencesKey("reminder_prompt_dismissed")
+        val PURE_BLACK = booleanPreferencesKey("pure_black")
     }
 }

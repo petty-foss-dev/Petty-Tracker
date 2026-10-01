@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,10 +41,12 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.isaaclamb.pettytracker.R
 import com.isaaclamb.pettytracker.domain.DeadlineStatus
 import com.isaaclamb.pettytracker.domain.RecordKind
@@ -124,8 +127,8 @@ fun statusColors(status: DeadlineStatus): Pair<Color, Color> {
     val statusColors = LocalStatusColors.current
     return when (status) {
         DeadlineStatus.PAST, DeadlineStatus.TODAY -> scheme.errorContainer to scheme.onErrorContainer
-        DeadlineStatus.SOON -> statusColors.soonContainer to statusColors.onSoonContainer
-        DeadlineStatus.OK -> scheme.primaryContainer to scheme.onPrimaryContainer
+        DeadlineStatus.SOON -> statusColors.soonContainer to statusColors.soon
+        DeadlineStatus.OK -> statusColors.okContainer to statusColors.ok
         DeadlineStatus.NONE -> scheme.surfaceContainerHighest to scheme.onSurfaceVariant
     }
 }
@@ -163,7 +166,7 @@ fun RecordCard(
     modifier: Modifier = Modifier,
     trailing: (@Composable () -> Unit)? = null,
 ) {
-    OutlinedCard(onClick = onClick, modifier = modifier.fillMaxWidth()) {
+    OutlinedCard(onClick = onClick, colors = elevatedCardColors(), shape = CardShape, modifier = modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(14.dp),
@@ -173,7 +176,7 @@ fun RecordCard(
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium.copy(fontFamily = FontFamily.Serif, fontWeight = FontWeight.SemiBold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -193,17 +196,25 @@ fun RecordCard(
     }
 }
 
+/** Hearth's card shape and elevated warm surface, shared by record, detail and attachment cards. */
+val CardShape = RoundedCornerShape(20.dp)
+
+@Composable
+fun elevatedCardColors() = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+
+/** Hearth's overline: a small, tracked, uppercase section label. */
 @Composable
 fun SectionHeader(text: String, modifier: Modifier = Modifier, action: (@Composable () -> Unit)? = null) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth().padding(top = 8.dp),
+        modifier = modifier.fillMaxWidth().padding(top = 12.dp, start = 4.dp),
     ) {
         Text(
-            text,
-            style = MaterialTheme.typography.titleSmall,
+            text.uppercase(),
+            style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.primary,
+            letterSpacing = 1.5.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.weight(1f).semantics { heading() },
         )
         action?.invoke()
@@ -316,7 +327,7 @@ fun ConfirmDialog(
 /** Groups a detail screen's label/value rows on one card, with the values selectable. */
 @Composable
 fun DetailCard(content: @Composable () -> Unit) {
-    OutlinedCard(modifier = Modifier.fillMaxWidth()) {
+    OutlinedCard(colors = elevatedCardColors(), shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         SelectionContainer {
             Column(Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) { content() }
         }

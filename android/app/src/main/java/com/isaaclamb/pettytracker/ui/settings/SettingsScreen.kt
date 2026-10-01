@@ -84,6 +84,7 @@ sealed interface SettingsMessage {
 class SettingsViewModel(private val app: TrackerApplication) : ViewModel() {
     private val repository = app.container.settingsRepository
     val settings = repository.settings
+    val pureBlack = repository.pureBlack
 
     var busy by mutableStateOf(false)
         private set
@@ -94,6 +95,10 @@ class SettingsViewModel(private val app: TrackerApplication) : ViewModel() {
             repository.update(transform)
             if (recheck) ReminderScheduler.checkNow(app)
         }
+    }
+
+    fun setPureBlack(enabled: Boolean) {
+        viewModelScope.launch { repository.setPureBlack(enabled) }
     }
 
     fun export(uri: Uri) = runBackupTask {
@@ -130,6 +135,7 @@ private val LEAD_DAY_OPTIONS = listOf(1, 3, 7, 14, 30, 60, 90)
 fun SettingsScreen(navController: NavController) {
     val viewModel = trackerViewModel { app, _ -> SettingsViewModel(app) }
     val settings by viewModel.settings.collectAsStateWithLifecycle(null)
+    val pureBlack by viewModel.pureBlack.collectAsStateWithLifecycle(false)
     val context = LocalContext.current
     val snackbar = remember { SnackbarHostState() }
     var pendingImport by rememberSaveable { mutableStateOf<String?>(null) }
@@ -187,9 +193,19 @@ fun SettingsScreen(navController: NavController) {
                     )
                 }
             }
+            SwitchRow(
+                title = stringResource(R.string.settings_pure_black),
+                body = stringResource(R.string.settings_pure_black_body),
+                checked = pureBlack,
+                onChange = viewModel::setPureBlack,
+            )
 
             SectionHeader(stringResource(R.string.settings_reminders))
-            ReminderToggle(current.remindersEnabled) { enabled ->
+            SwitchRow(
+                title = stringResource(R.string.settings_reminders_toggle),
+                body = stringResource(R.string.settings_reminders_toggle_body),
+                checked = current.remindersEnabled,
+            ) { enabled ->
                 viewModel.update({ it.copy(remindersEnabled = enabled) }, recheck = enabled)
             }
             if (current.remindersEnabled) {
@@ -280,23 +296,19 @@ private val ThemeMode.label: Int
     }
 
 @Composable
-private fun ReminderToggle(enabled: Boolean, onChange: (Boolean) -> Unit) {
+private fun SwitchRow(title: String, body: String, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .toggleable(value = enabled, role = Role.Switch, onValueChange = onChange)
+            .toggleable(value = checked, role = Role.Switch, onValueChange = onChange)
             .padding(vertical = 4.dp),
     ) {
         Column(Modifier.weight(1f)) {
-            Text(stringResource(R.string.settings_reminders_toggle), style = MaterialTheme.typography.bodyLarge)
-            Text(
-                stringResource(R.string.settings_reminders_toggle_body),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(body, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Switch(checked = enabled, onCheckedChange = null)
+        Switch(checked = checked, onCheckedChange = null)
     }
 }
 

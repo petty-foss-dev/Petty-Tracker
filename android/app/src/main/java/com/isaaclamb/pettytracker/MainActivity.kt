@@ -27,6 +27,7 @@ class MainActivity : ComponentActivity() {
         val settingsRepository = (application as TrackerApplication).container.settingsRepository
         setContent {
             val settings by settingsRepository.settings.collectAsStateWithLifecycle(initialValue = null)
+            val pureBlack by settingsRepository.pureBlack.collectAsStateWithLifecycle(initialValue = false)
             val current = settings ?: return@setContent
             val dark = current.themeMode.isDark()
             LaunchedEffect(dark) {
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     isAppearanceLightNavigationBars = !dark
                 }
             }
-            TrackerTheme(dark) {
+            TrackerTheme(dark, pureBlack) {
                 TrackerApp(openRequest = openRequest, onOpenHandled = { openRequest = null })
             }
         }

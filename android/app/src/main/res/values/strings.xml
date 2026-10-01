@@ -233,6 +233,8 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="settings_reminders">Reminders</string>
+    <string name="settings_pure_black">Pure black</string>
+    <string name="settings_pure_black_body">True black backgrounds in dark mode, easier on OLED screens</string>
     <string name="settings_reminders_toggle">Deadline reminders</string>
     <string name="settings_reminders_toggle_body">Notify before dates arrive and on the day</string>
     <string name="settings_notifications_blocked">Notifications are turned off for petty: Tracker.</string>
