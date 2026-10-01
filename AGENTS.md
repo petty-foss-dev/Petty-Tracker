@@ -8,6 +8,6 @@ All records stay on the device. Do not add accounts, analytics, ads, payment gat
 
 Codex owns review, testing, device and simulator verification, and source control. Implementation delegates must not commit, push, merge, change branches, or publish. Generated changes must be reviewed before they are built and exercised locally.
 
-Build iOS from `ios/` using the EnveKeep scheme on an iPhone Air simulator. Build Android from `android/` with `./gradlew :app:assembleDebug`. Run relevant tests and exercise changed screens. Report zero errors and zero new warnings, or state the exact blocker.
+Build iOS from `ios/` using the PettyTracker scheme on an iPhone Air simulator. Build Android from `android/` with `./gradlew :app:assembleDebug`. Run relevant tests and exercise changed screens. Report zero errors and zero new warnings, or state the exact blocker.
 
 Original source is licensed under AGPL-3.0-only. Preserve third-party notices. Never commit personal records, credentials, local SDK paths, signing files, or build products.

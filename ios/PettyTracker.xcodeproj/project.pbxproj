@@ -1,0 +1,989 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0370FE79965D593E13819362 /* SearchResultsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FD09985644FA4753159FCF /* SearchResultsSection.swift */; };
+		0C22962F084F28BA6D714E48 /* QuickCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6734D0CF447DF844F8E7CB52 /* QuickCapture.swift */; };
+		0D5819F9C1648787140AB464 /* ReceiptDetailsBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FDA00F3DE897D84D620C5C4 /* ReceiptDetailsBackupTests.swift */; };
+		1094F623C373F08E5A3B6405 /* QuickCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD8AF70E806AECBC5928181 /* QuickCaptureTests.swift */; };
+		1321F2A38F504EF3D6ECE255 /* ReceiptEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D02CD338BC97FBC5F06DBF /* ReceiptEditView.swift */; };
+		135EA9D28197B643CBBA63ED /* SubscriptionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B7062ADCB31C407857B600 /* SubscriptionEditView.swift */; };
+		1757DFCBDC39936AEF3CAF43 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA773AE811043576B6F0B36 /* Router.swift */; };
+		18F5146CEE4F1F8EEE9D9A79 /* ClaimPacketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */; };
+		1A7B62BE1B0E7CA7FFBB62ED /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74ADF3E9F4F4F11DD5167B04 /* ProductDetailView.swift */; };
+		1BE0DE55DB938E55FEA68AC9 /* ReceiptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEFAF7AC753A124EBFAB94E /* ReceiptParser.swift */; };
+		21EB2506B9014A2ED581BFC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 133F8C46CF4957530E7F82EA /* Assets.xcassets */; };
+		26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */; };
+		329B59C781EAD13D480FD1FC /* TextRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4787F1346DD6F964B1CDD005 /* TextRecognizer.swift */; };
+		4648B040828196EACFD30EE4 /* ReceiptFieldEditors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */; };
+		489CC4C29098603C5AF44B5E /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC765701130338823562782 /* Money.swift */; };
+		4B3040FD6BBB9090A7013503 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447635949807BBF2ADF1A3A5 /* Theme.swift */; };
+		4BCCA3AEA09175F55C28BB97 /* ReceiptReviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A47A29E1781757B19F2091 /* ReceiptReviewTests.swift */; };
+		50BACF547F3C434EDDC6603C /* SharedInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7763D328B4E00C9E87E9AE5 /* SharedInbox.swift */; };
+		5127B2758B5E4812D8EBB916 /* ReceiptDetailsParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA0DD4A23122F46AB831028 /* ReceiptDetailsParserTests.swift */; };
+		52FD6B0E169E2EB9374D7911 /* DocumentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3762AC8EF32871A3A90FD681 /* DocumentListView.swift */; };
+		5464EB03A1CA7AC546DDAE3A /* ImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349CF38A0C49D5C9F4D735A9 /* ImportTests.swift */; };
+		5A8B447695C99FF625A75968 /* ReceiptCSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55EAB07773A85C4E112221A6 /* ReceiptCSVTests.swift */; };
+		5C30F0C1DE07BB298652EEF8 /* ReceiptCSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F6BAF4441A19B9AEE72364 /* ReceiptCSV.swift */; };
+		619D8C770ABFAB2520EAD52E /* Editors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3259F6B70F0DD20770BC43 /* Editors.swift */; };
+		63C2CF032BAE3F556C21BD71 /* TextRecognizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2A498EF029183D1C7EA957 /* TextRecognizerTests.swift */; };
+		65E63CF07E0F559C10DCF94C /* RenewalsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C30510C168446D4076E11C9 /* RenewalsTests.swift */; };
+		6A8A7B1D6784E5AFDCC8E91D /* PettyTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB78A75D76D0954B00D159C /* PettyTrackerApp.swift */; };
+		6B0866DDEA36CF89C78A491F /* MoneyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562ACB569D2A6A78D7DFC1A7 /* MoneyTests.swift */; };
+		6B2669EEED1CFC4387E82B30 /* ReceiptReviewViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CEC552921A078D164C5024 /* ReceiptReviewViews.swift */; };
+		6BB23F773BA2850F402BB8F0 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF53A92A1ED4D9EC3613059 /* RootView.swift */; };
+		6C60277C0802259A36D94DC4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F505274184253C20475A62E9 /* SettingsView.swift */; };
+		74EDBCA1065B8B6C5B08A7B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DB220C6A2F7141F5BCEFAF9 /* Assets.xcassets */; };
+		77C572042537CF7B1671AA7A /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FF1F3983415627A025F1E /* DashboardView.swift */; };
+		79A516101DB51DE7B61FDAC4 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0F9DB4AA9CD5E5FCA7520 /* ReminderScheduler.swift */; };
+		7F84144E8CE7BC269CAB0038 /* PettyTrackerShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DACF2FAEEA2E24CA42A4EB60 /* PettyTrackerShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8051B8B70B2AC8D3C65974D1 /* ReceiptListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5FAC8A9473FC0548486933 /* ReceiptListView.swift */; };
+		808F54BC5B87199FA7615736 /* DocumentEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEBE76CF504FFC77017AF3E /* DocumentEditView.swift */; };
+		85F1CBE7E3729D4479414152 /* AttachmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3554AFB7F51691C675E39B28 /* AttachmentStore.swift */; };
+		8AFE4CC7CCD280FEF747D10B /* ReceiptReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36730EC5233FEB885009096B /* ReceiptReview.swift */; };
+		916C1A54F4F6EEBA2A0E105D /* LinkPickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD47AA4C03CD37A60881D18 /* LinkPickers.swift */; };
+		9C9970FCCAC275C8AC92ACF2 /* ReceiptBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A0A510A4EF1DA0CCC4432D /* ReceiptBrowseView.swift */; };
+		9CAE6D06D8E8F8280A2DA3B6 /* ReceiptParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6480EC73B8A5652AEB36A9 /* ReceiptParserTests.swift */; };
+		9F1A28112830BE71AC6797CC /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D19DA1DC93D2497D145C854 /* Day.swift */; };
+		A23250FC24927D31411913F1 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8DD2B899F07C337008FB06 /* Common.swift */; };
+		A4F41617A607D0D6493EA8B8 /* ReceiptDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A910F35E059DEFC72759E64E /* ReceiptDataTests.swift */; };
+		A94B65D38D357314764BB193 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 618A66C5CCDB10C9463DD967 /* ZIPFoundation */; };
+		A9EEBE1C36048864208AF1D1 /* ScanReceiptIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A51F4B0141E6D119EE29A90 /* ScanReceiptIntent.swift */; };
+		AEEC5E1B68092A9E774ED76A /* ClaimPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF78F17F99786D081179174B /* ClaimPacket.swift */; };
+		B2368EA696B5C456CD25AA95 /* Receipts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F752C01AAD8B13C8012E76 /* Receipts.swift */; };
+		B9A28DDBF1A5728E91739811 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BE437E0D13A7F55A0EE317 /* ShareViewController.swift */; };
+		BA402DC5E1054FF291C228D9 /* Deadlines.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAABF33E8BFAF20A5C2C701D /* Deadlines.swift */; };
+		C52C748010F107A57E748A61 /* ProductListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802548D6F8C10BF7564F7F5 /* ProductListView.swift */; };
+		C96B6F0C1311728F2B013187 /* android-device-backup.zip in Resources */ = {isa = PBXBuildFile; fileRef = D5C0067D34445B13A98C4DD3 /* android-device-backup.zip */; };
+		CC03FD1371FDBCC14A0E8EE1 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E577936CF1F9C3B03D79D1 /* BackupService.swift */; };
+		CD741593BE5AE70D7CD43DF2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3A63D488712C29A0CA424C /* Models.swift */; };
+		CE079256E85D8C48F79B32E6 /* Renewals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2086899ADAC6E4ADF77DF128 /* Renewals.swift */; };
+		D1987AFCD00E24864A0522D3 /* SubscriptionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8ADA30CC84B3DBC90236BFB /* SubscriptionListView.swift */; };
+		D44464E277FC3ED1D7092682 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92F6B4F8BEF6978789E80D7 /* TrackerStore.swift */; };
+		D4D62F58358D64147C426392 /* SubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE308FEFE75D3F9DFCAF0422 /* SubscriptionDetailView.swift */; };
+		DAB2D19FC525A5F3FD997834 /* ReceiptBrowseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836DFAA09108CBC751D12AB8 /* ReceiptBrowseTests.swift */; };
+		DE271AF01D389A2CA5C66F29 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A2D6BE3C67D2B227A18CD4 /* TestSupport.swift */; };
+		DEEFFCD33D6ACA33FF54E287 /* ReceiptCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBCFEA9FBB2DFC1B841FFF5 /* ReceiptCapture.swift */; };
+		E2FB0DA149CE74C0700E9B8B /* Attachments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50A13B8129CBBEE086C6E9C /* Attachments.swift */; };
+		E47A8591B4DDD36341921DD0 /* ProductEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE24AABA1D9E4FF65B815922 /* ProductEditView.swift */; };
+		E9B10519D7DE7D77E3D23FF0 /* SharedInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7763D328B4E00C9E87E9AE5 /* SharedInbox.swift */; };
+		EC1C33F122489816C4F3D88A /* BackupArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2AADA41FA7E45CA965A8A4 /* BackupArchive.swift */; };
+		EF8FBF66C628A6F7BF4CB7B1 /* ReceiptLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17942690A3FCC74A9FAFD7D0 /* ReceiptLinkTests.swift */; };
+		F771C56B595732693658229E /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05B964A2D79A8C2CECED02A /* Formats.swift */; };
+		FA407D55EBFA88DDA21D56D5 /* ReceiptDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D908FBCACE255DA70D93E /* ReceiptDetailView.swift */; };
+		FE3A27AC7E1F0BB9C8288CD4 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B6AA85061AC0BF719BAB38 /* DocumentDetailView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		94E35AC7AE4F8A0AA2C389D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9918746357EA9CD636A37B8A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 309FBCFD4A279A6E9541B8CF;
+			remoteInfo = PettyTracker;
+		};
+		A7EADAAC565E2B1EE301E832 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9918746357EA9CD636A37B8A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53F6C7BD1B53AD7E8DC4C953;
+			remoteInfo = PettyTrackerShare;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8A2861FC9C0A136028499CCD /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7F84144E8CE7BC269CAB0038 /* PettyTrackerShare.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0C30510C168446D4076E11C9 /* RenewalsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenewalsTests.swift; sourceTree = "<group>"; };
+		0C6480EC73B8A5652AEB36A9 /* ReceiptParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptParserTests.swift; sourceTree = "<group>"; };
+		0D19DA1DC93D2497D145C854 /* Day.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day.swift; sourceTree = "<group>"; };
+		0DA773AE811043576B6F0B36 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		133F8C46CF4957530E7F82EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		17942690A3FCC74A9FAFD7D0 /* ReceiptLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLinkTests.swift; sourceTree = "<group>"; };
+		189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupArchiveTests.swift; sourceTree = "<group>"; };
+		2086899ADAC6E4ADF77DF128 /* Renewals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renewals.swift; sourceTree = "<group>"; };
+		23A0A510A4EF1DA0CCC4432D /* ReceiptBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptBrowseView.swift; sourceTree = "<group>"; };
+		252D02E1266A72C787F49ADC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2C3A63D488712C29A0CA424C /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		2C3D908FBCACE255DA70D93E /* ReceiptDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDetailView.swift; sourceTree = "<group>"; };
+		2E3259F6B70F0DD20770BC43 /* Editors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Editors.swift; sourceTree = "<group>"; };
+		349CF38A0C49D5C9F4D735A9 /* ImportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTests.swift; sourceTree = "<group>"; };
+		3554AFB7F51691C675E39B28 /* AttachmentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentStore.swift; sourceTree = "<group>"; };
+		36730EC5233FEB885009096B /* ReceiptReview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReview.swift; sourceTree = "<group>"; };
+		3762AC8EF32871A3A90FD681 /* DocumentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListView.swift; sourceTree = "<group>"; };
+		3A51F4B0141E6D119EE29A90 /* ScanReceiptIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanReceiptIntent.swift; sourceTree = "<group>"; };
+		3BA0DD4A23122F46AB831028 /* ReceiptDetailsParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDetailsParserTests.swift; sourceTree = "<group>"; };
+		3DD47AA4C03CD37A60881D18 /* LinkPickers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPickers.swift; sourceTree = "<group>"; };
+		3FDA00F3DE897D84D620C5C4 /* ReceiptDetailsBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDetailsBackupTests.swift; sourceTree = "<group>"; };
+		40F6BAF4441A19B9AEE72364 /* ReceiptCSV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptCSV.swift; sourceTree = "<group>"; };
+		447635949807BBF2ADF1A3A5 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		4787F1346DD6F964B1CDD005 /* TextRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRecognizer.swift; sourceTree = "<group>"; };
+		54D02CD338BC97FBC5F06DBF /* ReceiptEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptEditView.swift; sourceTree = "<group>"; };
+		55EAB07773A85C4E112221A6 /* ReceiptCSVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptCSVTests.swift; sourceTree = "<group>"; };
+		562ACB569D2A6A78D7DFC1A7 /* MoneyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyTests.swift; sourceTree = "<group>"; };
+		5E8DD2B899F07C337008FB06 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		5EEBE76CF504FFC77017AF3E /* DocumentEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentEditView.swift; sourceTree = "<group>"; };
+		63E577936CF1F9C3B03D79D1 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
+		6734D0CF447DF844F8E7CB52 /* QuickCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCapture.swift; sourceTree = "<group>"; };
+		67C8DB1B0CF565C2F8F5AB4D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		68738514E3C93618A4D6CBD4 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
+		6DB220C6A2F7141F5BCEFAF9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		74ADF3E9F4F4F11DD5167B04 /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
+		7802548D6F8C10BF7564F7F5 /* ProductListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListView.swift; sourceTree = "<group>"; };
+		836DFAA09108CBC751D12AB8 /* ReceiptBrowseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptBrowseTests.swift; sourceTree = "<group>"; };
+		88BE437E0D13A7F55A0EE317 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		944970734028C220C5371703 /* PettyTrackerTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PettyTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		95A2D6BE3C67D2B227A18CD4 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
+		96FD09985644FA4753159FCF /* SearchResultsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsSection.swift; sourceTree = "<group>"; };
+		A02A087AC662771064F078F9 /* PettyTracker.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PettyTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4CEC552921A078D164C5024 /* ReceiptReviewViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReviewViews.swift; sourceTree = "<group>"; };
+		A50A13B8129CBBEE086C6E9C /* Attachments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachments.swift; sourceTree = "<group>"; };
+		A910F35E059DEFC72759E64E /* ReceiptDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDataTests.swift; sourceTree = "<group>"; };
+		AA2A498EF029183D1C7EA957 /* TextRecognizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRecognizerTests.swift; sourceTree = "<group>"; };
+		ABEFAF7AC753A124EBFAB94E /* ReceiptParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptParser.swift; sourceTree = "<group>"; };
+		ACC765701130338823562782 /* Money.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Money.swift; sourceTree = "<group>"; };
+		AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimPacketTests.swift; sourceTree = "<group>"; };
+		AFBCFEA9FBB2DFC1B841FFF5 /* ReceiptCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptCapture.swift; sourceTree = "<group>"; };
+		AFD8AF70E806AECBC5928181 /* QuickCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCaptureTests.swift; sourceTree = "<group>"; };
+		B1F752C01AAD8B13C8012E76 /* Receipts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Receipts.swift; sourceTree = "<group>"; };
+		B5B6AA85061AC0BF719BAB38 /* DocumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
+		B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFieldEditors.swift; sourceTree = "<group>"; };
+		BDB78A75D76D0954B00D159C /* PettyTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PettyTrackerApp.swift; sourceTree = "<group>"; };
+		BE24AABA1D9E4FF65B815922 /* ProductEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductEditView.swift; sourceTree = "<group>"; };
+		C19FF1F3983415627A025F1E /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		C7B09F8FE5CD22642A95F0B5 /* PettyTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PettyTracker.entitlements; sourceTree = "<group>"; };
+		C8ADA30CC84B3DBC90236BFB /* SubscriptionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListView.swift; sourceTree = "<group>"; };
+		CAF53A92A1ED4D9EC3613059 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		CE308FEFE75D3F9DFCAF0422 /* SubscriptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionDetailView.swift; sourceTree = "<group>"; };
+		D5C0067D34445B13A98C4DD3 /* android-device-backup.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "android-device-backup.zip"; sourceTree = "<group>"; };
+		DAABF33E8BFAF20A5C2C701D /* Deadlines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deadlines.swift; sourceTree = "<group>"; };
+		DACF2FAEEA2E24CA42A4EB60 /* PettyTrackerShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = PettyTrackerShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD5FAC8A9473FC0548486933 /* ReceiptListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptListView.swift; sourceTree = "<group>"; };
+		E5B7062ADCB31C407857B600 /* SubscriptionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionEditView.swift; sourceTree = "<group>"; };
+		E6E0F9DB4AA9CD5E5FCA7520 /* ReminderScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderScheduler.swift; sourceTree = "<group>"; };
+		ED2AADA41FA7E45CA965A8A4 /* BackupArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupArchive.swift; sourceTree = "<group>"; };
+		EF78F17F99786D081179174B /* ClaimPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimPacket.swift; sourceTree = "<group>"; };
+		F05B964A2D79A8C2CECED02A /* Formats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formats.swift; sourceTree = "<group>"; };
+		F505274184253C20475A62E9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F7763D328B4E00C9E87E9AE5 /* SharedInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedInbox.swift; sourceTree = "<group>"; };
+		F7A47A29E1781757B19F2091 /* ReceiptReviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReviewTests.swift; sourceTree = "<group>"; };
+		F92F6B4F8BEF6978789E80D7 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6070AEE947D7BC544B0649F8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A94B65D38D357314764BB193 /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		06446C7A56794B76C88EA011 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F505274184253C20475A62E9 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		1C03F753DA7B354D6A8D97B1 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0D19DA1DC93D2497D145C854 /* Day.swift */,
+				2C3A63D488712C29A0CA424C /* Models.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1F82189AA369D831822025B9 /* PettyTracker */ = {
+			isa = PBXGroup;
+			children = (
+				67C8DB1B0CF565C2F8F5AB4D /* Info.plist */,
+				C7B09F8FE5CD22642A95F0B5 /* PettyTracker.entitlements */,
+				AEC9DC368398EE94700B9A2E /* App */,
+				BFC3635099809C122E8B06E0 /* Data */,
+				64807CDBD0A920CA4D74DF10 /* Domain */,
+				9F7BB01BA82F01D31E6C84F5 /* Export */,
+				1C03F753DA7B354D6A8D97B1 /* Model */,
+				86654DFAA9091FECB214C45A /* Reminders */,
+				6D80F16A18183E7F939690DC /* Resources */,
+				7EF460A820DA0F882A0816F9 /* UI */,
+			);
+			path = PettyTracker;
+			sourceTree = "<group>";
+		};
+		237FC80598D149C988976B85 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				74ADF3E9F4F4F11DD5167B04 /* ProductDetailView.swift */,
+				BE24AABA1D9E4FF65B815922 /* ProductEditView.swift */,
+				7802548D6F8C10BF7564F7F5 /* ProductListView.swift */,
+			);
+			path = Products;
+			sourceTree = "<group>";
+		};
+		26D0EFDE6DC9FA8DAE6BC2E8 /* Documents */ = {
+			isa = PBXGroup;
+			children = (
+				B5B6AA85061AC0BF719BAB38 /* DocumentDetailView.swift */,
+				5EEBE76CF504FFC77017AF3E /* DocumentEditView.swift */,
+				3762AC8EF32871A3A90FD681 /* DocumentListView.swift */,
+			);
+			path = Documents;
+			sourceTree = "<group>";
+		};
+		3A1599EF329D795620E98DCE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A02A087AC662771064F078F9 /* PettyTracker.app */,
+				DACF2FAEEA2E24CA42A4EB60 /* PettyTrackerShare.appex */,
+				944970734028C220C5371703 /* PettyTrackerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5B88C1D690FC237E0AE217ED /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				133F8C46CF4957530E7F82EA /* Assets.xcassets */,
+				252D02E1266A72C787F49ADC /* Info.plist */,
+				68738514E3C93618A4D6CBD4 /* ShareExtension.entitlements */,
+				88BE437E0D13A7F55A0EE317 /* ShareViewController.swift */,
+			);
+			path = ShareExtension;
+			sourceTree = "<group>";
+		};
+		64807CDBD0A920CA4D74DF10 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				DAABF33E8BFAF20A5C2C701D /* Deadlines.swift */,
+				ACC765701130338823562782 /* Money.swift */,
+				ABEFAF7AC753A124EBFAB94E /* ReceiptParser.swift */,
+				36730EC5233FEB885009096B /* ReceiptReview.swift */,
+				B1F752C01AAD8B13C8012E76 /* Receipts.swift */,
+				2086899ADAC6E4ADF77DF128 /* Renewals.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		6D80F16A18183E7F939690DC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6DB220C6A2F7141F5BCEFAF9 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6F5418788FD031812CFD265D /* PettyTrackerTests */ = {
+			isa = PBXGroup;
+			children = (
+				189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */,
+				AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */,
+				349CF38A0C49D5C9F4D735A9 /* ImportTests.swift */,
+				562ACB569D2A6A78D7DFC1A7 /* MoneyTests.swift */,
+				AFD8AF70E806AECBC5928181 /* QuickCaptureTests.swift */,
+				836DFAA09108CBC751D12AB8 /* ReceiptBrowseTests.swift */,
+				55EAB07773A85C4E112221A6 /* ReceiptCSVTests.swift */,
+				A910F35E059DEFC72759E64E /* ReceiptDataTests.swift */,
+				3FDA00F3DE897D84D620C5C4 /* ReceiptDetailsBackupTests.swift */,
+				3BA0DD4A23122F46AB831028 /* ReceiptDetailsParserTests.swift */,
+				17942690A3FCC74A9FAFD7D0 /* ReceiptLinkTests.swift */,
+				0C6480EC73B8A5652AEB36A9 /* ReceiptParserTests.swift */,
+				F7A47A29E1781757B19F2091 /* ReceiptReviewTests.swift */,
+				0C30510C168446D4076E11C9 /* RenewalsTests.swift */,
+				95A2D6BE3C67D2B227A18CD4 /* TestSupport.swift */,
+				AA2A498EF029183D1C7EA957 /* TextRecognizerTests.swift */,
+				984F8D9806856BF9868B29CE /* Fixtures */,
+			);
+			path = PettyTrackerTests;
+			sourceTree = "<group>";
+		};
+		7EF460A820DA0F882A0816F9 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F05B964A2D79A8C2CECED02A /* Formats.swift */,
+				CAF53A92A1ED4D9EC3613059 /* RootView.swift */,
+				447635949807BBF2ADF1A3A5 /* Theme.swift */,
+				C3B172108755DCED709D171D /* Components */,
+				96DC5659C4C5FF793128D819 /* Dashboard */,
+				26D0EFDE6DC9FA8DAE6BC2E8 /* Documents */,
+				237FC80598D149C988976B85 /* Products */,
+				A507D1A8F2BE45092AB590A5 /* Receipts */,
+				06446C7A56794B76C88EA011 /* Settings */,
+				E80E3C32A3035B7DE2730E9B /* Subscriptions */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		86654DFAA9091FECB214C45A /* Reminders */ = {
+			isa = PBXGroup;
+			children = (
+				E6E0F9DB4AA9CD5E5FCA7520 /* ReminderScheduler.swift */,
+			);
+			path = Reminders;
+			sourceTree = "<group>";
+		};
+		94E64E58FAFAFEEB8E7E4157 = {
+			isa = PBXGroup;
+			children = (
+				1F82189AA369D831822025B9 /* PettyTracker */,
+				6F5418788FD031812CFD265D /* PettyTrackerTests */,
+				B78AEF7D6092DE6C68200D85 /* Shared */,
+				5B88C1D690FC237E0AE217ED /* ShareExtension */,
+				3A1599EF329D795620E98DCE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		96DC5659C4C5FF793128D819 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				C19FF1F3983415627A025F1E /* DashboardView.swift */,
+				96FD09985644FA4753159FCF /* SearchResultsSection.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		984F8D9806856BF9868B29CE /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				D5C0067D34445B13A98C4DD3 /* android-device-backup.zip */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		9F7BB01BA82F01D31E6C84F5 /* Export */ = {
+			isa = PBXGroup;
+			children = (
+				EF78F17F99786D081179174B /* ClaimPacket.swift */,
+				40F6BAF4441A19B9AEE72364 /* ReceiptCSV.swift */,
+			);
+			path = Export;
+			sourceTree = "<group>";
+		};
+		A507D1A8F2BE45092AB590A5 /* Receipts */ = {
+			isa = PBXGroup;
+			children = (
+				3DD47AA4C03CD37A60881D18 /* LinkPickers.swift */,
+				23A0A510A4EF1DA0CCC4432D /* ReceiptBrowseView.swift */,
+				AFBCFEA9FBB2DFC1B841FFF5 /* ReceiptCapture.swift */,
+				2C3D908FBCACE255DA70D93E /* ReceiptDetailView.swift */,
+				54D02CD338BC97FBC5F06DBF /* ReceiptEditView.swift */,
+				B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */,
+				DD5FAC8A9473FC0548486933 /* ReceiptListView.swift */,
+				A4CEC552921A078D164C5024 /* ReceiptReviewViews.swift */,
+			);
+			path = Receipts;
+			sourceTree = "<group>";
+		};
+		AEC9DC368398EE94700B9A2E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				BDB78A75D76D0954B00D159C /* PettyTrackerApp.swift */,
+				6734D0CF447DF844F8E7CB52 /* QuickCapture.swift */,
+				0DA773AE811043576B6F0B36 /* Router.swift */,
+				3A51F4B0141E6D119EE29A90 /* ScanReceiptIntent.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B78AEF7D6092DE6C68200D85 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				F7763D328B4E00C9E87E9AE5 /* SharedInbox.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		BFC3635099809C122E8B06E0 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				3554AFB7F51691C675E39B28 /* AttachmentStore.swift */,
+				ED2AADA41FA7E45CA965A8A4 /* BackupArchive.swift */,
+				63E577936CF1F9C3B03D79D1 /* BackupService.swift */,
+				4787F1346DD6F964B1CDD005 /* TextRecognizer.swift */,
+				F92F6B4F8BEF6978789E80D7 /* TrackerStore.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		C3B172108755DCED709D171D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A50A13B8129CBBEE086C6E9C /* Attachments.swift */,
+				5E8DD2B899F07C337008FB06 /* Common.swift */,
+				2E3259F6B70F0DD20770BC43 /* Editors.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		E80E3C32A3035B7DE2730E9B /* Subscriptions */ = {
+			isa = PBXGroup;
+			children = (
+				CE308FEFE75D3F9DFCAF0422 /* SubscriptionDetailView.swift */,
+				E5B7062ADCB31C407857B600 /* SubscriptionEditView.swift */,
+				C8ADA30CC84B3DBC90236BFB /* SubscriptionListView.swift */,
+			);
+			path = Subscriptions;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00762E26C664C176D7C7CFDB /* PettyTrackerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD725A2838B2FFFD2B055DF4 /* Build configuration list for PBXNativeTarget "PettyTrackerTests" */;
+			buildPhases = (
+				25164F51A508F5EE548102B2 /* Sources */,
+				AA73FF126AB9978FC1182AB1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2FC4CF488C9D19D400F4B4E5 /* PBXTargetDependency */,
+			);
+			name = PettyTrackerTests;
+			packageProductDependencies = (
+			);
+			productName = PettyTrackerTests;
+			productReference = 944970734028C220C5371703 /* PettyTrackerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		309FBCFD4A279A6E9541B8CF /* PettyTracker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 83E3AFC938D8CF1698C07629 /* Build configuration list for PBXNativeTarget "PettyTracker" */;
+			buildPhases = (
+				C380A6BB70727265298928ED /* Sources */,
+				40E334A0225CA819F98346A3 /* Resources */,
+				6070AEE947D7BC544B0649F8 /* Frameworks */,
+				8A2861FC9C0A136028499CCD /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8AAD16182E8BD546CC934E42 /* PBXTargetDependency */,
+			);
+			name = PettyTracker;
+			packageProductDependencies = (
+				618A66C5CCDB10C9463DD967 /* ZIPFoundation */,
+			);
+			productName = PettyTracker;
+			productReference = A02A087AC662771064F078F9 /* PettyTracker.app */;
+			productType = "com.apple.product-type.application";
+		};
+		53F6C7BD1B53AD7E8DC4C953 /* PettyTrackerShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78E250259230B09EDCBE5354 /* Build configuration list for PBXNativeTarget "PettyTrackerShare" */;
+			buildPhases = (
+				3EF13DABEA07A9E716BFC705 /* Sources */,
+				19533F8AD16E01A07C4180B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PettyTrackerShare;
+			packageProductDependencies = (
+			);
+			productName = PettyTrackerShare;
+			productReference = DACF2FAEEA2E24CA42A4EB60 /* PettyTrackerShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9918746357EA9CD636A37B8A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					309FBCFD4A279A6E9541B8CF = {
+						ProvisioningStyle = Automatic;
+					};
+					53F6C7BD1B53AD7E8DC4C953 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = AE2C6FBE6DD4CF19D90EEE7A /* Build configuration list for PBXProject "PettyTracker" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 94E64E58FAFAFEEB8E7E4157;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6B14A05442DF4B88E571C372 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3A1599EF329D795620E98DCE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				309FBCFD4A279A6E9541B8CF /* PettyTracker */,
+				53F6C7BD1B53AD7E8DC4C953 /* PettyTrackerShare */,
+				00762E26C664C176D7C7CFDB /* PettyTrackerTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		19533F8AD16E01A07C4180B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21EB2506B9014A2ED581BFC6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		40E334A0225CA819F98346A3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				74EDBCA1065B8B6C5B08A7B2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA73FF126AB9978FC1182AB1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C96B6F0C1311728F2B013187 /* android-device-backup.zip in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		25164F51A508F5EE548102B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */,
+				18F5146CEE4F1F8EEE9D9A79 /* ClaimPacketTests.swift in Sources */,
+				5464EB03A1CA7AC546DDAE3A /* ImportTests.swift in Sources */,
+				6B0866DDEA36CF89C78A491F /* MoneyTests.swift in Sources */,
+				1094F623C373F08E5A3B6405 /* QuickCaptureTests.swift in Sources */,
+				DAB2D19FC525A5F3FD997834 /* ReceiptBrowseTests.swift in Sources */,
+				5A8B447695C99FF625A75968 /* ReceiptCSVTests.swift in Sources */,
+				A4F41617A607D0D6493EA8B8 /* ReceiptDataTests.swift in Sources */,
+				0D5819F9C1648787140AB464 /* ReceiptDetailsBackupTests.swift in Sources */,
+				5127B2758B5E4812D8EBB916 /* ReceiptDetailsParserTests.swift in Sources */,
+				EF8FBF66C628A6F7BF4CB7B1 /* ReceiptLinkTests.swift in Sources */,
+				9CAE6D06D8E8F8280A2DA3B6 /* ReceiptParserTests.swift in Sources */,
+				4BCCA3AEA09175F55C28BB97 /* ReceiptReviewTests.swift in Sources */,
+				65E63CF07E0F559C10DCF94C /* RenewalsTests.swift in Sources */,
+				DE271AF01D389A2CA5C66F29 /* TestSupport.swift in Sources */,
+				63C2CF032BAE3F556C21BD71 /* TextRecognizerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3EF13DABEA07A9E716BFC705 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A28DDBF1A5728E91739811 /* ShareViewController.swift in Sources */,
+				50BACF547F3C434EDDC6603C /* SharedInbox.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C380A6BB70727265298928ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85F1CBE7E3729D4479414152 /* AttachmentStore.swift in Sources */,
+				E2FB0DA149CE74C0700E9B8B /* Attachments.swift in Sources */,
+				EC1C33F122489816C4F3D88A /* BackupArchive.swift in Sources */,
+				CC03FD1371FDBCC14A0E8EE1 /* BackupService.swift in Sources */,
+				AEEC5E1B68092A9E774ED76A /* ClaimPacket.swift in Sources */,
+				A23250FC24927D31411913F1 /* Common.swift in Sources */,
+				77C572042537CF7B1671AA7A /* DashboardView.swift in Sources */,
+				9F1A28112830BE71AC6797CC /* Day.swift in Sources */,
+				BA402DC5E1054FF291C228D9 /* Deadlines.swift in Sources */,
+				FE3A27AC7E1F0BB9C8288CD4 /* DocumentDetailView.swift in Sources */,
+				808F54BC5B87199FA7615736 /* DocumentEditView.swift in Sources */,
+				52FD6B0E169E2EB9374D7911 /* DocumentListView.swift in Sources */,
+				619D8C770ABFAB2520EAD52E /* Editors.swift in Sources */,
+				F771C56B595732693658229E /* Formats.swift in Sources */,
+				916C1A54F4F6EEBA2A0E105D /* LinkPickers.swift in Sources */,
+				CD741593BE5AE70D7CD43DF2 /* Models.swift in Sources */,
+				489CC4C29098603C5AF44B5E /* Money.swift in Sources */,
+				6A8A7B1D6784E5AFDCC8E91D /* PettyTrackerApp.swift in Sources */,
+				1A7B62BE1B0E7CA7FFBB62ED /* ProductDetailView.swift in Sources */,
+				E47A8591B4DDD36341921DD0 /* ProductEditView.swift in Sources */,
+				C52C748010F107A57E748A61 /* ProductListView.swift in Sources */,
+				0C22962F084F28BA6D714E48 /* QuickCapture.swift in Sources */,
+				9C9970FCCAC275C8AC92ACF2 /* ReceiptBrowseView.swift in Sources */,
+				5C30F0C1DE07BB298652EEF8 /* ReceiptCSV.swift in Sources */,
+				DEEFFCD33D6ACA33FF54E287 /* ReceiptCapture.swift in Sources */,
+				FA407D55EBFA88DDA21D56D5 /* ReceiptDetailView.swift in Sources */,
+				1321F2A38F504EF3D6ECE255 /* ReceiptEditView.swift in Sources */,
+				4648B040828196EACFD30EE4 /* ReceiptFieldEditors.swift in Sources */,
+				8051B8B70B2AC8D3C65974D1 /* ReceiptListView.swift in Sources */,
+				1BE0DE55DB938E55FEA68AC9 /* ReceiptParser.swift in Sources */,
+				8AFE4CC7CCD280FEF747D10B /* ReceiptReview.swift in Sources */,
+				6B2669EEED1CFC4387E82B30 /* ReceiptReviewViews.swift in Sources */,
+				B2368EA696B5C456CD25AA95 /* Receipts.swift in Sources */,
+				79A516101DB51DE7B61FDAC4 /* ReminderScheduler.swift in Sources */,
+				CE079256E85D8C48F79B32E6 /* Renewals.swift in Sources */,
+				6BB23F773BA2850F402BB8F0 /* RootView.swift in Sources */,
+				1757DFCBDC39936AEF3CAF43 /* Router.swift in Sources */,
+				A9EEBE1C36048864208AF1D1 /* ScanReceiptIntent.swift in Sources */,
+				0370FE79965D593E13819362 /* SearchResultsSection.swift in Sources */,
+				6C60277C0802259A36D94DC4 /* SettingsView.swift in Sources */,
+				E9B10519D7DE7D77E3D23FF0 /* SharedInbox.swift in Sources */,
+				D4D62F58358D64147C426392 /* SubscriptionDetailView.swift in Sources */,
+				135EA9D28197B643CBBA63ED /* SubscriptionEditView.swift in Sources */,
+				D1987AFCD00E24864A0522D3 /* SubscriptionListView.swift in Sources */,
+				329B59C781EAD13D480FD1FC /* TextRecognizer.swift in Sources */,
+				4B3040FD6BBB9090A7013503 /* Theme.swift in Sources */,
+				D44464E277FC3ED1D7092682 /* TrackerStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2FC4CF488C9D19D400F4B4E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 309FBCFD4A279A6E9541B8CF /* PettyTracker */;
+			targetProxy = 94E35AC7AE4F8A0AA2C389D7 /* PBXContainerItemProxy */;
+		};
+		8AAD16182E8BD546CC934E42 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53F6C7BD1B53AD7E8DC4C953 /* PettyTrackerShare */;
+			targetProxy = A7EADAAC565E2B1EE301E832 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		162A938E73563828533DC406 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.isaaclamb.PettyTracker.share;
+				PRODUCT_NAME = PettyTrackerShare;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		25C257D607910E36BE0F1ABF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		555EB107CF5DF11CF6D63D7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PettyTracker/PettyTracker.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PettyTracker/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.isaaclamb.PettyTracker;
+				PRODUCT_NAME = PettyTracker;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5731B010389D325EE7222443 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.isaaclamb.PettyTrackerTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PettyTracker.app/PettyTracker";
+			};
+			name = Release;
+		};
+		657C23787F150A10F2EF2471 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		8C0F15E46150D80CE7E5EEF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.isaaclamb.PettyTrackerTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PettyTracker.app/PettyTracker";
+			};
+			name = Debug;
+		};
+		B095AAA501C1EA436C2F2001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.isaaclamb.PettyTracker.share;
+				PRODUCT_NAME = PettyTrackerShare;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FCDEF3D5723812D7A3BF6B17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PettyTracker/PettyTracker.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PettyTracker/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.isaaclamb.PettyTracker;
+				PRODUCT_NAME = PettyTracker;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		78E250259230B09EDCBE5354 /* Build configuration list for PBXNativeTarget "PettyTrackerShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				162A938E73563828533DC406 /* Debug */,
+				B095AAA501C1EA436C2F2001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		83E3AFC938D8CF1698C07629 /* Build configuration list for PBXNativeTarget "PettyTracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FCDEF3D5723812D7A3BF6B17 /* Debug */,
+				555EB107CF5DF11CF6D63D7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AD725A2838B2FFFD2B055DF4 /* Build configuration list for PBXNativeTarget "PettyTrackerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C0F15E46150D80CE7E5EEF3 /* Debug */,
+				5731B010389D325EE7222443 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AE2C6FBE6DD4CF19D90EEE7A /* Build configuration list for PBXProject "PettyTracker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				25C257D607910E36BE0F1ABF /* Debug */,
+				657C23787F150A10F2EF2471 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6B14A05442DF4B88E571C372 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.9.20;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		618A66C5CCDB10C9463DD967 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6B14A05442DF4B88E571C372 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 9918746357EA9CD636A37B8A /* Project object */;
+}

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="ios/EnveKeep/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="88" alt="petty: Tracker app icon">
+  <img src="ios/PettyTracker/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="88" alt="petty: Tracker app icon">
 </p>
 
 <h1 align="center">petty: Tracker</h1>
@@ -100,20 +100,20 @@ You need a Mac with **Xcode 26 or later** and **[XcodeGen](https://github.com/yo
 ```sh
 cd ios
 xcodegen generate
-open EnveKeep.xcodeproj
+open PettyTracker.xcodeproj
 ```
 
-Choose the **EnveKeep** scheme and an iPhone simulator, then run. Simulator receipt capture supports Photos, Files, and manual entry.
+Choose the **PettyTracker** scheme and an iPhone simulator, then run. Simulator receipt capture supports Photos, Files, and manual entry.
 
 To build and test from Terminal with an installed iPhone Air simulator:
 
 ```sh
-xcodebuild -project EnveKeep.xcodeproj -scheme EnveKeep \
+xcodebuild -project PettyTracker.xcodeproj -scheme PettyTracker \
   -destination 'platform=iOS Simulator,name=iPhone Air' \
   CODE_SIGNING_ALLOWED=NO build test
 ```
 
-For a physical iPhone, select your development team for both **EnveKeep** and **EnveKeepShare**. The targets use `com.enve.keep`, `com.enve.keep.share`, and the shared App Group `group.com.enve.keep`. Your signing setup must support these identifiers. If you use your own identifiers, update both targets and entitlements in `project.yml`, and the App Group value in `Shared/SharedInbox.swift`, then regenerate the project.
+For a physical iPhone, select your development team for both **PettyTracker** and **PettyTrackerShare**. The targets use `com.isaaclamb.PettyTracker`, `com.isaaclamb.PettyTracker.share`, and the shared App Group `group.com.isaaclamb.PettyTracker`. Your signing setup must support these identifiers. If you use your own identifiers, update both targets and entitlements in `project.yml`, and the App Group value in `Shared/SharedInbox.swift`, then regenerate the project.
 
 The latest feature verification passed **135 tests on iOS 17 and iOS 27 simulators**, with no build warnings. Route and custom field browsing, CSV sharing, claim PDF preview, and the Photos share extension were exercised in Simulator. Camera capture, handwriting on real receipts, and Shortcut discovery still need physical iPhone verification.
 

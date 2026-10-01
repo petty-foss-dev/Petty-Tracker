@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "EnveKeep"
+rootProject.name = "PettyTracker"
 include(":app")

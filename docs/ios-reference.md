@@ -24,7 +24,7 @@ petty: Tracker has no accounts, servers, analytics, ads or in-app purchases, and
 
 ## Backup format
 
-The ZIP holds `backup.json` and a flat `attachments/` folder. The manifest uses the same keys and types as Android: ISO `yyyy-MM-dd` dates, decimal amounts as strings, upper-case enum names and explicit `null`s. For the exact schema, see `EnveKeep/Model/Models.swift` and `EnveKeep/Data/BackupArchive.swift`.
+The ZIP holds `backup.json` and a flat `attachments/` folder. The manifest uses the same keys and types as Android: ISO `yyyy-MM-dd` dates, decimal amounts as strings, upper-case enum names and explicit `null`s. For the exact schema, see `PettyTracker/Model/Models.swift` and `PettyTracker/Data/BackupArchive.swift`.
 
 There are three versions:
 
@@ -38,13 +38,13 @@ Requirements: Xcode 26 or newer and [XcodeGen](https://github.com/yonaskolb/Xcod
 
 ```sh
 xcodegen generate
-xcodebuild -project EnveKeep.xcodeproj -scheme EnveKeep \
+xcodebuild -project PettyTracker.xcodeproj -scheme PettyTracker \
   -destination "platform=iOS Simulator,name=iPhone Air" build test
 ```
 
 Minimum iOS version: 17.0.
 
-Run the commands above from `ios/`. The app (`com.enve.keep`) and its share extension (`com.enve.keep.share`) share the App Group `group.com.enve.keep`, declared in `EnveKeep/EnveKeep.entitlements` and `ShareExtension/ShareExtension.entitlements`. Simulator builds need no setup. To run on a device, choose your team for both targets in Xcode. Your signing setup must support the two bundle IDs and the App Group. If you change the bundle ID prefix, use a matching App Group ID in both entitlements files and in `SharedInbox.appGroup`.
+Run the commands above from `ios/`. The app (`com.isaaclamb.PettyTracker`) and its share extension (`com.isaaclamb.PettyTracker.share`) share the App Group `group.com.isaaclamb.PettyTracker`, declared in `PettyTracker/PettyTracker.entitlements` and `ShareExtension/ShareExtension.entitlements`. Simulator builds need no setup. To run on a device, choose your team for both targets in Xcode. Your signing setup must support the two bundle IDs and the App Group. If you change the bundle ID prefix, use a matching App Group ID in both entitlements files and in `SharedInbox.appGroup`.
 
 ## Project layout
 

@@ -12,18 +12,18 @@ From this folder, with Xcode 26 or later and XcodeGen installed:
 
 ```sh
 xcodegen generate
-open EnveKeep.xcodeproj
+open PettyTracker.xcodeproj
 ```
 
-Choose the EnveKeep scheme and an iPhone simulator. From Terminal:
+Choose the PettyTracker scheme and an iPhone simulator. From Terminal:
 
 ```sh
-xcodebuild -project EnveKeep.xcodeproj -scheme EnveKeep \
+xcodebuild -project PettyTracker.xcodeproj -scheme PettyTracker \
   -destination 'platform=iOS Simulator,name=iPhone Air' \
   CODE_SIGNING_ALLOWED=NO build test
 ```
 
-For a physical iPhone, set your development team on both EnveKeep and EnveKeepShare. See the [shared build guide](../README.md#ios) for signing and App Group details. Camera capture requires a real iPhone; use Photos, Files, or manual entry in Simulator.
+For a physical iPhone, set your development team on both PettyTracker and PettyTrackerShare. See the [shared build guide](../README.md#ios) for signing and App Group details. Camera capture requires a real iPhone; use Photos, Files, or manual entry in Simulator.
 
 ## License and support
 

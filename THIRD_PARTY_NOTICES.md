@@ -10,7 +10,7 @@ Third-party components retain their own licenses, separate from petty: Tracker's
 
 Copyright (c) 2017–2025 Thomas Zoechling (https://www.peakstep.com).
 
-The full license is retained in [docs/licenses/ZIPFoundation-MIT.txt](docs/licenses/ZIPFoundation-MIT.txt). The dependency revision is recorded in `ios/EnveKeep.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
+The full license is retained in [docs/licenses/ZIPFoundation-MIT.txt](docs/licenses/ZIPFoundation-MIT.txt). The dependency revision is recorded in `ios/PettyTracker.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
 
 Apple system frameworks are provided by the platform and are not vendored in this repository.
 

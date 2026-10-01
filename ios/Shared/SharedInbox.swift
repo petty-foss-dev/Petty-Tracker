@@ -2,9 +2,9 @@ import Foundation
 import UniformTypeIdentifiers
 
 /// Files shared from other apps, kept in the App Group container until petty: Tracker turns them into receipts.
-/// The share extension only adds complete batches here; it never touches `keep.json`.
+/// The share extension only adds complete batches here; it never touches `tracker.json`.
 struct SharedInbox: Sendable {
-    static let appGroup = "group.com.enve.keep"
+    static let appGroup = "group.com.isaaclamb.PettyTracker"
     static let maxItemsPerShare = 20
 
     struct Item: Hashable, Identifiable, Sendable {
