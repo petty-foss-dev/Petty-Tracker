@@ -108,6 +108,20 @@ final class TrackerStore {
         }
     }
 
+    /// Attaches files already copied into the attachment store, deleting the copies if the save fails.
+    func addAttachments(_ added: [Attachment], to ownerType: OwnerType, _ ownerId: Int64) throws {
+        do {
+            _ = try saveOwned(ownerType, added: added, removed: []) { _ in ownerId }
+        } catch {
+            attachmentStore.delete(added.map(\.fileName))
+            throw error
+        }
+    }
+
+    func removeAttachment(_ attachment: Attachment) throws {
+        _ = try saveOwned(attachment.ownerType, added: [], removed: [attachment]) { _ in attachment.ownerId }
+    }
+
     func linkProduct(_ productId: Int64, toReceipt receiptId: Int64?) throws {
         try mutate { link(productId, to: receiptId, in: &$0) }
     }

@@ -62,7 +62,7 @@ private struct SubscriptionEditForm: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Service name", text: $form.name)
+                    FormTextField("Service", text: $form.name, prompt: "Required")
                         .textInputAutocapitalization(.words)
                     if showErrors && form.name.trimmingCharacters(in: .whitespaces).isEmpty {
                         FieldError(text: String(localized: "Required"))

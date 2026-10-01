@@ -53,10 +53,12 @@ struct DocumentDetailView: View {
             Section("Scans and files") {
                 AttachmentGallery(
                     attachments: store.attachments(.document, documentId),
-                    emptyText: "No scans or files. Edit the document to add them.",
+                    emptyText: "Add a photo or scan so the document is on hand when you need it.",
                     opened: $openedAttachment,
-                    errorMessage: $errorMessage
+                    errorMessage: $errorMessage,
+                    onDelete: { attachment in perform { try store.removeAttachment(attachment) } }
                 )
+                AttachmentAddMenu { added in perform { try store.addAttachments(added, to: .document, documentId) } }
             }
             Section {
                 Button("Delete document", role: .destructive) { confirmDelete = true }
@@ -83,6 +85,14 @@ struct DocumentDetailView: View {
             Text("The document and its scans will be removed from this device.")
         }
         .errorAlert($errorMessage)
+    }
+
+    private func perform(_ action: () throws -> Void) {
+        do {
+            try action()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     private func badgeText(_ status: DeadlineStatus) -> String {

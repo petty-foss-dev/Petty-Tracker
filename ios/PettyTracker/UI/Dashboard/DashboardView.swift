@@ -10,16 +10,25 @@ struct DashboardSummary {
         let status: DeadlineStatus
     }
 
-    struct Category {
-        let count: Int
-        let next: Deadline?
+    enum Band: CaseIterable {
+        case week, month, later
+
+        init(days: Int) {
+            self = days <= 7 ? .week : days <= 30 ? .month : .later
+        }
+
+        var title: LocalizedStringKey {
+            switch self {
+            case .week: "Next 7 days"
+            case .month: "Next 30 days"
+            case .later: "Later"
+            }
+        }
     }
 
     let pastDue: [Entry]
-    let upcoming: [Entry]
-    let warranties: Category
-    let subscriptions: Category
-    let documents: Category
+    let upcoming: [(band: Band, entries: [Entry])]
+    let upcomingCount: Int
     let isEmpty: Bool
 
     init(_ data: TrackerData, today: Day) {
@@ -33,14 +42,10 @@ struct DashboardSummary {
             $0.status == .past
                 && ($0.deadline.kind != .warranty || $0.deadline.days(from: today) >= -Self.recentWarrantyDays)
         }.reversed()
-        upcoming = entries.filter { $0.status.isUpcoming }
-
-        func category(_ kind: RecordKind, count: Int) -> Category {
-            Category(count: count, next: deadlines.filter { $0.kind == kind && $0.date >= today }.min { $0.date < $1.date })
-        }
-        warranties = category(.warranty, count: data.products.count)
-        subscriptions = category(.subscription, count: data.subscriptions.filter(\.isActive).count)
-        documents = category(.document, count: data.documents.count)
+        let soon = entries.filter { $0.status.isUpcoming }
+        let banded = Dictionary(grouping: soon) { Band(days: $0.deadline.days(from: today)) }
+        upcoming = Band.allCases.compactMap { band in banded[band].map { (band, $0) } }
+        upcomingCount = soon.count
         isEmpty = data.products.isEmpty && data.subscriptions.isEmpty && data.documents.isEmpty && data.receipts.isEmpty
     }
 }
@@ -49,6 +54,7 @@ struct DashboardView: View {
     @Environment(TrackerStore.self) private var store
     @Environment(Router.self) private var router
     @Environment(\.reminders) private var reminders
+    @Environment(QuickCapture.self) private var quickCapture
     @State private var query = ""
     @State private var editor: Editor?
     @State private var notificationStatus: UNAuthorizationStatus?
@@ -60,8 +66,10 @@ struct DashboardView: View {
             if !query.isEmpty {
                 SearchResultsSection(query: query)
             } else if summary.isEmpty {
-                WelcomeSection(onAdd: { editor = Editor(new: $0) }, onReceipts: { router.tab = .receipts })
+                WelcomeSection(onAdd: { editor = Editor(new: $0) }, onReceipts: quickCapture.requestScan)
             } else {
+                SummaryTiles(summary: summary)
+                QuickAddSection(onAdd: { editor = Editor(new: $0) }, onScanReceipt: quickCapture.requestScan)
                 if showReminderPrompt {
                     ReminderPromptSection(onAllow: allowReminders, onDismiss: dismissReminderPrompt)
                 }
@@ -70,14 +78,18 @@ struct DashboardView: View {
                         ForEach(summary.pastDue, id: \.self) { entry in deadlineLink(entry) }
                     }
                 }
-                Section("Coming up") {
-                    if summary.upcoming.isEmpty {
-                        Text("Nothing due within your reminder windows.")
+                ForEach(summary.upcoming, id: \.band) { group in
+                    Section(group.band.title) {
+                        ForEach(group.entries, id: \.self) { entry in deadlineLink(entry) }
+                    }
+                }
+                if summary.pastDue.isEmpty && summary.upcoming.isEmpty {
+                    Section {
+                        Label("Nothing due within your reminder windows.", systemImage: "checkmark.circle")
                             .foregroundStyle(.secondary)
                     }
-                    ForEach(summary.upcoming, id: \.self) { entry in deadlineLink(entry) }
                 }
-                OverviewSection(summary: summary)
+                RecentReceiptsSection()
             }
         }
         .trackerListStyle()
@@ -90,7 +102,7 @@ struct DashboardView: View {
                 }
             }
             ToolbarItem(placement: .primaryAction) {
-                AddRecordMenu { editor = Editor(new: $0) }
+                AddRecordMenu(onSelect: { editor = Editor(new: $0) }, onScanReceipt: quickCapture.requestScan)
             }
         }
         .editorSheet($editor) { router.homePath.append($0) }
@@ -220,63 +232,126 @@ private struct ReminderPromptSection: View {
     }
 }
 
-private struct OverviewSection: View {
+private struct SummaryTiles: View {
     let summary: DashboardSummary
     @Environment(TrackerStore.self) private var store
     @Environment(Router.self) private var router
 
     var body: some View {
-        Section("Overview") {
-            row(.warranty, tab: .warranties, category: summary.warranties,
-                count: Formats.count(summary.warranties.count, "product", "products"))
-            row(.subscription, tab: .subscriptions, category: summary.subscriptions,
-                count: Formats.count(summary.subscriptions.count, "active subscription", "active subscriptions"))
-            row(.document, tab: .documents, category: summary.documents,
-                count: Formats.count(summary.documents.count, "document", "documents"))
-            let latest = store.data.receipts.max { ($0.sortDate, $0.id) < ($1.sortDate, $1.id) }
-            row(symbol: Receipt.symbol, tab: .receipts,
-                count: Formats.count(store.data.receipts.count, "receipt", "receipts"),
-                detail: latest.map { String(localized: "Latest: \($0.merchant)") })
-            let totals = Renewals.monthlyTotals(store.data.subscriptions)
-            if !totals.isEmpty {
-                LabeledContent("Monthly cost") {
-                    VStack(alignment: .trailing) {
-                        ForEach(totals, id: \.currency) { total in
-                            Text("≈ \(Money.format(total.amount, currency: total.currency))")
-                        }
-                    }
+        let monthly = Renewals.monthlyTotals(store.data.subscriptions)
+        Section {
+            HStack(spacing: 10) {
+                tile(
+                    value: "\(summary.pastDue.count)",
+                    label: "Overdue",
+                    tint: summary.pastDue.isEmpty ? .primary : .trackerPast
+                )
+                tile(
+                    value: "\(summary.upcomingCount)",
+                    label: "Due soon",
+                    tint: summary.upcomingCount == 0 ? .primary : .trackerSoon
+                )
+                Button {
+                    router.tab = .subscriptions
+                } label: {
+                    tile(
+                        value: monthly.first.map { Money.format($0.amount, currency: $0.currency) } ?? "–",
+                        label: monthly.count > 1 ? "Per month, \(monthly[0].currency)" : "Per month",
+                        tint: .primary
+                    )
                 }
+                .buttonStyle(.plain)
+                .accessibilityHint("Shows subscriptions")
             }
         }
+        .listRowBackground(Color.clear)
+        .listRowInsets(EdgeInsets())
     }
 
-    private func row(_ kind: RecordKind, tab: AppTab, category: DashboardSummary.Category, count: String) -> some View {
-        row(symbol: kind.symbol, tab: tab, count: count, detail: category.next.map { next in
-            String(localized: "Next: \(next.title), \(Formats.relativeDays(next.days(from: store.today)))")
-        })
+    private func tile(value: String, label: LocalizedStringKey, tint: Color) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(value)
+                .font(.title2.weight(.semibold).monospacedDigit())
+                .foregroundStyle(tint)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+            Text(label)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct QuickAddSection: View {
+    let onAdd: (RecordKind) -> Void
+    let onScanReceipt: () -> Void
+
+    var body: some View {
+        Section {
+            HStack(spacing: 10) {
+                button("Product", symbol: RecordKind.warranty.symbol) { onAdd(.warranty) }
+                button("Subscription", symbol: RecordKind.subscription.symbol) { onAdd(.subscription) }
+                button("Document", symbol: RecordKind.document.symbol) { onAdd(.document) }
+                button("Receipt", symbol: Receipt.symbol, action: onScanReceipt)
+            }
+        }
+        .listRowBackground(Color.clear)
+        .listRowInsets(EdgeInsets())
     }
 
-    private func row(symbol: String, tab: AppTab, count: String, detail: String?) -> some View {
-        Button {
-            router.tab = tab
-        } label: {
-            HStack(spacing: 12) {
+    private func button(_ title: LocalizedStringKey, symbol: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 6) {
                 Image(systemName: symbol)
-                    .foregroundStyle(Color.accentColor)
-                    .frame(width: 28)
-                    .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(count).foregroundStyle(.primary)
-                    if let detail {
-                        Text(detail)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                    .font(.title3)
+                    .frame(height: 24)
+                Text(title)
+                    .font(.caption.weight(.medium))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            .foregroundStyle(Color.trackerOnPrimaryContainer)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(Color.trackerPrimaryContainer.opacity(0.7), in: RoundedRectangle(cornerRadius: 16))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("Add \(Text(title))"))
+    }
+}
+
+private struct RecentReceiptsSection: View {
+    @Environment(TrackerStore.self) private var store
+    @Environment(Router.self) private var router
+
+    var body: some View {
+        let receipts = store.data.receipts
+        if !receipts.isEmpty {
+            Section {
+                ForEach(receipts.sorted { ($0.sortDate, $0.id) > ($1.sortDate, $1.id) }.prefix(3)) { receipt in
+                    NavigationLink(value: Route.receipt(receipt.id)) {
+                        ReceiptRow(receipt: receipt)
                     }
                 }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.tertiary)
+                Button {
+                    router.tab = .receipts
+                } label: {
+                    HStack {
+                        Text("All \(Formats.count(receipts.count, "receipt", "receipts"))")
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+            } header: {
+                Text("Recent receipts")
             }
         }
     }

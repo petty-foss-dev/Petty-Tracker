@@ -44,9 +44,13 @@ struct ProductListView: View {
         List {
             if !store.data.products.isEmpty {
                 FilterPicker(selection: $filter, options: ProductFilter.allCases, label: \.label)
-                ForEach(items, id: \.product.id) { item in
-                    NavigationLink(value: Route.product(item.product.id)) {
-                        ProductRow(product: item.product, status: item.status, today: today)
+                ForEach(StatusSection.group(items, status: \.status), id: \.section) { group in
+                    Section(group.section.title(.warranty)) {
+                        ForEach(group.items, id: \.product.id) { item in
+                            NavigationLink(value: Route.product(item.product.id)) {
+                                ProductRow(product: item.product, status: item.status, today: today)
+                            }
+                        }
                     }
                 }
             }
@@ -82,18 +86,17 @@ struct ProductRow: View {
     let today: Day
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(product.name).font(.body.weight(.medium))
-            let subtitle = [product.brand, product.model].filter { !$0.isEmpty }.joined(separator: " · ")
-            if !subtitle.isEmpty {
-                Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
-            }
-            if let expires = product.warrantyExpires {
-                Text(Formats.deadline(.warranty, days: today.days(until: expires)))
+        HStack(spacing: 12) {
+            RecordIcon(symbol: RecordKind.warranty.symbol, tint: status.tint)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(product.name).font(.body.weight(.medium))
+                let subtitle = [product.brand, product.model].filter { !$0.isEmpty }.joined(separator: " · ")
+                if !subtitle.isEmpty {
+                    Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
+                }
+                Text(product.warrantyExpires.map { Formats.deadline(.warranty, date: $0, today: today) } ?? String(localized: "No warranty date"))
                     .font(.subheadline)
                     .foregroundStyle(status == .ok ? Color.secondary : status.tint)
-            } else {
-                Text("No warranty date").font(.subheadline).foregroundStyle(.secondary)
             }
         }
         .padding(.vertical, 2)

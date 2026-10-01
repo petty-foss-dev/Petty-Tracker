@@ -422,7 +422,7 @@ private struct ReceiptEditForm: View {
 
     private var detailsSection: some View {
         Section("Receipt") {
-            TextField("Merchant", text: $form.merchant)
+            FormTextField("Merchant", text: $form.merchant, prompt: "Required")
                 .textInputAutocapitalization(.words)
             if showErrors && form.merchant.trimmingCharacters(in: .whitespaces).isEmpty {
                 FieldError(text: String(localized: "Required"))
@@ -437,7 +437,7 @@ private struct ReceiptEditForm: View {
                 }
             }
             HStack {
-                TextField("Category", text: $form.category)
+                FormTextField("Category", text: $form.category)
                     .textInputAutocapitalization(.words)
                 Menu {
                     ForEach(categorySuggestions, id: \.self) { category in
@@ -448,7 +448,7 @@ private struct ReceiptEditForm: View {
                 }
                 .accessibilityLabel("Choose category")
             }
-            TextField("Tags, separated by commas", text: $form.tags)
+            FormTextField("Tags", text: $form.tags, prompt: "Comma separated")
                 .textInputAutocapitalization(.never)
         }
     }

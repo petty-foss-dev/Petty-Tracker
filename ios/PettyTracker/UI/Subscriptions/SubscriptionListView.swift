@@ -112,13 +112,14 @@ struct SubscriptionRow: View {
         let status = subscription.isActive
             ? deadlineStatus(subscription.nextRenewal, today: today, leadDays: leadDays)
             : .none
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 3) {
+        HStack(spacing: 12) {
+            RecordIcon(symbol: RecordKind.subscription.symbol, tint: status.tint)
+            VStack(alignment: .leading, spacing: 2) {
                 Text(subscription.name).font(.body.weight(.medium))
                 if let canceled = subscription.canceledOn {
                     Text("Canceled \(Formats.date(canceled))").font(.subheadline).foregroundStyle(.secondary)
                 } else {
-                    Text(Formats.deadline(.subscription, days: today.days(until: subscription.nextRenewal)))
+                    Text(Formats.deadline(.subscription, date: subscription.nextRenewal, today: today))
                         .font(.subheadline)
                         .foregroundStyle(status == .ok ? Color.secondary : status.tint)
                 }

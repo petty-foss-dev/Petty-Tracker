@@ -74,6 +74,7 @@
 		E9B10519D7DE7D77E3D23FF0 /* SharedInbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7763D328B4E00C9E87E9AE5 /* SharedInbox.swift */; };
 		EC1C33F122489816C4F3D88A /* BackupArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2AADA41FA7E45CA965A8A4 /* BackupArchive.swift */; };
 		EF8FBF66C628A6F7BF4CB7B1 /* ReceiptLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17942690A3FCC74A9FAFD7D0 /* ReceiptLinkTests.swift */; };
+		F1CBF1A20DA8704C6D5EF834 /* DashboardSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C7CD587A6965BBD3F305AA /* DashboardSummaryTests.swift */; };
 		F771C56B595732693658229E /* Formats.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05B964A2D79A8C2CECED02A /* Formats.swift */; };
 		FA407D55EBFA88DDA21D56D5 /* ReceiptDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D908FBCACE255DA70D93E /* ReceiptDetailView.swift */; };
 		FE3A27AC7E1F0BB9C8288CD4 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B6AA85061AC0BF719BAB38 /* DocumentDetailView.swift */; };
@@ -118,6 +119,7 @@
 		133F8C46CF4957530E7F82EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17942690A3FCC74A9FAFD7D0 /* ReceiptLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptLinkTests.swift; sourceTree = "<group>"; };
 		189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupArchiveTests.swift; sourceTree = "<group>"; };
+		18C7CD587A6965BBD3F305AA /* DashboardSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardSummaryTests.swift; sourceTree = "<group>"; };
 		2086899ADAC6E4ADF77DF128 /* Renewals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renewals.swift; sourceTree = "<group>"; };
 		23A0A510A4EF1DA0CCC4432D /* ReceiptBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptBrowseView.swift; sourceTree = "<group>"; };
 		252D02E1266A72C787F49ADC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 			children = (
 				189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */,
 				AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */,
+				18C7CD587A6965BBD3F305AA /* DashboardSummaryTests.swift */,
 				349CF38A0C49D5C9F4D735A9 /* ImportTests.swift */,
 				562ACB569D2A6A78D7DFC1A7 /* MoneyTests.swift */,
 				AFD8AF70E806AECBC5928181 /* QuickCaptureTests.swift */,
@@ -584,6 +587,7 @@
 			files = (
 				26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */,
 				18F5146CEE4F1F8EEE9D9A79 /* ClaimPacketTests.swift in Sources */,
+				F1CBF1A20DA8704C6D5EF834 /* DashboardSummaryTests.swift in Sources */,
 				5464EB03A1CA7AC546DDAE3A /* ImportTests.swift in Sources */,
 				6B0866DDEA36CF89C78A491F /* MoneyTests.swift in Sources */,
 				1094F623C373F08E5A3B6405 /* QuickCaptureTests.swift in Sources */,

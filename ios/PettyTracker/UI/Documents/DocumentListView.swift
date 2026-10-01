@@ -44,9 +44,13 @@ struct DocumentListView: View {
         List {
             if !store.data.documents.isEmpty {
                 FilterPicker(selection: $filter, options: DocumentFilter.allCases, label: \.label)
-                ForEach(items, id: \.document.id) { item in
-                    NavigationLink(value: Route.document(item.document.id)) {
-                        DocumentRow(document: item.document, status: item.status, today: today)
+                ForEach(StatusSection.group(items, status: \.status), id: \.section) { group in
+                    Section(group.section.title(.document)) {
+                        ForEach(group.items, id: \.document.id) { item in
+                            NavigationLink(value: Route.document(item.document.id)) {
+                                DocumentRow(document: item.document, status: item.status, today: today)
+                            }
+                        }
                     }
                 }
             }
@@ -82,17 +86,16 @@ struct DocumentRow: View {
     let today: Day
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(document.title).font(.body.weight(.medium))
-            if !document.issuer.isEmpty {
-                Text(document.issuer).font(.subheadline).foregroundStyle(.secondary)
-            }
-            if let expires = document.expiresOn {
-                Text(Formats.deadline(.document, days: today.days(until: expires)))
+        HStack(spacing: 12) {
+            RecordIcon(symbol: RecordKind.document.symbol, tint: status.tint)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(document.title).font(.body.weight(.medium))
+                if !document.issuer.isEmpty {
+                    Text(document.issuer).font(.subheadline).foregroundStyle(.secondary)
+                }
+                Text(document.expiresOn.map { Formats.deadline(.document, date: $0, today: today) } ?? String(localized: "No expiry date"))
                     .font(.subheadline)
                     .foregroundStyle(status == .ok ? Color.secondary : status.tint)
-            } else {
-                Text("No expiry date").font(.subheadline).foregroundStyle(.secondary)
             }
         }
         .padding(.vertical, 2)

@@ -33,13 +33,6 @@ struct AttachmentEditorSection: View {
     @Binding var draft: AttachmentDraft
     @Environment(TrackerStore.self) private var store
 
-    @State private var showFiles = false
-    @State private var showPhotos = false
-    @State private var showCamera = false
-    @State private var photoItems: [PhotosPickerItem] = []
-    @State private var importing = 0
-    @State private var errorMessage: String?
-
     var body: some View {
         Section(title) {
             ForEach(draft.visible, id: \.fileName) { attachment in
@@ -56,56 +49,75 @@ struct AttachmentEditorSection: View {
                     .accessibilityLabel(String(localized: "Remove \(attachment.displayName)"))
                 }
             }
+            AttachmentAddMenu { draft.added += $0 }
+        }
+    }
+}
+
+/// Copies picked files, library photos or camera shots into the attachment store and hands them back.
+struct AttachmentAddMenu: View {
+    let onAdded: ([Attachment]) -> Void
+    @Environment(TrackerStore.self) private var store
+
+    @State private var showFiles = false
+    @State private var showPhotos = false
+    @State private var showCamera = false
+    @State private var photoItems: [PhotosPickerItem] = []
+    @State private var importing = 0
+    @State private var errorMessage: String?
+
+    var body: some View {
+        // Presentations hang off this single row; on a Section they would repeat for every row.
+        Menu {
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                Button("Take Photo", systemImage: "camera") { showCamera = true }
+            }
+            Button("Photo Library", systemImage: "photo.on.rectangle") { showPhotos = true }
+            Button("Choose File", systemImage: "folder") { showFiles = true }
+        } label: {
             if importing > 0 {
                 HStack {
                     ProgressView()
                     Text("Adding…").foregroundStyle(.secondary)
                 }
+            } else {
+                Label("Add photo or file", systemImage: "paperclip")
             }
-            // Presentations hang off this single row; on a Section they would repeat for every row.
-            Menu {
-                Button("Choose File", systemImage: "folder") { showFiles = true }
-                Button("Photo Library", systemImage: "photo.on.rectangle") { showPhotos = true }
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    Button("Take Photo", systemImage: "camera") { showCamera = true }
-                }
-            } label: {
-                Label("Add attachment", systemImage: "paperclip")
-            }
-            .fileImporter(isPresented: $showFiles, allowedContentTypes: [.data], allowsMultipleSelection: true) { result in
-                switch result {
-                case .success(let urls):
-                    add { store in
-                        var imported: [Attachment] = []
-                        for url in urls { imported.append(try await store.importFile(at: url)) }
-                        return imported
-                    }
-                case .failure(let error):
-                    errorMessage = error.localizedDescription
-                }
-            }
-            .photosPicker(isPresented: $showPhotos, selection: $photoItems, matching: .images)
-            .onChange(of: photoItems) { _, items in
-                guard !items.isEmpty else { return }
-                photoItems = []
+        }
+        .disabled(importing > 0)
+        .fileImporter(isPresented: $showFiles, allowedContentTypes: [.data], allowsMultipleSelection: true) { result in
+            switch result {
+            case .success(let urls):
                 add { store in
                     var imported: [Attachment] = []
-                    for item in items {
-                        guard let data = try await item.loadTransferable(type: Data.self) else { continue }
-                        imported.append(try await store.importPhoto(data))
-                    }
+                    for url in urls { imported.append(try await store.importFile(at: url)) }
                     return imported
                 }
+            case .failure(let error):
+                errorMessage = error.localizedDescription
             }
-            .fullScreenCover(isPresented: $showCamera) {
-                CameraPicker { image in
-                    guard let data = image.jpegData(compressionQuality: 0.85) else { return }
-                    add { store in [try await store.importPhoto(data)] }
-                }
-                .ignoresSafeArea()
-            }
-            .errorAlert($errorMessage)
         }
+        .photosPicker(isPresented: $showPhotos, selection: $photoItems, matching: .images)
+        .onChange(of: photoItems) { _, items in
+            guard !items.isEmpty else { return }
+            photoItems = []
+            add { store in
+                var imported: [Attachment] = []
+                for item in items {
+                    guard let data = try await item.loadTransferable(type: Data.self) else { continue }
+                    imported.append(try await store.importPhoto(data))
+                }
+                return imported
+            }
+        }
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraPicker { image in
+                guard let data = image.jpegData(compressionQuality: 0.85) else { return }
+                add { store in [try await store.importPhoto(data)] }
+            }
+            .ignoresSafeArea()
+        }
+        .errorAlert($errorMessage)
     }
 
     private func add(_ work: @escaping @Sendable (AttachmentStore) async throws -> [Attachment]) {
@@ -114,7 +126,7 @@ struct AttachmentEditorSection: View {
         Task {
             defer { importing -= 1 }
             do {
-                draft.added += try await work(attachmentStore)
+                onAdded(try await work(attachmentStore))
             } catch {
                 errorMessage = String(localized: "A file could not be added. \(error.localizedDescription)")
             }
@@ -129,6 +141,7 @@ struct AttachmentGallery: View {
     let emptyText: LocalizedStringKey
     @Binding var opened: OpenedAttachment?
     @Binding var errorMessage: String?
+    var onDelete: ((Attachment) -> Void)?
     @Environment(TrackerStore.self) private var store
 
     var body: some View {
@@ -149,8 +162,14 @@ struct AttachmentGallery: View {
             .accessibilityHint("Opens a preview")
             .contextMenu {
                 Button("Share", systemImage: "square.and.arrow.up") { open(attachment, share: true) }
+                if let onDelete {
+                    Button("Delete", systemImage: "trash", role: .destructive) { onDelete(attachment) }
+                }
             }
             .swipeActions {
+                if let onDelete {
+                    Button("Delete", systemImage: "trash", role: .destructive) { onDelete(attachment) }
+                }
                 Button("Share", systemImage: "square.and.arrow.up") { open(attachment, share: true) }
                     .tint(.accentColor)
             }

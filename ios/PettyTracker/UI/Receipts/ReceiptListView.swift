@@ -352,10 +352,10 @@ struct ReceiptRow: View {
                     }
                 }
                 let subtitle = [
-                    receipt.purchaseDate.map(Formats.date) ?? String(localized: "No date"),
+                    receipt.purchaseDate.map { Formats.shortDate($0, today: store.today) } ?? String(localized: "No date"),
                     receipt.category.isEmpty ? nil : receipt.category,
                 ].compactMap { $0 }.joined(separator: " · ")
-                Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
+                Text(subtitle).font(.subheadline).foregroundStyle(.secondary).lineLimit(1)
                 if let route = receipt.routeLabel {
                     Label(route, systemImage: ReceiptFacetKind.route.symbol)
                         .labelStyle(.titleAndIcon)

@@ -50,10 +50,12 @@ struct ProductDetailView: View {
             Section("Files and photos") {
                 AttachmentGallery(
                     attachments: store.attachments(.product, productId),
-                    emptyText: "No files or photos. Edit the product to add them.",
+                    emptyText: "Add a photo of the product, its serial label or the manual.",
                     opened: $openedAttachment,
-                    errorMessage: $errorMessage
+                    errorMessage: $errorMessage,
+                    onDelete: { attachment in perform { try store.removeAttachment(attachment) } }
                 )
+                AttachmentAddMenu { added in perform { try store.addAttachments(added, to: .product, productId) } }
             }
             Section {
                 Button("Delete product", role: .destructive) { confirmDelete = true }
@@ -141,8 +143,12 @@ struct ProductDetailView: View {
     }
 
     private func link(_ receiptId: Int64?) {
+        perform { try store.linkProduct(productId, toReceipt: receiptId) }
+    }
+
+    private func perform(_ action: () throws -> Void) {
         do {
-            try store.linkProduct(productId, toReceipt: receiptId)
+            try action()
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -38,9 +38,8 @@ struct SubscriptionDetailView: View {
                     }
                     Text(Formats.cycle(count: subscription.cycleCount, unit: subscription.cycleUnit))
                         .foregroundStyle(.secondary)
-                    if let price = subscription.price, subscription.cycleUnit != .months || subscription.cycleCount != 1 {
-                        let monthly = Renewals.monthlyCost(price: price, count: subscription.cycleCount, unit: subscription.cycleUnit)
-                        Text("≈ \(Money.format(monthly, currency: subscription.currency)) per month")
+                    if let price = subscription.price {
+                        Text(costLine(price, subscription))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -117,6 +116,18 @@ struct SubscriptionDetailView: View {
             Text("The subscription will be removed from this device.")
         }
         .errorAlert($errorMessage)
+    }
+
+    /// The equivalent cost per month and per year, leaving out whichever the price already states.
+    private func costLine(_ price: Decimal, _ subscription: Subscription) -> String {
+        let monthly = Renewals.monthlyCost(price: price, count: subscription.cycleCount, unit: subscription.cycleUnit)
+        let perMonth = String(localized: "≈ \(Money.format(monthly, currency: subscription.currency)) per month")
+        let perYear = String(localized: "≈ \(Money.format(monthly * 12, currency: subscription.currency)) per year")
+        return switch (subscription.cycleUnit, subscription.cycleCount) {
+        case (.months, 1): perYear
+        case (.years, 1): perMonth
+        default: "\(perMonth) · \(perYear)"
+        }
     }
 
     private func update(_ transform: (Subscription) -> Subscription) {

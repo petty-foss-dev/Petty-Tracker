@@ -85,20 +85,20 @@ private struct ProductEditForm: View {
         NavigationStack {
             Form {
                 Section("Details") {
-                    TextField("Product name", text: $form.name)
+                    FormTextField("Name", text: $form.name, prompt: "Required")
                         .textInputAutocapitalization(.words)
                     if showErrors && form.name.trimmingCharacters(in: .whitespaces).isEmpty {
                         FieldError(text: String(localized: "Required"))
                     }
-                    TextField("Brand", text: $form.brand)
-                    TextField("Model", text: $form.model)
-                    TextField("Serial number", text: $form.serialNumber)
+                    FormTextField("Brand", text: $form.brand)
+                    FormTextField("Model", text: $form.model)
+                    FormTextField("Serial number", text: $form.serialNumber)
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
                 }
                 Section("Purchase") {
                     OptionalDateRow(title: String(localized: "Purchase date"), selection: $form.purchaseDate)
-                    TextField("Retailer", text: $form.retailer)
+                    FormTextField("Retailer", text: $form.retailer)
                     AmountRow(price: $form.price, currency: $form.currency, isInvalid: showErrors && !form.priceIsValid)
                 }
                 Section {

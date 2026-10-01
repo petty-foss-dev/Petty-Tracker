@@ -1,7 +1,10 @@
 import Foundation
 
 extension Receipt {
-    static let symbol = "receipt"
+    // The "receipt" symbol arrived in iOS 18.
+    static var symbol: String {
+        if #available(iOS 18, *) { "receipt" } else { "doc.plaintext" }
+    }
     static let fuelCategory = String(localized: "Fuel")
 
     static func isValidCardLastFour(_ text: String) -> Bool {

@@ -5,6 +5,14 @@ enum Formats {
         day.date().formatted(date: .abbreviated, time: .omitted)
     }
 
+    /// "Oct 12" within the current year, "Oct 12, 2027" otherwise.
+    static func shortDate(_ day: Day, today: Day) -> String {
+        let date = day.date()
+        return day.year == today.year
+            ? date.formatted(.dateTime.month(.abbreviated).day())
+            : date.formatted(date: .abbreviated, time: .omitted)
+    }
+
     static func time(_ time: ClockTime) -> String {
         time.date().formatted(date: .omitted, time: .shortened)
     }
@@ -41,10 +49,19 @@ enum Formats {
         }
     }
 
+    /// Relative phrasing within a month either side of today, the date itself further out.
+    static func deadline(_ kind: RecordKind, date day: Day, today: Day) -> String {
+        let days = today.days(until: day)
+        return abs(days) <= 31 ? deadline(kind, days: days) : phrase(kind, when: shortDate(day, today: today), past: days < 0)
+    }
+
     /// Absolute phrasing for notifications, which may be read long after they were scheduled.
     static func deadlinePhrase(_ kind: RecordKind, date day: Day, past: Bool) -> String {
-        let when = date(day)
-        return switch (kind, past) {
+        phrase(kind, when: date(day), past: past)
+    }
+
+    private static func phrase(_ kind: RecordKind, when: String, past: Bool) -> String {
+        switch (kind, past) {
         case (.warranty, false): String(localized: "Warranty ends \(when)")
         case (.warranty, true): String(localized: "Warranty ended \(when)")
         case (.subscription, false): String(localized: "Renews \(when)")

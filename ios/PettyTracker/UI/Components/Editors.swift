@@ -40,12 +40,14 @@ extension View {
 
 struct AddRecordMenu: View {
     let onSelect: (RecordKind) -> Void
+    let onScanReceipt: () -> Void
 
     var body: some View {
         Menu {
             Button("Product and warranty", systemImage: RecordKind.warranty.symbol) { onSelect(.warranty) }
             Button("Subscription", systemImage: RecordKind.subscription.symbol) { onSelect(.subscription) }
             Button("Document", systemImage: RecordKind.document.symbol) { onSelect(.document) }
+            Button("Receipt", systemImage: Receipt.symbol, action: onScanReceipt)
         } label: {
             Label("Add", systemImage: "plus")
         }

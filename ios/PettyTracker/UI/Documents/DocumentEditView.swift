@@ -59,13 +59,13 @@ private struct DocumentEditForm: View {
         NavigationStack {
             Form {
                 Section("Details") {
-                    TextField("Document name", text: $form.title)
+                    FormTextField("Name", text: $form.title, prompt: "Required")
                         .textInputAutocapitalization(.words)
                     if showErrors && form.title.trimmingCharacters(in: .whitespaces).isEmpty {
                         FieldError(text: String(localized: "Required"))
                     }
-                    TextField("Issued by", text: $form.issuer)
-                    TextField("Document number", text: $form.reference)
+                    FormTextField("Issued by", text: $form.issuer)
+                    FormTextField("Number", text: $form.reference)
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
                 }

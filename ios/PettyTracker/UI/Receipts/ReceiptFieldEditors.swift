@@ -64,12 +64,12 @@ struct ReceiptStoreSection: View {
         Section("Store and payment") {
             TextField("Store address", text: $form.storeAddress, axis: .vertical)
                 .lineLimit(1...4)
-            TextField("Store phone", text: $form.storePhone)
+            FormTextField("Phone", text: $form.storePhone)
                 .keyboardType(.phonePad)
-            TextField("Receipt or transaction number", text: $form.transactionId)
+            FormTextField("Transaction", text: $form.transactionId)
                 .textInputAutocapitalization(.characters)
                 .autocorrectionDisabled()
-            TextField("Payment method, such as Visa or Cash", text: $form.paymentMethod)
+            FormTextField("Payment", text: $form.paymentMethod, prompt: "Visa, cash…")
                 .textInputAutocapitalization(.words)
             LabeledContent("Card last 4 digits") {
                 TextField("1234", text: $form.cardLastFour)
@@ -133,7 +133,7 @@ struct ReceiptFuelSection: View {
     var body: some View {
         Section {
             if form.isFuel || expanded {
-                TextField("Grade, such as Regular or Diesel", text: $form.fuelGrade)
+                FormTextField("Grade", text: $form.fuelGrade, prompt: "Regular, diesel…")
                     .textInputAutocapitalization(.words)
                 HStack {
                     TextField("Volume", text: $form.fuelVolume)
@@ -152,9 +152,9 @@ struct ReceiptFuelSection: View {
                         .multilineTextAlignment(.trailing)
                         .foregroundStyle(showErrors && !ReceiptForm.isValidQuantity(form.fuelUnitPrice) ? Color.trackerPast : .primary)
                 }
-                TextField("Pump number", text: $form.pumpNumber)
+                FormTextField("Pump", text: $form.pumpNumber)
                     .keyboardType(.numbersAndPunctuation)
-                TextField("Odometer", text: $form.odometer)
+                FormTextField("Odometer", text: $form.odometer)
                     .keyboardType(.numbersAndPunctuation)
                 if showErrors && ![form.fuelVolume, form.fuelUnitPrice].allSatisfy(ReceiptForm.isValidQuantity) {
                     FieldError(text: String(localized: "Enter numbers such as 10.543"))

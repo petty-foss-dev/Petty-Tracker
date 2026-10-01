@@ -49,22 +49,19 @@ struct ReceiptDetailView: View {
                     .scrollIndicators(.hidden)
                 }
             }
-            detailSections(receipt)
-            Section("Items") {
-                if receipt.items.isEmpty {
-                    Text("No items").foregroundStyle(.secondary)
-                }
-                ForEach(Array(receipt.items.enumerated()), id: \.offset) { _, item in
-                    ItemRow(item: item, currency: receipt.currency)
-                        .contextMenu {
-                            Button("Create product from item", systemImage: "plus.circle") {
-                                newProduct = ProductDraftRequest(product: Product(receipt: receipt, item: item))
+            if !receipt.items.isEmpty {
+                Section("Items") {
+                    ForEach(Array(receipt.items.enumerated()), id: \.offset) { _, item in
+                        ItemRow(item: item, currency: receipt.currency)
+                            .contextMenu {
+                                Button("Create product from item", systemImage: "plus.circle") {
+                                    newProduct = ProductDraftRequest(product: Product(receipt: receipt, item: item))
+                                }
                             }
-                        }
+                    }
                 }
             }
-            productsSection(receipt)
-            if receipt.subtotal != nil || receipt.tax != nil || receipt.tip != nil || receipt.total != nil {
+            if receipt.subtotal != nil || receipt.tax != nil || receipt.tip != nil {
                 Section("Totals") {
                     amountRow("Subtotal", receipt.subtotal, receipt.currency)
                     amountRow("Tax", receipt.tax, receipt.currency)
@@ -72,6 +69,8 @@ struct ReceiptDetailView: View {
                     amountRow("Total", receipt.total, receipt.currency)
                 }
             }
+            detailSections(receipt)
+            productsSection(receipt)
             if !receipt.customFields.isEmpty {
                 Section("Custom fields") {
                     ForEach(Array(receipt.customFields.enumerated()), id: \.offset) { _, field in
@@ -243,8 +242,9 @@ struct ReceiptDetailView: View {
     }
 
     private func productsSection(_ receipt: Receipt) -> some View {
-        Section {
-            ForEach(store.products(coveredBy: receipt)) { product in
+        let linked = store.products(coveredBy: receipt)
+        return Section {
+            ForEach(linked) { product in
                 NavigationLink(value: Route.product(product.id)) {
                     Label(product.name, systemImage: RecordKind.warranty.symbol)
                 }
@@ -255,21 +255,23 @@ struct ReceiptDetailView: View {
                     .tint(Color.trackerSoon)
                 }
             }
-            if !receipt.items.isEmpty {
-                Menu {
-                    ForEach(Array(receipt.items.enumerated()), id: \.offset) { _, item in
-                        Button(itemTitle(item, currency: receipt.currency)) {
-                            newProduct = ProductDraftRequest(product: Product(receipt: receipt, item: item))
+            Menu {
+                Button("New product from this receipt", systemImage: "plus.rectangle.on.rectangle") {
+                    newProduct = ProductDraftRequest(product: Product(receipt: receipt, item: nil))
+                }
+                if !receipt.items.isEmpty {
+                    Menu("Create product from item", systemImage: "plus.circle") {
+                        ForEach(Array(receipt.items.enumerated()), id: \.offset) { _, item in
+                            Button(itemTitle(item, currency: receipt.currency)) {
+                                newProduct = ProductDraftRequest(product: Product(receipt: receipt, item: item))
+                            }
                         }
                     }
-                } label: {
-                    Label("Create product from item", systemImage: "plus.circle")
                 }
+                Button("Link existing product", systemImage: "link") { linkingProduct = true }
+            } label: {
+                Label(linked.isEmpty ? "Track a warranty from this receipt" : "Add another product", systemImage: "checkmark.shield")
             }
-            Button("New product from this receipt", systemImage: "plus.rectangle.on.rectangle") {
-                newProduct = ProductDraftRequest(product: Product(receipt: receipt, item: nil))
-            }
-            Button("Link existing product", systemImage: "link") { linkingProduct = true }
         } header: {
             Text("Products and warranties")
         } footer: {
