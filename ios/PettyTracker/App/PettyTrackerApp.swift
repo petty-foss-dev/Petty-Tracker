@@ -5,6 +5,10 @@ import UserNotifications
 struct PettyTrackerApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
 
+    init() {
+        Appearance.configureNavigationBars()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()

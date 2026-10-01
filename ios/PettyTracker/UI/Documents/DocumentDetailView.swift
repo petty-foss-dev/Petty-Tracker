@@ -34,12 +34,13 @@ struct DocumentDetailView: View {
                     if let expires = document.expiresOn {
                         Text(Formats.deadline(.document, days: today.days(until: expires)))
                             .font(.title3.weight(.semibold))
+                            .fontDesign(.serif)
                     }
                 }
                 .padding(.vertical, 4)
             }
             if !document.issuer.isEmpty || !document.reference.isEmpty || document.issuedOn != nil || document.expiresOn != nil {
-                Section("Details") {
+                Section(overline: "Details") {
                     DetailField("Issued by", document.issuer)
                     DetailField("Document number", document.reference, monospaced: true)
                     DetailField("Issue date", document.issuedOn.map(Formats.date) ?? "")
@@ -47,11 +48,11 @@ struct DocumentDetailView: View {
                 }
             }
             if !document.notes.isEmpty {
-                Section("Notes") {
+                Section(overline: "Notes") {
                     Text(document.notes).textSelection(.enabled)
                 }
             }
-            Section("Scans and files") {
+            Section(overline: "Scans and files") {
                 AttachmentGallery(
                     attachments: store.attachments(.document, documentId),
                     emptyText: "Add a photo or scan so the document is on hand when you need it.",

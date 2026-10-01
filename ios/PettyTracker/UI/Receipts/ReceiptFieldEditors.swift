@@ -48,7 +48,7 @@ struct OptionalTimeRow: View {
                 HStack {
                     Text(title).foregroundStyle(.primary)
                     Spacer()
-                    Text("Add time").foregroundStyle(Color.accentColor)
+                    Text("Add time").foregroundStyle(Color.trackerAccent)
                 }
             }
             .accessibilityLabel(String(localized: "Choose \(title)"))
@@ -61,7 +61,7 @@ struct ReceiptStoreSection: View {
     let showErrors: Bool
 
     var body: some View {
-        Section("Store and payment") {
+        Section(overline: "Store and payment") {
             TextField("Store address", text: $form.storeAddress, axis: .vertical)
                 .lineLimit(1...4)
             FormTextField("Phone", text: $form.storePhone)
@@ -101,7 +101,7 @@ struct ReceiptTripSection: View {
                 }
             }
         } header: {
-            Text("Trip")
+            Overline("Trip")
         } footer: {
             Text("Where the trip started and ended, for finding receipts by route. Use the same spelling each time.")
         }
@@ -163,7 +163,7 @@ struct ReceiptFuelSection: View {
                 Button("Add fuel details", systemImage: "fuelpump") { expanded = true }
             }
         } header: {
-            Text("Fuel")
+            Overline("Fuel")
         }
     }
 }
@@ -206,7 +206,7 @@ struct ReceiptCustomFieldsSection: View {
                 fields.append(ReceiptFieldDraft())
             }
         } header: {
-            Text("Custom fields")
+            Overline("Custom fields")
         } footer: {
             Text("Add your own details, such as Vehicle, Project or Trip purpose. Names and values can be searched and browsed.")
         }

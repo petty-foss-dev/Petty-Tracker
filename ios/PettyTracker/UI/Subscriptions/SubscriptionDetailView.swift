@@ -35,6 +35,7 @@ struct SubscriptionDetailView: View {
                     if let price = subscription.price {
                         Text(Money.format(price, currency: subscription.currency))
                             .font(.largeTitle.weight(.semibold))
+                            .fontDesign(.serif)
                     }
                     Text(Formats.cycle(count: subscription.cycleCount, unit: subscription.cycleUnit))
                         .foregroundStyle(.secondary)
@@ -69,7 +70,7 @@ struct SubscriptionDetailView: View {
                     Button("Mark canceled", systemImage: "xmark.circle") { confirmCancel = true }
                 }
             } header: {
-                Text("Renewal")
+                Overline("Renewal")
             } footer: {
                 if subscription.isActive && status == .past {
                     Text("The renewal date has passed. Mark it renewed to move to the next billing date.")
@@ -77,7 +78,7 @@ struct SubscriptionDetailView: View {
             }
 
             if !subscription.notes.isEmpty {
-                Section("Notes") {
+                Section(overline: "Notes") {
                     Text(subscription.notes).textSelection(.enabled)
                 }
             }

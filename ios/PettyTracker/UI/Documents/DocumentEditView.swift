@@ -57,8 +57,8 @@ private struct DocumentEditForm: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Details") {
+            TrackerForm {
+                Section(overline: "Details") {
                     FormTextField("Name", text: $form.title, prompt: "Required")
                         .textInputAutocapitalization(.words)
                     if showErrors && form.title.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -73,13 +73,13 @@ private struct DocumentEditForm: View {
                     OptionalDateRow(title: String(localized: "Issue date"), selection: $form.issuedOn)
                     OptionalDateRow(title: String(localized: "Expiry date"), selection: $form.expiresOn)
                 } header: {
-                    Text("Dates")
+                    Overline("Dates")
                 } footer: {
                     if let issued = form.issuedOn, let expires = form.expiresOn, expires < issued {
                         Text("This is before the issue date").foregroundStyle(Color.trackerSoon)
                     }
                 }
-                Section("Notes") {
+                Section(overline: "Notes") {
                     NotesField(text: $form.notes)
                 }
                 AttachmentEditorSection(title: "Scans and files", draft: $attachments)

@@ -36,7 +36,7 @@ struct SubscriptionListView: View {
             .sorted { ($0.isActive ? 0 : 1, $0.nextRenewal.epochDay) < ($1.isActive ? 0 : 1, $1.nextRenewal.epochDay) }
         let totals = Renewals.monthlyTotals(all)
 
-        List {
+        TrackerList {
             if !all.isEmpty {
                 FilterPicker(selection: $filter, options: SubscriptionFilter.allCases, label: \.label)
                 if !totals.isEmpty && query.isEmpty {
@@ -46,6 +46,7 @@ struct SubscriptionListView: View {
                             ForEach(totals, id: \.currency) { total in
                                 Text("≈ \(Money.format(total.amount, currency: total.currency))")
                                     .font(.title2.weight(.semibold))
+                                    .fontDesign(.serif)
                             }
                             Text(Formats.count(all.filter(\.isActive).count, "active subscription", "active subscriptions"))
                                 .font(.footnote)
@@ -62,7 +63,7 @@ struct SubscriptionListView: View {
                         .swipeActions {
                             if subscription.isActive {
                                 Button("Mark renewed", systemImage: "checkmark.circle") { markRenewed(subscription.id) }
-                                    .tint(.accentColor)
+                                    .tint(Color.trackerAccent)
                             }
                         }
                     }
@@ -115,7 +116,7 @@ struct SubscriptionRow: View {
         HStack(spacing: 12) {
             RecordIcon(symbol: RecordKind.subscription.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
-                Text(subscription.name).font(.body.weight(.medium))
+                Text(subscription.name).font(.body.weight(.semibold)).fontDesign(.serif)
                 if let canceled = subscription.canceledOn {
                     Text("Canceled \(Formats.date(canceled))").font(.subheadline).foregroundStyle(.secondary)
                 } else {

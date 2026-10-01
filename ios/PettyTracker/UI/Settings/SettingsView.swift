@@ -17,14 +17,23 @@ struct SettingsView: View {
     @State private var busy = false
     @State private var notice: String?
     @State private var errorMessage: String?
+    @AppStorage(Appearance.pureBlackKey) private var pureBlack = false
 
     var body: some View {
-        Form {
-            Section("Appearance") {
+        TrackerForm {
+            Section(overline: "Appearance") {
                 Picker("Theme", selection: setting(\.themeMode)) {
                     ForEach(ThemeMode.allCases, id: \.self) { Text($0.label).tag($0) }
                 }
                 .pickerStyle(.segmented)
+                Toggle(isOn: $pureBlack) {
+                    VStack(alignment: .leading) {
+                        Text("Pure black")
+                        Text("True black backgrounds in dark mode, easier on OLED screens")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
 
             Section {
@@ -49,12 +58,12 @@ struct SettingsView: View {
                 leadPicker("Subscription renewals", \.subscriptionLeadDays)
                 leadPicker("Document expiry", \.documentLeadDays)
             } header: {
-                Text("Reminders")
+                Overline("Reminders")
             } footer: {
                 Text("Reminders arrive around 9 AM.")
             }
 
-            Section("Defaults") {
+            Section(overline: "Defaults") {
                 NavigationLink {
                     CurrencyPicker(selection: setting(\.defaultCurrency))
                 } label: {
@@ -97,13 +106,13 @@ struct SettingsView: View {
                     }
                 }
             } header: {
-                Text("Backup")
+                Overline("Backup")
             } footer: {
                 Text("Export saves every record, receipt, attachment and setting to a single ZIP file you choose. Import replaces everything on this iPhone with the contents of a backup. Backups without receipts work with petty: Tracker for Android too. Once you keep receipts, backups use a newer format that petty: Tracker for Android can't import.")
             }
             .disabled(busy)
 
-            Section("About") {
+            Section(overline: "About") {
                 LabeledContent("Version", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")
                 Text("Your records and files are stored only on this device. petty: Tracker has no internet access, accounts, analytics or ads.")
                     .font(.footnote)

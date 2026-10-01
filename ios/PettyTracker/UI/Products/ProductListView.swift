@@ -41,11 +41,11 @@ struct ProductListView: View {
                     < ($1.status.sortRank, deadlineSortKey($1.product.warrantyExpires, $1.status))
             }
 
-        List {
+        TrackerList {
             if !store.data.products.isEmpty {
                 FilterPicker(selection: $filter, options: ProductFilter.allCases, label: \.label)
                 ForEach(StatusSection.group(items, status: \.status), id: \.section) { group in
-                    Section(group.section.title(.warranty)) {
+                    Section(overline: group.section.title(.warranty)) {
                         ForEach(group.items, id: \.product.id) { item in
                             NavigationLink(value: Route.product(item.product.id)) {
                                 ProductRow(product: item.product, status: item.status, today: today)
@@ -89,7 +89,7 @@ struct ProductRow: View {
         HStack(spacing: 12) {
             RecordIcon(symbol: RecordKind.warranty.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
-                Text(product.name).font(.body.weight(.medium))
+                Text(product.name).font(.body.weight(.semibold)).fontDesign(.serif)
                 let subtitle = [product.brand, product.model].filter { !$0.isEmpty }.joined(separator: " · ")
                 if !subtitle.isEmpty {
                     Text(subtitle).font(.subheadline).foregroundStyle(.secondary)
@@ -104,17 +104,35 @@ struct ProductRow: View {
     }
 }
 
-/// A segmented filter shown as the first list row.
+/// A row of filter chips shown as the first list row.
 struct FilterPicker<Option: Hashable>: View {
     @Binding var selection: Option
     let options: [Option]
     let label: KeyPath<Option, LocalizedStringKey>
 
     var body: some View {
-        Picker("Filter", selection: $selection) {
-            ForEach(options, id: \.self) { Text($0[keyPath: label]).tag($0) }
+        ScrollView(.horizontal) {
+            HStack(spacing: 8) {
+                ForEach(options, id: \.self) { option in
+                    let selected = option == selection
+                    Button {
+                        selection = option
+                    } label: {
+                        Text(option[keyPath: label])
+                            .font(.subheadline.weight(selected ? .semibold : .medium))
+                            .foregroundStyle(selected ? Color.trackerOnAccent : .secondary)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(selected ? Color.trackerAccent : Color.trackerElevated, in: Capsule())
+                            .overlay(Capsule().strokeBorder(selected ? Color.clear : Color.trackerHairline))
+                            .frame(minHeight: 44)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(selected ? .isSelected : [])
+                }
+            }
         }
-        .pickerStyle(.segmented)
+        .scrollIndicators(.hidden)
         .listRowBackground(Color.clear)
         .listRowInsets(EdgeInsets())
     }

@@ -281,7 +281,7 @@ private struct ReceiptEditForm: View {
 
     var body: some View {
         NavigationStack {
-            Form {
+            TrackerForm {
                 pagesSection
                 reviewSection
                 detailsSection
@@ -295,7 +295,7 @@ private struct ReceiptEditForm: View {
                     names: ReceiptOrganizer.suggestions(store.data.receipts.flatMap(\.customFields).map(\.name)),
                     showErrors: showErrors
                 )
-                Section("Notes") {
+                Section(overline: "Notes") {
                     NotesField(text: $form.notes)
                 }
                 recognizedTextSection
@@ -394,7 +394,7 @@ private struct ReceiptEditForm: View {
                 }
             }
         } header: {
-            Text("Scans")
+            Overline("Scans")
         } footer: {
             if !pages.visible.isEmpty {
                 Text("Text is recognized on this iPhone and can contain mistakes, especially in handwriting. Check each field before saving.")
@@ -413,7 +413,7 @@ private struct ReceiptEditForm: View {
             Section {
                 ForEach(flags) { ReviewFlagRow(flag: $0, currency: form.currency) }
             } header: {
-                Text("Check before saving")
+                Overline("Check before saving")
             } footer: {
                 Text("Nothing is removed automatically. Saved receipts with open checks appear under Needs review.")
             }
@@ -421,7 +421,7 @@ private struct ReceiptEditForm: View {
     }
 
     private var detailsSection: some View {
-        Section("Receipt") {
+        Section(overline: "Receipt") {
             FormTextField("Merchant", text: $form.merchant, prompt: "Required")
                 .textInputAutocapitalization(.words)
             if showErrors && form.merchant.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -474,7 +474,7 @@ private struct ReceiptEditForm: View {
                 form.items.append(ReceiptItemDraft())
             }
         } header: {
-            Text("Items")
+            Overline("Items")
         } footer: {
             if let sum = form.itemsSum {
                 Text("Items add up to \(Money.format(sum, currency: form.currency)). Enter discounts as negative amounts.")
@@ -496,7 +496,7 @@ private struct ReceiptEditForm: View {
                 }
             }
         } header: {
-            Text("Totals")
+            Overline("Totals")
         } footer: {
             if let warning = totalsWarning {
                 Text(warning).foregroundStyle(Color.trackerSoon)

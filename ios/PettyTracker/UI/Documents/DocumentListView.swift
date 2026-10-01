@@ -41,11 +41,11 @@ struct DocumentListView: View {
                     < ($1.status.sortRank, deadlineSortKey($1.document.expiresOn, $1.status))
             }
 
-        List {
+        TrackerList {
             if !store.data.documents.isEmpty {
                 FilterPicker(selection: $filter, options: DocumentFilter.allCases, label: \.label)
                 ForEach(StatusSection.group(items, status: \.status), id: \.section) { group in
-                    Section(group.section.title(.document)) {
+                    Section(overline: group.section.title(.document)) {
                         ForEach(group.items, id: \.document.id) { item in
                             NavigationLink(value: Route.document(item.document.id)) {
                                 DocumentRow(document: item.document, status: item.status, today: today)
@@ -89,7 +89,7 @@ struct DocumentRow: View {
         HStack(spacing: 12) {
             RecordIcon(symbol: RecordKind.document.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
-                Text(document.title).font(.body.weight(.medium))
+                Text(document.title).font(.body.weight(.semibold)).fontDesign(.serif)
                 if !document.issuer.isEmpty {
                     Text(document.issuer).font(.subheadline).foregroundStyle(.secondary)
                 }

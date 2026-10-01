@@ -6,6 +6,7 @@ struct RootView: View {
     @Environment(\.reminders) private var reminders
     @Environment(QuickCapture.self) private var quickCapture
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage(Appearance.pureBlackKey) private var pureBlack = false
 
     var body: some View {
         @Bindable var router = router
@@ -40,6 +41,9 @@ struct RootView: View {
             .tabItem { Label("Receipts", systemImage: Receipt.symbol) }
             .tag(AppTab.receipts)
         }
+        // Surface colors read the pure-black preference when they resolve, so rebuild the tabs when it changes.
+        .id(pureBlack)
+        .tint(Color.trackerAccent)
         .preferredColorScheme(store.settings.themeMode.colorScheme)
         .task(id: store.data) {
             await reminders?.reschedule(store.data)

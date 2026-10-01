@@ -29,14 +29,14 @@ struct ProductDetailView: View {
                 WarrantyHeader(product: product, status: status, today: today)
             }
             if !(product.brand + product.model + product.serialNumber).isEmpty {
-                Section("Details") {
+                Section(overline: "Details") {
                     DetailField("Brand", product.brand)
                     DetailField("Model", product.model)
                     DetailField("Serial number", product.serialNumber, monospaced: true)
                 }
             }
             if product.purchaseDate != nil || !product.retailer.isEmpty || product.price != nil {
-                Section("Purchase") {
+                Section(overline: "Purchase") {
                     DetailField("Purchase date", product.purchaseDate.map(Formats.date) ?? "")
                     DetailField("Retailer", product.retailer)
                     DetailField("Price", product.price.map { Money.format($0, currency: product.currency) } ?? "")
@@ -44,11 +44,11 @@ struct ProductDetailView: View {
             }
             receiptSection
             if !product.notes.isEmpty {
-                Section("Notes") {
+                Section(overline: "Notes") {
                     Text(product.notes).textSelection(.enabled)
                 }
             }
-            Section("Files and photos") {
+            Section(overline: "Files and photos") {
                 AttachmentGallery(
                     attachments: store.attachments(.product, productId),
                     emptyText: "Add a photo of the product, its serial label or the manual.",
@@ -145,7 +145,7 @@ struct ProductDetailView: View {
                 Button("Link a receipt", systemImage: "link") { pickingReceipt = true }
             }
         } header: {
-            Text("Receipt")
+            Overline("Receipt")
         } footer: {
             if store.receiptCovering(productId) == nil {
                 Text("Link the purchase receipt so it's ready as proof of purchase for a claim.")
@@ -221,6 +221,7 @@ private struct WarrantyHeader: View {
             if let expires = product.warrantyExpires {
                 Text(Formats.deadline(.warranty, days: today.days(until: expires)))
                     .font(.title3.weight(.semibold))
+                    .fontDesign(.serif)
                 if let remaining {
                     ProgressView(value: remaining)
                         .tint(status.tint)

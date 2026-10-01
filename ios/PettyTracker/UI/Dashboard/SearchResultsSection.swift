@@ -17,7 +17,7 @@ struct SearchResultsSection: View {
                 .listRowBackground(Color.clear)
         }
         if !products.isEmpty {
-            Section("Warranties") {
+            Section(overline: "Warranties") {
                 ForEach(products) { product in
                     NavigationLink(value: Route.product(product.id)) {
                         ProductRow(
@@ -30,7 +30,7 @@ struct SearchResultsSection: View {
             }
         }
         if !subscriptions.isEmpty {
-            Section("Subscriptions") {
+            Section(overline: "Subscriptions") {
                 ForEach(subscriptions) { subscription in
                     NavigationLink(value: Route.subscription(subscription.id)) {
                         SubscriptionRow(subscription: subscription, leadDays: data.settings.subscriptionLeadDays, today: store.today)
@@ -39,7 +39,7 @@ struct SearchResultsSection: View {
             }
         }
         if !documents.isEmpty {
-            Section("Documents") {
+            Section(overline: "Documents") {
                 ForEach(documents) { document in
                     NavigationLink(value: Route.document(document.id)) {
                         DocumentRow(
@@ -52,7 +52,7 @@ struct SearchResultsSection: View {
             }
         }
         if !receipts.isEmpty {
-            Section("Receipts") {
+            Section(overline: "Receipts") {
                 ForEach(receipts) { receipt in
                     NavigationLink(value: Route.receipt(receipt.id)) {
                         ReceiptRow(receipt: receipt)

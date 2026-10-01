@@ -11,7 +11,7 @@ struct ReceiptPicker: View {
     var body: some View {
         let receipts = ReceiptOrganizer.groups(store.data.receipts.filter { $0.matches(query) }, sort: .newest, grouping: .none)
             .flatMap(\.receipts)
-        List {
+        TrackerList {
             if query.isEmpty {
                 Button {
                     choose(nil)
@@ -19,7 +19,7 @@ struct ReceiptPicker: View {
                     HStack {
                         Text("No receipt")
                         Spacer()
-                        if selection == nil { Image(systemName: "checkmark").foregroundStyle(Color.accentColor) }
+                        if selection == nil { Image(systemName: "checkmark").foregroundStyle(Color.trackerAccent) }
                     }
                 }
                 .foregroundStyle(.primary)
@@ -30,7 +30,7 @@ struct ReceiptPicker: View {
                 } label: {
                     HStack {
                         ReceiptRow(receipt: receipt)
-                        if selection == receipt.id { Image(systemName: "checkmark").foregroundStyle(Color.accentColor) }
+                        if selection == receipt.id { Image(systemName: "checkmark").foregroundStyle(Color.trackerAccent) }
                     }
                 }
                 .foregroundStyle(.primary)
@@ -85,12 +85,14 @@ struct ProductLinkPicker: View {
                             }
                         }
                         Spacer()
-                        if current?.id == receiptId { Image(systemName: "checkmark").foregroundStyle(Color.accentColor) }
+                        if current?.id == receiptId { Image(systemName: "checkmark").foregroundStyle(Color.trackerAccent) }
                     }
                 }
                 .foregroundStyle(.primary)
                 .disabled(current?.id == receiptId)
+                .listRowBackground(Color.trackerElevated)
             }
+            .trackerListStyle()
             .overlay {
                 if store.data.products.isEmpty {
                     ContentUnavailableView("No products yet", systemImage: RecordKind.warranty.symbol)

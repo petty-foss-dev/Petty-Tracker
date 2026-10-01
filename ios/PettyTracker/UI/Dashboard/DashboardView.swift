@@ -62,7 +62,7 @@ struct DashboardView: View {
 
     var body: some View {
         let summary = DashboardSummary(store.data, today: store.today)
-        List {
+        TrackerList {
             if !query.isEmpty {
                 SearchResultsSection(query: query)
             } else if summary.isEmpty {
@@ -74,12 +74,12 @@ struct DashboardView: View {
                     ReminderPromptSection(onAllow: allowReminders, onDismiss: dismissReminderPrompt)
                 }
                 if !summary.pastDue.isEmpty {
-                    Section("Needs attention") {
+                    Section(overline: "Needs attention") {
                         ForEach(summary.pastDue, id: \.self) { entry in deadlineLink(entry) }
                     }
                 }
                 ForEach(summary.upcoming, id: \.band) { group in
-                    Section(group.band.title) {
+                    Section(overline: group.band.title) {
                         ForEach(group.entries, id: \.self) { entry in deadlineLink(entry) }
                     }
                 }
@@ -122,7 +122,7 @@ struct DashboardView: View {
         .swipeActions {
             if entry.deadline.kind == .subscription {
                 Button("Mark renewed", systemImage: "checkmark.circle") { markRenewed(entry.deadline.id) }
-                    .tint(.accentColor)
+                    .tint(Color.trackerAccent)
             }
         }
     }
@@ -162,17 +162,18 @@ private struct WelcomeSection: View {
             VStack(alignment: .leading, spacing: 10) {
                 Image(systemName: "checkmark.shield")
                     .font(.largeTitle)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.trackerAccent)
                     .accessibilityHidden(true)
                 Text("Keep it all in one place")
                     .font(.title2.weight(.semibold))
+                    .fontDesign(.serif)
                     .accessibilityAddTraits(.isHeader)
                 Text("Track warranties, subscriptions and document expiry dates. Everything stays on this iPhone.")
                     .foregroundStyle(.secondary)
             }
             .padding(.vertical, 8)
         }
-        Section("What do you want to keep?") {
+        Section(overline: "What do you want to keep?") {
             addButton(.warranty, title: "Product and warranty", hint: "Receipt, serial number and warranty")
             addButton(.subscription, title: "Subscription", hint: "Price, billing cycle and next renewal")
             addButton(.document, title: "Document", hint: "Passport, licence, insurance or ID")
@@ -197,7 +198,7 @@ private struct WelcomeSection: View {
                     Text(hint).font(.subheadline).foregroundStyle(.secondary)
                 }
                 Spacer()
-                Image(systemName: "plus").foregroundStyle(Color.accentColor)
+                Image(systemName: "plus").foregroundStyle(Color.trackerAccent)
             }
             .contentShape(Rectangle())
         }
@@ -228,7 +229,7 @@ private struct ReminderPromptSection: View {
             }
             .padding(.vertical, 4)
         }
-        .listRowBackground(Color.trackerPrimaryContainer.opacity(0.5))
+        .listRowBackground(Color.trackerPrimaryContainer)
     }
 }
 
@@ -272,6 +273,7 @@ private struct SummaryTiles: View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
                 .font(.title2.weight(.semibold).monospacedDigit())
+                .fontDesign(.serif)
                 .foregroundStyle(tint)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
@@ -283,7 +285,8 @@ private struct SummaryTiles: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 16))
+        .background(Color.trackerElevated, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Color.trackerHairline))
         .accessibilityElement(children: .combine)
     }
 }
@@ -319,7 +322,7 @@ private struct QuickAddSection: View {
             .foregroundStyle(Color.trackerOnPrimaryContainer)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)
-            .background(Color.trackerPrimaryContainer.opacity(0.7), in: RoundedRectangle(cornerRadius: 16))
+            .background(Color.trackerPrimaryContainer, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("Add \(Text(title))"))
@@ -351,7 +354,7 @@ private struct RecentReceiptsSection: View {
                     }
                 }
             } header: {
-                Text("Recent receipts")
+                Overline("Recent receipts")
             }
         }
     }

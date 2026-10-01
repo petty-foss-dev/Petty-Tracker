@@ -171,7 +171,7 @@ struct AttachmentGallery: View {
                     Button("Delete", systemImage: "trash", role: .destructive) { onDelete(attachment) }
                 }
                 Button("Share", systemImage: "square.and.arrow.up") { open(attachment, share: true) }
-                    .tint(.accentColor)
+                    .tint(Color.trackerAccent)
             }
         }
     }

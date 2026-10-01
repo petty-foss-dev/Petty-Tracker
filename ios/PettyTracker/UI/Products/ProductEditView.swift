@@ -83,8 +83,8 @@ private struct ProductEditForm: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Details") {
+            TrackerForm {
+                Section(overline: "Details") {
                     FormTextField("Name", text: $form.name, prompt: "Required")
                         .textInputAutocapitalization(.words)
                     if showErrors && form.name.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -96,7 +96,7 @@ private struct ProductEditForm: View {
                         .textInputAutocapitalization(.characters)
                         .autocorrectionDisabled()
                 }
-                Section("Purchase") {
+                Section(overline: "Purchase") {
                     OptionalDateRow(title: String(localized: "Purchase date"), selection: $form.purchaseDate)
                     FormTextField("Retailer", text: $form.retailer)
                     AmountRow(price: $form.price, currency: $form.currency, isInvalid: showErrors && !form.priceIsValid)
@@ -116,7 +116,7 @@ private struct ProductEditForm: View {
                         )
                     }
                 } header: {
-                    Text("Warranty")
+                    Overline("Warranty")
                 } footer: {
                     if let start = form.purchaseDate, let end = form.warrantyExpires, end < start {
                         Text("This is before the purchase date").foregroundStyle(Color.trackerSoon)
@@ -133,11 +133,11 @@ private struct ProductEditForm: View {
                         }
                     }
                 } header: {
-                    Text("Receipt")
+                    Overline("Receipt")
                 } footer: {
                     Text("A receipt can cover several products. Its scans stay with the receipt and aren't copied.")
                 }
-                Section("Notes") {
+                Section(overline: "Notes") {
                     NotesField(text: $form.notes)
                 }
                 AttachmentEditorSection(title: "Files and photos", draft: $attachments)

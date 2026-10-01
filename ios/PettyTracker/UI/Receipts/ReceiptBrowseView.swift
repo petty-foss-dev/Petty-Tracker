@@ -31,7 +31,7 @@ struct ReceiptBrowseView: View {
     var body: some View {
         let receipts = store.data.receipts
         let categories = ReceiptOrganizer.facets(.category, in: receipts)
-        List {
+        TrackerList {
             Section {
                 NavigationLink(value: Route.receipts(ReceiptFilter())) {
                     FacetSummaryRow(
@@ -51,7 +51,7 @@ struct ReceiptBrowseView: View {
                     }
                 }
             }
-            Section("Browse by") {
+            Section(overline: "Browse by") {
                 ForEach([ReceiptFacetKind.route, .merchant, .location, .tag, .field], id: \.self) { kind in
                     let count = ReceiptFacetListView.valueCount(kind, in: receipts)
                     if count > 0 {
@@ -89,7 +89,7 @@ struct ReceiptFacetListView: View {
     var body: some View {
         let all = ReceiptOrganizer.facets(kind, in: receipts ?? store.data.receipts)
         let summaries = all.filter { Search.matches(query, $0.facet.title) }
-        List {
+        TrackerList {
             if kind == .field {
                 // A field name stays visible while any of its values match the search.
                 let names = all.filter { name in
@@ -186,7 +186,7 @@ struct FacetSummaryRow: View {
         HStack(alignment: .firstTextBaseline) {
             if let symbol {
                 Image(systemName: symbol)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.trackerAccent)
                     .accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 2) {
@@ -236,7 +236,7 @@ struct ReceiptResultsView: View {
         let matches = store.data.receipts.filter(filter.includes)
         let groups = ReceiptOrganizer.groups(matches, sort: sort, grouping: grouping)
         let pending = ReceiptReview.pending(store.data.receipts, pages: store.receiptPages)
-        List {
+        TrackerList {
             Section {
                 LabeledContent {
                     TotalsText(totals: ReceiptOrganizer.totals(matches))
@@ -364,7 +364,7 @@ struct ReceiptFilterSheet: View {
         let matches = receipts.filter { draft.includes($0) }
         let currencies = Set(receipts.map(\.currency)).sorted()
         NavigationStack {
-            Form {
+            TrackerForm {
                 Section {
                     ForEach(draft.facets, id: \.self) { facet in
                         Label(facet.title, systemImage: facet.kind.symbol)
@@ -380,7 +380,7 @@ struct ReceiptFilterSheet: View {
                         }
                     }
                 } header: {
-                    Text("Narrow by")
+                    Overline("Narrow by")
                 } footer: {
                     Text("Choices come from the \(Formats.count(matches.count, "receipt", "receipts")) that match so far.")
                 }
@@ -390,7 +390,7 @@ struct ReceiptFilterSheet: View {
                     TextField("To", text: $draft.destination)
                         .textInputAutocapitalization(.words)
                 } header: {
-                    Text("Trip")
+                    Overline("Trip")
                 } footer: {
                     Text("Matches part of a place name, so “San Fran” finds San Francisco.")
                 }
@@ -398,7 +398,7 @@ struct ReceiptFilterSheet: View {
                     OptionalDateRow(title: String(localized: "From"), selection: $draft.fromDate)
                     OptionalDateRow(title: String(localized: "Until"), selection: $draft.toDate)
                 } header: {
-                    Text("Date")
+                    Overline("Date")
                 } footer: {
                     Text("Receipts without a purchase date use the day they were added.")
                 }
@@ -423,7 +423,7 @@ struct ReceiptFilterSheet: View {
                         FieldError(text: String(localized: "Enter amounts such as 25 or 49.99"))
                     }
                 } header: {
-                    Text("Total")
+                    Overline("Total")
                 } footer: {
                     Text("Totals are compared in each receipt's own currency.")
                 }

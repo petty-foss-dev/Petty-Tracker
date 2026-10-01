@@ -60,7 +60,7 @@ private struct SubscriptionEditForm: View {
 
     var body: some View {
         NavigationStack {
-            Form {
+            TrackerForm {
                 Section {
                     FormTextField("Service", text: $form.name, prompt: "Required")
                         .textInputAutocapitalization(.words)
@@ -94,11 +94,11 @@ private struct SubscriptionEditForm: View {
                         isInvalid: showErrors && form.nextRenewal == nil
                     )
                 } header: {
-                    Text("Billing cycle")
+                    Overline("Billing cycle")
                 } footer: {
                     Text("Future renewals follow this date, keeping month-end dates at month end.")
                 }
-                Section("Notes") {
+                Section(overline: "Notes") {
                     NotesField(text: $form.notes)
                 }
             }

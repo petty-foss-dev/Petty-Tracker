@@ -17,17 +17,17 @@ struct StatusBadge: View {
         switch status {
         case .past: .trackerPast
         case .soon, .today: .trackerSoon
-        case .ok: .trackerOnPrimaryContainer
+        case .ok: .trackerOK
         case .none: .secondary
         }
     }
 
     private var background: Color {
         switch status {
-        case .past: .trackerPastContainer.opacity(0.6)
-        case .soon, .today: .trackerSoonContainer.opacity(0.6)
-        case .ok: .trackerPrimaryContainer.opacity(0.7)
-        case .none: Color.secondary.opacity(0.12)
+        case .past: .trackerPastContainer
+        case .soon, .today: .trackerSoonContainer
+        case .ok: .trackerOKContainer
+        case .none: Color.trackerHairline
         }
     }
 }
@@ -37,7 +37,7 @@ extension DeadlineStatus {
         switch self {
         case .past: .trackerPast
         case .soon, .today: .trackerSoon
-        case .ok: .accentColor
+        case .ok: .trackerOK
         case .none: .secondary
         }
     }
@@ -46,7 +46,7 @@ extension DeadlineStatus {
 /// The rounded symbol tile that leads record rows.
 struct RecordIcon: View {
     let symbol: String
-    var tint: Color = .accentColor
+    var tint: Color = .trackerAccent
 
     var body: some View {
         Image(systemName: symbol)
@@ -70,7 +70,8 @@ struct DeadlineRow: View {
             RecordIcon(symbol: deadline.kind.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
                 Text(deadline.title)
-                    .font(.body.weight(.medium))
+                    .font(.body.weight(.semibold))
+                    .fontDesign(.serif)
                     .foregroundStyle(.primary)
                 Text(phrase)
                     .font(.subheadline)
@@ -141,7 +142,7 @@ struct OptionalDateRow: View {
                         .foregroundStyle(isInvalid ? Color.trackerPast : .primary)
                     Spacer()
                     Text(isInvalid ? "Required" : "Add date")
-                        .foregroundStyle(isInvalid ? Color.trackerPast : .accentColor)
+                        .foregroundStyle(isInvalid ? Color.trackerPast : .trackerAccent)
                 }
             }
             .accessibilityLabel(String(localized: "Choose \(title)"))
@@ -199,13 +200,15 @@ struct CurrencyPicker: View {
                         .foregroundStyle(.secondary)
                     Spacer()
                     if code == selection {
-                        Image(systemName: "checkmark").foregroundStyle(Color.accentColor)
+                        Image(systemName: "checkmark").foregroundStyle(Color.trackerAccent)
                     }
                 }
             }
             .foregroundStyle(.primary)
             .accessibilityAddTraits(code == selection ? .isSelected : [])
+            .listRowBackground(Color.trackerElevated)
         }
+        .trackerListStyle()
         .navigationTitle("Currency")
         .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always))

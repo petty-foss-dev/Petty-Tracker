@@ -76,7 +76,7 @@ struct ReceiptListView: View {
         let filtered = receipts.filter { filter.includes($0) && (!needsReviewOnly || pending[$0.id] != nil) }
         let groups = ReceiptOrganizer.groups(filtered, sort: sort, grouping: grouping)
 
-        List {
+        TrackerList {
             if let item = quickCapture.sharedItems.first {
                 Button {
                     openShared(item)
@@ -116,7 +116,7 @@ struct ReceiptListView: View {
                                 .tint(Color.trackerPast)
                             if pending[receipt.id] != nil {
                                 Button("Reviewed", systemImage: "checkmark") { markReviewed(receipt) }
-                                    .tint(.accentColor)
+                                    .tint(Color.trackerAccent)
                             }
                         }
                     }
@@ -223,7 +223,7 @@ struct ReceiptListView: View {
         let reviewLabel = needsReviewOnly ? String(localized: "Needs review") : nil
         return HStack {
             Image(systemName: "line.3.horizontal.decrease.circle.fill")
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color.trackerAccent)
                 .accessibilityHidden(true)
             Text([reviewLabel, category, tag.map { "#\($0)" }].compactMap { $0 }.joined(separator: " · "))
                 .lineLimit(1)
@@ -247,7 +247,7 @@ struct ReceiptListView: View {
             Toggle(isOn: $needsReviewOnly) {
                 Label("Needs review (\(pendingCount))", systemImage: "exclamationmark.circle")
             }
-            Section("Export CSV") {
+            Section(overline: "Export CSV") {
                 Button("All receipts (\(receipts.count))", systemImage: "tablecells") {
                     exportCSV(ReceiptOrganizer.groups(receipts, sort: sort, grouping: .none).flatMap(\.receipts))
                 }
@@ -317,10 +317,12 @@ struct GroupHeader: View {
 
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(title)
+            Overline(verbatim: title)
             Spacer()
             Text(totals.map { Money.format($0.amount, currency: $0.currency) }.joined(separator: " + "))
+                .font(.footnote.weight(.semibold))
                 .monospacedDigit()
+                .foregroundStyle(.secondary)
         }
     }
 }
@@ -343,7 +345,7 @@ struct ReceiptRow: View {
             }
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 4) {
-                    Text(receipt.merchant).font(.body.weight(.medium))
+                    Text(receipt.merchant).font(.body.weight(.semibold)).fontDesign(.serif)
                     if needsReview {
                         Image(systemName: "exclamationmark.circle.fill")
                             .font(.caption)
@@ -366,7 +368,7 @@ struct ReceiptRow: View {
                 if !receipt.tags.isEmpty {
                     Text(receipt.tags.map { "#\($0)" }.joined(separator: " "))
                         .font(.caption)
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.trackerAccent)
                         .lineLimit(1)
                 }
             }

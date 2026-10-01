@@ -30,7 +30,7 @@ struct ReceiptDetailView: View {
             }
             reviewSection(receipt, pages: pages)
             if !pages.isEmpty {
-                Section("Scans") {
+                Section(overline: "Scans") {
                     ScrollView(.horizontal) {
                         HStack(spacing: 12) {
                             ForEach(Array(pages.enumerated()), id: \.element.id) { index, page in
@@ -50,7 +50,7 @@ struct ReceiptDetailView: View {
                 }
             }
             if !receipt.items.isEmpty {
-                Section("Items") {
+                Section(overline: "Items") {
                     ForEach(Array(receipt.items.enumerated()), id: \.offset) { _, item in
                         ItemRow(item: item, currency: receipt.currency)
                             .contextMenu {
@@ -62,7 +62,7 @@ struct ReceiptDetailView: View {
                 }
             }
             if receipt.subtotal != nil || receipt.tax != nil || receipt.tip != nil {
-                Section("Totals") {
+                Section(overline: "Totals") {
                     amountRow("Subtotal", receipt.subtotal, receipt.currency)
                     amountRow("Tax", receipt.tax, receipt.currency)
                     amountRow("Tip", receipt.tip, receipt.currency)
@@ -72,7 +72,7 @@ struct ReceiptDetailView: View {
             detailSections(receipt)
             productsSection(receipt)
             if !receipt.customFields.isEmpty {
-                Section("Custom fields") {
+                Section(overline: "Custom fields") {
                     ForEach(Array(receipt.customFields.enumerated()), id: \.offset) { _, field in
                         NavigationLink(value: Route.receipts(ReceiptFilter(facets: [
                             .field(name: field.name, value: field.value.isEmpty ? nil : field.value),
@@ -83,7 +83,7 @@ struct ReceiptDetailView: View {
                 }
             }
             if !receipt.notes.isEmpty {
-                Section("Notes") {
+                Section(overline: "Notes") {
                     Text(receipt.notes).textSelection(.enabled)
                 }
             }
@@ -177,7 +177,7 @@ struct ReceiptDetailView: View {
                 Button("Edit receipt", systemImage: "pencil") { editor = ReceiptEditorRequest(receiptId: receiptId) }
                 Button("Mark as reviewed", systemImage: "checkmark.circle") { perform { try store.markReviewed(receiptId) } }
             } header: {
-                Text("Needs review")
+                Overline("Needs review")
             } footer: {
                 Text("Fix what's wrong, or mark as reviewed if it's correct as is. Duplicates are never removed automatically.")
             }
@@ -185,7 +185,7 @@ struct ReceiptDetailView: View {
             Section {
                 HStack {
                     Label("Reviewed", systemImage: "checkmark.circle.fill")
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(Color.trackerAccent)
                     Spacer()
                     Button("Review again") { perform { try store.setResolvedFlags([], forReceipt: receiptId) } }
                         .buttonStyle(.borderless)
@@ -198,7 +198,7 @@ struct ReceiptDetailView: View {
     private func detailSections(_ receipt: Receipt) -> some View {
         let storeDetails = [receipt.storeAddress, receipt.storePhone, receipt.transactionId, receipt.paymentMethod, receipt.cardLastFour]
         if !storeDetails.allSatisfy(\.isEmpty) {
-            Section("Store and payment") {
+            Section(overline: "Store and payment") {
                 if !receipt.storeAddress.isEmpty {
                     NavigationLink(value: Route.receipts(ReceiptFilter(facets: [.location(receipt.storeAddress)]))) {
                         LabeledContent("Address", value: receipt.storeAddress)
@@ -211,14 +211,14 @@ struct ReceiptDetailView: View {
             }
         }
         if let route = receipt.routeLabel {
-            Section("Trip") {
+            Section(overline: "Trip") {
                 NavigationLink(value: Route.receipts(ReceiptFilter(facets: [.route(origin: receipt.origin, destination: receipt.destination)]))) {
                     Label(route, systemImage: ReceiptFacetKind.route.symbol)
                 }
             }
         }
         if receipt.hasFuelDetails {
-            Section("Fuel") {
+            Section(overline: "Fuel") {
                 textRow("Grade", receipt.fuelGrade)
                 if let volume = receipt.fuelVolume {
                     textRow("Volume", Formats.fuelVolume(volume, unit: receipt.fuelUnit))
@@ -273,7 +273,7 @@ struct ReceiptDetailView: View {
                 Label(linked.isEmpty ? "Track a warranty from this receipt" : "Add another product", systemImage: "checkmark.shield")
             }
         } header: {
-            Text("Products and warranties")
+            Overline("Products and warranties")
         } footer: {
             Text("Linked products use this receipt as proof of purchase. The scans stay here and aren't copied.")
         }
@@ -390,12 +390,13 @@ private struct ReceiptHeader: View {
             }
             Text(receipt.total.map { Money.format($0, currency: receipt.currency) } ?? String(localized: "No total"))
                 .font(.largeTitle.weight(.semibold))
+                .fontDesign(.serif)
                 .monospacedDigit()
                 .foregroundStyle(receipt.total == nil ? .secondary : .primary)
             if !receipt.tags.isEmpty {
                 Text(receipt.tags.map { "#\($0)" }.joined(separator: " "))
                     .font(.subheadline)
-                    .foregroundStyle(Color.accentColor)
+                    .foregroundStyle(Color.trackerAccent)
             }
         }
         .padding(.vertical, 4)
@@ -422,7 +423,7 @@ private struct ItemRow: View {
             if let amount = item.amount {
                 Text(Money.format(amount, currency: currency))
                     .monospacedDigit()
-                    .foregroundStyle(amount < 0 ? Color.accentColor : .primary)
+                    .foregroundStyle(amount < 0 ? Color.trackerAccent : .primary)
             }
         }
         .accessibilityElement(children: .combine)
