@@ -130,6 +130,7 @@ struct DashboardView: View {
     private func markRenewed(_ id: Int64) {
         do {
             try store.updateSubscription(id) { Renewals.advance($0, today: store.today) }
+            Haptics.success()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -209,6 +210,17 @@ private struct ReminderPromptSection: View {
     let onAllow: () -> Void
     let onDismiss: () -> Void
 
+    @ViewBuilder
+    private var promptButtons: some View {
+        Button("Allow notifications", action: onAllow)
+            .buttonStyle(.borderedProminent)
+            .foregroundStyle(Color.trackerOnAccent)
+            .fixedSize()
+        Button("Not now", action: onDismiss)
+            .buttonStyle(.bordered)
+            .fixedSize()
+    }
+
     var body: some View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
@@ -217,12 +229,9 @@ private struct ReminderPromptSection: View {
                 Text("Allow notifications so petty: Tracker can tell you before warranties end, subscriptions renew and documents expire.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
-                HStack {
-                    Button("Allow notifications", action: onAllow)
-                        .buttonStyle(.borderedProminent)
-                        .foregroundStyle(Color.trackerOnAccent)
-                    Button("Not now", action: onDismiss)
-                        .buttonStyle(.bordered)
+                ViewThatFits(in: .horizontal) {
+                    HStack { promptButtons }
+                    VStack(alignment: .leading) { promptButtons }
                 }
                 .padding(.top, 4)
             }
@@ -240,7 +249,7 @@ private struct SummaryTiles: View {
     var body: some View {
         let monthly = Renewals.monthlyTotals(store.data.subscriptions)
         Section {
-            HStack(spacing: 10) {
+            TileRow {
                 tile(
                     value: "\(summary.pastDue.count)",
                     label: "Overdue",
@@ -295,7 +304,7 @@ private struct QuickAddSection: View {
 
     var body: some View {
         Section {
-            HStack(spacing: 10) {
+            TileRow {
                 button("Product", symbol: RecordKind.warranty.symbol) { onAdd(.warranty) }
                 button("Subscription", symbol: RecordKind.subscription.symbol) { onAdd(.subscription) }
                 button("Document", symbol: RecordKind.document.symbol) { onAdd(.document) }
@@ -308,19 +317,7 @@ private struct QuickAddSection: View {
 
     private func button(_ title: LocalizedStringKey, symbol: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            VStack(spacing: 6) {
-                Image(systemName: symbol)
-                    .font(.title3)
-                    .frame(height: 24)
-                Text(title)
-                    .font(.caption.weight(.medium))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            }
-            .foregroundStyle(Color.trackerOnPrimaryContainer)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .background(Color.trackerPrimaryContainer, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            ActionTile(title: title, symbol: symbol)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("Add \(Text(title))"))

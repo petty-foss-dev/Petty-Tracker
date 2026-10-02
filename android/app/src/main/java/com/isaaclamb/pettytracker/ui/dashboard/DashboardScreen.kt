@@ -61,6 +61,7 @@ import com.isaaclamb.pettytracker.ui.SearchRoute
 import com.isaaclamb.pettytracker.ui.SettingsRoute
 import com.isaaclamb.pettytracker.ui.Tab
 import com.isaaclamb.pettytracker.ui.TrackerNavigationBar
+import com.isaaclamb.pettytracker.ui.components.ActionTile
 import com.isaaclamb.pettytracker.ui.components.EmptyState
 import com.isaaclamb.pettytracker.ui.components.RecordCard
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
@@ -239,23 +240,13 @@ private fun SummaryTile(value: String, label: String, color: Color, modifier: Mo
 private fun QuickAddRow(onCreate: (RecordKind) -> Unit) {
     Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
         RecordKind.entries.forEach { kind ->
-            val description = stringResource(kind.addLabel)
-            Surface(
+            ActionTile(
+                icon = kind.icon,
+                label = stringResource(kind.quickAddLabel),
+                description = stringResource(kind.addLabel),
                 onClick = { onCreate(kind) },
-                shape = RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.weight(1f).semantics { contentDescription = description },
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.padding(vertical = 14.dp),
-                ) {
-                    Icon(kind.icon, contentDescription = null)
-                    Text(stringResource(kind.quickAddLabel), style = MaterialTheme.typography.labelLarge, maxLines = 1)
-                }
-            }
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }

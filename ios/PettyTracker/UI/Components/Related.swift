@@ -53,11 +53,19 @@ extension TrackerStore {
 /// Cross-references to other records, shown on every detail screen.
 struct RelatedSection: View {
     let ref: RecordRef
+    /// Screens with their own "Link" action hide the section until something is linked.
+    var showsWhenEmpty = true
     @Environment(TrackerStore.self) private var store
     @State private var picking = false
     @State private var errorMessage: String?
 
     var body: some View {
+        if showsWhenEmpty || !store.related(to: ref).isEmpty {
+            section
+        }
+    }
+
+    private var section: some View {
         Section {
             ForEach(store.related(to: ref), id: \.link.id) { entry in
                 NavigationLink(value: entry.other.route) {
@@ -111,7 +119,7 @@ private struct RelatedRow: View {
     }
 }
 
-private struct RecordLinkPicker: View {
+struct RecordLinkPicker: View {
     let ref: RecordRef
     @Environment(TrackerStore.self) private var store
     @Environment(\.dismiss) private var dismiss
@@ -169,6 +177,7 @@ private struct RecordLinkPicker: View {
     private func link(_ other: RecordRef) {
         do {
             try store.addLink(ref, to: other, note: note.trimmingCharacters(in: .whitespacesAndNewlines))
+            Haptics.success()
             dismiss()
         } catch {
             errorMessage = error.localizedDescription

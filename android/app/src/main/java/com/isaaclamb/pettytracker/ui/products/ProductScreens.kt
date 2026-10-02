@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.AssistChip
@@ -52,6 +54,8 @@ import com.isaaclamb.pettytracker.domain.deadlineStatus
 import com.isaaclamb.pettytracker.ui.Formats
 import com.isaaclamb.pettytracker.ui.ProductDetailRoute
 import com.isaaclamb.pettytracker.ui.ProductEditRoute
+import com.isaaclamb.pettytracker.ui.components.ActionTile
+import com.isaaclamb.pettytracker.ui.components.AddAttachmentSheet
 import com.isaaclamb.pettytracker.ui.components.AttachmentEditor
 import com.isaaclamb.pettytracker.ui.components.ConfirmDialog
 import com.isaaclamb.pettytracker.ui.components.CurrencyField
@@ -68,6 +72,7 @@ import com.isaaclamb.pettytracker.ui.components.KindBadge
 import com.isaaclamb.pettytracker.ui.components.NoMatches
 import com.isaaclamb.pettytracker.ui.components.ProductFileLabels
 import com.isaaclamb.pettytracker.ui.components.RecordCard
+import com.isaaclamb.pettytracker.ui.components.RecordLinkSheet
 import com.isaaclamb.pettytracker.ui.components.RelatedSection
 import com.isaaclamb.pettytracker.ui.components.SearchField
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
@@ -144,6 +149,8 @@ fun ProductDetailScreen(navController: NavController) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
+    var adding by rememberSaveable { mutableStateOf(false) }
+    var linking by rememberSaveable { mutableStateOf(false) }
 
     val product = state.product
     LaunchedEffect(state.loaded, product) {
@@ -157,9 +164,6 @@ fun ProductDetailScreen(navController: NavController) {
         title = product.name,
         onBack = { navController.popBackStack() },
         actions = {
-            IconButton(onClick = { shareText(context, shareSubject, shareBody) }) {
-                Icon(Icons.Outlined.Share, contentDescription = stringResource(R.string.action_share_details))
-            }
             IconButton(onClick = { navController.navigate(ProductEditRoute(product.id)) }) {
                 Icon(Icons.Outlined.Edit, contentDescription = stringResource(R.string.action_edit))
             }
@@ -169,46 +173,72 @@ fun ProductDetailScreen(navController: NavController) {
         },
     ) {
         WarrantyCard(product, state.leadDays)
-        SectionHeader(stringResource(R.string.section_details))
-        DetailCard {
-            DetailRow(stringResource(R.string.field_brand), product.brand)
-            DetailRow(stringResource(R.string.field_model), product.model)
-            DetailRow(stringResource(R.string.field_serial), product.serialNumber)
-            DetailRow(stringResource(R.string.field_purchase_date), product.purchaseDate?.let(Formats::date))
-            DetailRow(stringResource(R.string.field_retailer), product.retailer)
-            DetailRow(stringResource(R.string.field_price), product.price?.let { Money.format(it, product.currency) })
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+            ActionTile(
+                Icons.Outlined.AddAPhoto,
+                stringResource(R.string.action_add),
+                onClick = { adding = true },
+                description = stringResource(R.string.title_add_attachment),
+                modifier = Modifier.weight(1f),
+            )
+            ActionTile(
+                Icons.Outlined.Link,
+                stringResource(R.string.action_link),
+                onClick = { linking = true },
+                description = stringResource(R.string.action_link_record),
+                modifier = Modifier.weight(1f),
+            )
+            ActionTile(
+                Icons.Outlined.Share,
+                stringResource(R.string.action_share),
+                onClick = { shareText(context, shareSubject, shareBody) },
+                description = stringResource(R.string.action_share_details),
+                modifier = Modifier.weight(1f),
+            )
         }
-        SectionHeader(stringResource(R.string.section_product_page))
-        if (product.productUrl.isNotBlank()) {
-            OutlinedButton(onClick = { openLink(context, product.productUrl) }, modifier = Modifier.fillMaxWidth()) {
-                Icon(Icons.Outlined.OpenInBrowser, contentDescription = null)
-                Text(
-                    Uri.parse(product.productUrl).host ?: product.productUrl,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(start = 8.dp),
-                )
+        if (listOf(product.brand, product.model, product.serialNumber, product.retailer).any { it.isNotBlank() } ||
+            product.purchaseDate != null || product.price != null
+        ) {
+            SectionHeader(stringResource(R.string.section_details))
+            DetailCard {
+                DetailRow(stringResource(R.string.field_brand), product.brand)
+                DetailRow(stringResource(R.string.field_model), product.model)
+                DetailRow(stringResource(R.string.field_serial), product.serialNumber)
+                DetailRow(stringResource(R.string.field_purchase_date), product.purchaseDate?.let(Formats::date))
+                DetailRow(stringResource(R.string.field_retailer), product.retailer)
+                DetailRow(stringResource(R.string.field_price), product.price?.let { Money.format(it, product.currency) })
             }
         }
-        DetailAttachments(
-            viewModel,
-            state.attachments.filter { it.label == AttachmentLabel.PRODUCT_PAGE },
-            stringResource(R.string.product_page_copy_hint),
-            listOf(AttachmentLabel.PRODUCT_PAGE),
-        )
-        SectionHeader(stringResource(R.string.section_attachments))
-        DetailAttachments(
-            viewModel,
-            state.attachments.filter { it.label != AttachmentLabel.PRODUCT_PAGE },
-            stringResource(R.string.attachments_none_product),
-            ProductFileLabels,
-        )
-        RelatedSection(RecordRef(RecordType.PRODUCT, product.id), navController)
         if (product.notes.isNotBlank()) {
             SectionHeader(stringResource(R.string.field_notes))
             SelectionContainer { Text(product.notes, style = MaterialTheme.typography.bodyLarge) }
         }
+        val pageCopies = state.attachments.filter { it.label == AttachmentLabel.PRODUCT_PAGE }
+        if (product.productUrl.isNotBlank() || pageCopies.isNotEmpty()) {
+            SectionHeader(stringResource(R.string.section_product_page))
+            if (product.productUrl.isNotBlank()) {
+                OutlinedButton(onClick = { openLink(context, product.productUrl) }, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Outlined.OpenInBrowser, contentDescription = null)
+                    Text(
+                        Uri.parse(product.productUrl).host ?: product.productUrl,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
+            DetailAttachments(viewModel, pageCopies, stringResource(R.string.product_page_copy_hint), listOf(AttachmentLabel.PRODUCT_PAGE))
+        }
+        val files = state.attachments.filter { it.label != AttachmentLabel.PRODUCT_PAGE }
+        if (files.isNotEmpty()) {
+            SectionHeader(stringResource(R.string.section_attachments))
+            DetailAttachments(viewModel, files, "", ProductFileLabels, showAddControls = false)
+        }
+        RelatedSection(RecordRef(RecordType.PRODUCT, product.id), navController, showsWhenEmpty = false)
     }
+
+    if (adding) AddAttachmentSheet(viewModel, ProductFileLabels + AttachmentLabel.PRODUCT_PAGE) { adding = false }
+    if (linking) RecordLinkSheet(RecordRef(RecordType.PRODUCT, product.id)) { linking = false }
 
     if (confirmDelete) {
         ConfirmDialog(
@@ -244,13 +274,11 @@ private fun WarrantyCard(product: Product, leadDays: Int) {
                         ),
                         style = MaterialTheme.typography.titleMedium,
                     )
-                    if (expires != null) {
-                        Text(
-                            deadlineText(RecordKind.WARRANTY, expires, today, withDate = true),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
+                    Text(
+                        if (expires != null) deadlineText(RecordKind.WARRANTY, expires, today, withDate = true) else stringResource(R.string.warranty_no_date_hint),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
             val start = product.purchaseDate

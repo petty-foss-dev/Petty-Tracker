@@ -63,9 +63,13 @@ struct DeadlineRow: View {
     let deadline: Deadline
     let status: DeadlineStatus
     let today: Day
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         let phrase = Formats.deadline(deadline.kind, days: deadline.days(from: today))
+        let date = Text(Formats.shortDate(deadline.date, today: today))
+            .font(.footnote.monospacedDigit())
+            .foregroundStyle(.secondary)
         HStack(spacing: 12) {
             RecordIcon(symbol: deadline.kind.symbol, tint: status.tint)
             VStack(alignment: .leading, spacing: 2) {
@@ -75,11 +79,11 @@ struct DeadlineRow: View {
                 Text(phrase)
                     .font(.subheadline)
                     .foregroundStyle(status == .ok ? Color.secondary : status.tint)
+                // At accessibility sizes the date moves under the name rather than squeezing it.
+                if typeSize.isAccessibilitySize { date }
             }
             Spacer(minLength: 8)
-            Text(Formats.shortDate(deadline.date, today: today))
-                .font(.footnote.monospacedDigit())
-                .foregroundStyle(.secondary)
+            if !typeSize.isAccessibilitySize { date }
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(deadline.kind.label), \(deadline.title), \(phrase), \(Formats.date(deadline.date))")
@@ -283,5 +287,59 @@ enum StatusSection: CaseIterable {
     static func group<T>(_ items: [T], status: (T) -> DeadlineStatus) -> [(section: StatusSection, items: [T])] {
         let grouped = Dictionary(grouping: items) { StatusSection(status($0)) }
         return allCases.compactMap { section in grouped[section].map { (section, $0) } }
+    }
+}
+
+/// A compact icon-over-caption tile, used for the quick-add row on Home and record actions.
+struct ActionTile: View {
+    let title: LocalizedStringKey
+    let symbol: String
+    var busy = false
+
+    var body: some View {
+        VStack(spacing: 6) {
+            if busy {
+                ProgressView().frame(height: 24)
+            } else {
+                Image(systemName: symbol)
+                    .font(.title3)
+                    .frame(height: 24)
+            }
+            Text(title)
+                .font(.caption.weight(.medium))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .foregroundStyle(Color.trackerOnPrimaryContainer)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 12)
+        .background(Color.trackerPrimaryContainer, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+    }
+}
+
+/// A light confirmation tap after something is saved.
+@MainActor
+enum Haptics {
+    static func success() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+    }
+}
+
+/// Tiles in one row, or two per row at accessibility text sizes so their labels aren't cut off.
+struct TileRow<Content: View>: View {
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        if typeSize.isAccessibilitySize {
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                content
+            }
+        } else {
+            HStack(spacing: 10) {
+                content
+            }
+        }
     }
 }

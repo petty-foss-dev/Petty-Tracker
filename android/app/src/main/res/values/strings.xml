@@ -320,4 +320,9 @@
     <string name="export_status_no_date">No date</string>
     <string name="export_status_due_soon">Due soon</string>
     <string name="export_status_overdue">Renewal overdue</string>
+    <string name="title_add_attachment">Add a photo or file</string>
+    <string name="action_add">Add</string>
+    <string name="action_link">Link</string>
+    <string name="action_share">Share</string>
+    <string name="warranty_no_date_hint">Add the warranty end date with Edit to get a reminder before it runs out.</string>
 </resources>

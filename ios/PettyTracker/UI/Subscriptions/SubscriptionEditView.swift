@@ -134,6 +134,7 @@ private struct SubscriptionEditForm: View {
         do {
             let id = try store.saveSubscription(subscription)
             dismiss()
+            Haptics.success()
             onSaved(id)
         } catch {
             errorMessage = error.localizedDescription

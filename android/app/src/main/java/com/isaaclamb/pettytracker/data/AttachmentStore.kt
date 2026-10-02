@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.LruCache
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
@@ -91,7 +92,18 @@ class AttachmentStore(private val context: Context) {
             ?.forEach { it.deleteRecursively() }
     }
 
-    suspend fun thumbnail(fileName: String, maxSize: Int): Bitmap? = withContext(Dispatchers.IO) {
+    // Recently decoded thumbnails, so rows scrolled back into view don't decode their files again.
+    private val thumbnails = object : LruCache<String, Bitmap>(16 * 1024 * 1024) {
+        override fun sizeOf(key: String, value: Bitmap) = value.byteCount
+    }
+
+    suspend fun thumbnail(fileName: String, maxSize: Int): Bitmap? {
+        val key = "$fileName@$maxSize"
+        thumbnails.get(key)?.let { return it }
+        return decodeThumbnail(fileName, maxSize)?.also { thumbnails.put(key, it) }
+    }
+
+    private suspend fun decodeThumbnail(fileName: String, maxSize: Int): Bitmap? = withContext(Dispatchers.IO) {
         val path = file(fileName).path
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeFile(path, bounds)

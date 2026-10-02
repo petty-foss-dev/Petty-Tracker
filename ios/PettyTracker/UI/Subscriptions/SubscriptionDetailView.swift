@@ -22,7 +22,7 @@ struct SubscriptionDetailView: View {
         let status = subscription.isActive
             ? deadlineStatus(subscription.nextRenewal, today: today, leadDays: store.settings.subscriptionLeadDays)
             : .none
-        return List {
+        return TrackerList {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
@@ -64,6 +64,7 @@ struct SubscriptionDetailView: View {
                     }
                     Button("Mark renewed", systemImage: "checkmark.circle") {
                         update { Renewals.advance($0, today: store.today) }
+                        Haptics.success()
                     }
                     .accessibilityLabel(String(localized: "Mark \(subscription.name) renewed"))
                     Button("Mark canceled", systemImage: "xmark.circle") { confirmCancel = true }
@@ -86,7 +87,6 @@ struct SubscriptionDetailView: View {
                 Button("Delete subscription", role: .destructive) { confirmDelete = true }
             }
         }
-        .trackerListStyle()
         .navigationTitle(subscription.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

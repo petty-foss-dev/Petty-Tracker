@@ -11,6 +11,9 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ExperimentalMaterial3Api
 import com.isaaclamb.pettytracker.data.AttachmentLabel
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.DropdownMenu
@@ -184,6 +187,7 @@ fun DetailAttachments(
     attachments: List<Attachment>,
     emptyText: String,
     labels: List<AttachmentLabel> = listOf(AttachmentLabel.OTHER),
+    showAddControls: Boolean = true,
 ) {
     val context = LocalContext.current
     var pendingRemoval by remember { mutableStateOf<Attachment?>(null) }
@@ -233,12 +237,14 @@ fun DetailAttachments(
             }
         }
         if (viewModel.importing) LinearProgressIndicator(Modifier.fillMaxWidth())
-        if (labels.size > 1) LabelChips(labels, label) { label = it }
-        AttachmentButtons(
-            viewModel.attachmentStore,
-            onFiles = { viewModel.addFiles(it, label) },
-            onPhoto = { name, success -> viewModel.onPhotoResult(name, success, label) },
-        )
+        if (showAddControls) {
+            if (labels.size > 1) LabelChips(labels, label) { label = it }
+            AttachmentButtons(
+                viewModel.attachmentStore,
+                onFiles = { viewModel.addFiles(it, label) },
+                onPhoto = { name, success -> viewModel.onPhotoResult(name, success, label) },
+            )
+        }
     }
     val message = viewModel.message
     LaunchedEffect(message) {
@@ -255,6 +261,33 @@ fun DetailAttachments(
             onConfirm = { viewModel.remove(attachment) },
             onDismiss = { pendingRemoval = null },
         )
+    }
+}
+
+/** Adds a labelled photo or file to a record from a sheet, for screens that keep adding out of the way. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddAttachmentSheet(viewModel: RecordDetailViewModel, labels: List<AttachmentLabel>, onDismiss: () -> Unit) {
+    var label by rememberSaveable { mutableStateOf(labels.first()) }
+    ModalBottomSheet(onDismissRequest = onDismiss) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.navigationBarsPadding().padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        ) {
+            Text(stringResource(R.string.title_add_attachment), style = MaterialTheme.typography.titleLarge)
+            LabelChips(labels, label) { label = it }
+            AttachmentButtons(
+                viewModel.attachmentStore,
+                onFiles = { uris ->
+                    viewModel.addFiles(uris, label)
+                    if (uris.isNotEmpty()) onDismiss()
+                },
+                onPhoto = { name, success ->
+                    viewModel.onPhotoResult(name, success, label)
+                    if (success) onDismiss()
+                },
+            )
+        }
     }
 }
 

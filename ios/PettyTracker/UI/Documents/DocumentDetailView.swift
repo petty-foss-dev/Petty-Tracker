@@ -21,7 +21,7 @@ struct DocumentDetailView: View {
     private func content(_ document: Document) -> some View {
         let today = store.today
         let status = deadlineStatus(document.expiresOn, today: today, leadDays: store.settings.documentLeadDays)
-        return List {
+        return TrackerList {
             Section {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
@@ -66,7 +66,6 @@ struct DocumentDetailView: View {
                 Button("Delete document", role: .destructive) { confirmDelete = true }
             }
         }
-        .trackerListStyle()
         .attachmentPresenter($openedAttachment)
         .navigationTitle(document.title)
         .navigationBarTitleDisplayMode(.inline)

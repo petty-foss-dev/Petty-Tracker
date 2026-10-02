@@ -33,8 +33,12 @@ extension TrackerData {
 @MainActor
 @Observable
 final class TrackerStore {
-    private(set) var data: TrackerData
+    private(set) var data: TrackerData {
+        didSet { index = Index(data) }
+    }
     private(set) var today = Day.today()
+    /// Lookups rebuilt whenever `data` changes, so list rows don't scan every attachment and receipt.
+    private var index: Index
 
     let root: URL
     let attachmentStore: AttachmentStore
@@ -56,16 +60,18 @@ final class TrackerStore {
         var excluded = root
         try? excluded.setResourceValues(values)
 
-        data = TrackerData()
+        var loaded = TrackerData()
         if let bytes = try? Data(contentsOf: fileURL) {
             do {
-                data = try JSONDecoder().decode(TrackerData.self, from: bytes)
+                loaded = try JSONDecoder().decode(TrackerData.self, from: bytes)
             } catch {
                 // Keep the unreadable file for recovery instead of overwriting it on the next save.
                 let aside = root.appending(path: "tracker-unreadable-\(Int(Date().timeIntervalSince1970)).json")
                 try? fileManager.moveItem(at: fileURL, to: aside)
             }
         }
+        data = loaded
+        index = Index(loaded)
         BackupService.recoverInterruptedImport(root: root, referenced: Set(data.attachments.map(\.fileName)))
         try? fileManager.createDirectory(at: attachmentStore.directory, withIntermediateDirectories: true)
     }
@@ -77,13 +83,13 @@ final class TrackerStore {
 
     var settings: Settings { data.settings }
 
-    func product(_ id: Int64) -> Product? { data.products.first { $0.id == id } }
-    func subscription(_ id: Int64) -> Subscription? { data.subscriptions.first { $0.id == id } }
-    func document(_ id: Int64) -> Document? { data.documents.first { $0.id == id } }
-    func receipt(_ id: Int64) -> Receipt? { data.receipts.first { $0.id == id } }
+    func product(_ id: Int64) -> Product? { index.products[id].map { data.products[$0] } }
+    func subscription(_ id: Int64) -> Subscription? { index.subscriptions[id].map { data.subscriptions[$0] } }
+    func document(_ id: Int64) -> Document? { index.documents[id].map { data.documents[$0] } }
+    func receipt(_ id: Int64) -> Receipt? { index.receipts[id].map { data.receipts[$0] } }
 
     func attachments(_ ownerType: OwnerType, _ ownerId: Int64) -> [Attachment] {
-        data.attachments.filter { $0.ownerType == ownerType && $0.ownerId == ownerId }
+        index.attachments[Index.Owner(type: ownerType, id: ownerId)] ?? []
     }
 
     /// Every record linked to `ref`, with the link that joins them.
@@ -101,7 +107,7 @@ final class TrackerStore {
     }
 
     func receiptCovering(_ productId: Int64) -> Receipt? {
-        data.receipts.first { $0.productIds.contains(productId) }
+        index.receiptByProduct[productId].flatMap(receipt)
     }
 
     func products(coveredBy receipt: Receipt) -> [Product] {
@@ -109,10 +115,7 @@ final class TrackerStore {
     }
 
     /// Page file names of every receipt, in page order.
-    var receiptPages: [Int64: [String]] {
-        Dictionary(grouping: data.attachments.filter { $0.ownerType == .receipt }, by: \.ownerId)
-            .mapValues { $0.map(\.fileName) }
-    }
+    var receiptPages: [Int64: [String]] { index.receiptPages }
 
     /// Saves the product and makes `receiptId` its only linked receipt, or unlinks it when nil.
     @discardableResult
@@ -322,6 +325,43 @@ final class TrackerStore {
             delete(&data)
         }
         attachmentStore.delete(files)
+    }
+}
+
+private struct Index {
+    struct Owner: Hashable {
+        let type: OwnerType
+        let id: Int64
+    }
+
+    let attachments: [Owner: [Attachment]]
+    let receiptByProduct: [Int64: Int64]
+    let receiptPages: [Int64: [String]]
+    /// Array positions by record id.
+    let products: [Int64: Int]
+    let subscriptions: [Int64: Int]
+    let documents: [Int64: Int]
+    let receipts: [Int64: Int]
+
+    init(_ data: TrackerData) {
+        func positions<T: Identifiable>(_ items: [T]) -> [Int64: Int] where T.ID == Int64 {
+            Dictionary(items.enumerated().map { ($1.id, $0) }, uniquingKeysWith: { first, _ in first })
+        }
+        products = positions(data.products)
+        subscriptions = positions(data.subscriptions)
+        documents = positions(data.documents)
+        receipts = positions(data.receipts)
+        attachments = Dictionary(grouping: data.attachments) { Owner(type: $0.ownerType, id: $0.ownerId) }
+        var receiptByProduct: [Int64: Int64] = [:]
+        for receipt in data.receipts {
+            for productId in receipt.productIds where receiptByProduct[productId] == nil {
+                receiptByProduct[productId] = receipt.id
+            }
+        }
+        self.receiptByProduct = receiptByProduct
+        receiptPages = attachments.reduce(into: [:]) { pages, entry in
+            if entry.key.type == .receipt { pages[entry.key.id] = entry.value.map(\.fileName) }
+        }
     }
 }
 

@@ -597,6 +597,7 @@ private struct ReceiptEditForm: View {
             let id = try store.saveReceipt(receipt, added: pages.added, removed: pages.removed)
             if let sharedItem { quickCapture.finish(sharedItem) }
             dismiss()
+            Haptics.success()
             onSaved(id)
         } catch {
             errorMessage = error.localizedDescription

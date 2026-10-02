@@ -97,6 +97,7 @@ struct SubscriptionListView: View {
     private func markRenewed(_ id: Int64) {
         do {
             try store.updateSubscription(id) { Renewals.advance($0, today: store.today) }
+            Haptics.success()
         } catch {
             errorMessage = error.localizedDescription
         }

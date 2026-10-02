@@ -67,6 +67,8 @@ struct ReceiptListView: View {
     @State private var editor: ReceiptEditorRequest?
     @State private var showCaptureChoices = false
     @State private var pendingDelete: Receipt?
+    @State private var choosingShared: SharedInbox.Item?
+    @State private var filingShared: SharedInbox.Item?
     @State private var errorMessage: String?
 
     var body: some View {
@@ -199,12 +201,27 @@ struct ReceiptListView: View {
         } message: { _ in
             Text("The receipt and its scans will be removed from this device.")
         }
+        .confirmationDialog(
+            "What is this file?",
+            isPresented: Binding(get: { choosingShared != nil }, set: { if !$0 { choosingShared = nil } }),
+            titleVisibility: .visible,
+            presenting: choosingShared
+        ) { item in
+            Button("A receipt") { editShared(item) }
+            Button("A file for a product") { filingShared = item }
+            Button("Decide later", role: .cancel) { quickCapture.postpone(item) }
+        } message: { _ in
+            Text("Receipts are read and organized here. Manuals, product page copies and photos can be filed with a product.")
+        }
+        .sheet(item: $filingShared) { item in
+            SharedFileProductPicker(file: item.file) { quickCapture.finish(item) }
+        }
         .errorAlert($errorMessage)
     }
 
     private func openQuickCapture() {
         guard router.tab == .receipts, router.receiptsPath.isEmpty, editor == nil, captureSource == nil, !showCaptureChoices,
-              !router.isPresentingModal
+              choosingShared == nil, filingShared == nil, !router.isPresentingModal
         else { return }
         if quickCapture.consumeScanRequest() {
             if DocumentScanner.isSupported { captureSource = .scanner } else { showCaptureChoices = true }
@@ -213,7 +230,16 @@ struct ReceiptListView: View {
         }
     }
 
+    /// With products on file, a shared file may be a manual or product page rather than a receipt, so ask first.
     private func openShared(_ item: SharedInbox.Item) {
+        if store.data.products.isEmpty {
+            editShared(item)
+        } else {
+            choosingShared = item
+        }
+    }
+
+    private func editShared(_ item: SharedInbox.Item) {
         editor = ReceiptEditorRequest(capture: .files([item.file]), sharedItem: item)
     }
 

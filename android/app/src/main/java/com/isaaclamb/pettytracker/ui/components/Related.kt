@@ -97,13 +97,13 @@ private val RecordType.title: Int
         RecordType.DOCUMENT -> R.string.kind_document
     }
 
-/** Cross-references to other records, shown on every detail screen. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** Cross-references to other records, shown on detail screens. Screens with their own Link action hide it until used. */
 @Composable
-fun RelatedSection(ref: RecordRef, navController: NavController) {
+fun RelatedSection(ref: RecordRef, navController: NavController, showsWhenEmpty: Boolean = true) {
     val viewModel = trackerViewModel { app, _ -> RelatedViewModel(app, ref) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     var picking by rememberSaveable { mutableStateOf(false) }
+    if (!showsWhenEmpty && state.related.isEmpty()) return
 
     SectionHeader(stringResource(R.string.section_related))
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -134,43 +134,49 @@ fun RelatedSection(ref: RecordRef, navController: NavController) {
             Text(stringResource(R.string.action_link_record), modifier = Modifier.padding(start = 8.dp))
         }
     }
+    if (picking) RecordLinkSheet(ref) { picking = false }
+}
 
-    if (picking) {
-        var query by rememberSaveable { mutableStateOf("") }
-        var note by rememberSaveable { mutableStateOf("") }
-        ModalBottomSheet(
-            onDismissRequest = { picking = false },
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+/** Picks another record to link to [ref], with an optional note. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RecordLinkSheet(ref: RecordRef, onDismiss: () -> Unit) {
+    val viewModel = trackerViewModel { app, _ -> RelatedViewModel(app, ref) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    var query by rememberSaveable { mutableStateOf("") }
+    var note by rememberSaveable { mutableStateOf("") }
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.navigationBarsPadding().imePadding().padding(horizontal = 16.dp),
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.navigationBarsPadding().imePadding().padding(horizontal = 16.dp),
-            ) {
-                Text(stringResource(R.string.title_link_record), style = MaterialTheme.typography.titleLarge)
-                FormTextField(note, { note = it }, stringResource(R.string.field_link_note))
-                SearchField(query, { query = it }, stringResource(R.string.search_records))
-                val matches = state.candidates.filter { matchesAny(query, it.title) }
-                if (matches.isEmpty()) {
-                    Text(
-                        stringResource(R.string.link_nothing_to_link),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 16.dp),
+            Text(stringResource(R.string.title_link_record), style = MaterialTheme.typography.titleLarge)
+            FormTextField(note, { note = it }, stringResource(R.string.field_link_note))
+            SearchField(query, { query = it }, stringResource(R.string.search_records))
+            val matches = state.candidates.filter { matchesAny(query, it.title) }
+            if (matches.isEmpty()) {
+                Text(
+                    stringResource(R.string.link_nothing_to_link),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(vertical = 16.dp),
+                )
+            }
+            LazyColumn {
+                items(matches, key = { "${it.ref.type}-${it.ref.id}" }) { record ->
+                    ListItem(
+                        headlineContent = { Text(record.title) },
+                        supportingContent = { Text(stringResource(record.ref.type.title)) },
+                        leadingContent = { Icon(record.ref.type.kind.icon, contentDescription = null) },
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                        modifier = Modifier.clickable(role = Role.Button) {
+                            viewModel.link(record.ref, note)
+                            onDismiss()
+                        },
                     )
-                }
-                LazyColumn {
-                    items(matches, key = { "${it.ref.type}-${it.ref.id}" }) { record ->
-                        ListItem(
-                            headlineContent = { Text(record.title) },
-                            supportingContent = { Text(stringResource(record.ref.type.title)) },
-                            leadingContent = { Icon(record.ref.type.kind.icon, contentDescription = null) },
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-                            modifier = Modifier.clickable(role = Role.Button) {
-                                viewModel.link(record.ref, note)
-                                picking = false
-                            },
-                        )
-                    }
                 }
             }
         }

@@ -113,6 +113,7 @@ private struct DocumentEditForm: View {
         do {
             let id = try store.saveDocument(document, added: attachments.added, removed: attachments.removed)
             dismiss()
+            Haptics.success()
             onSaved(id)
         } catch {
             errorMessage = error.localizedDescription

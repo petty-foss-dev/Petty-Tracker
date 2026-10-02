@@ -12,6 +12,7 @@ struct ProductDetailView: View {
     @State private var pickingReceipt = false
     @State private var confirmPacketWithoutReceipt = false
     @State private var preparingPacket = false
+    @State private var linking = false
 
     var body: some View {
         if let product = store.product(productId) {
@@ -24,10 +25,11 @@ struct ProductDetailView: View {
     private func content(_ product: Product) -> some View {
         let today = store.today
         let status = deadlineStatus(product.warrantyExpires, today: today, leadDays: store.settings.warrantyLeadDays)
-        return List {
+        return TrackerList {
             Section {
                 WarrantyHeader(product: product, status: status, today: today)
             }
+            actions(product)
             if !(product.brand + product.model + product.serialNumber).isEmpty {
                 Section(overline: "Details") {
                     DetailField("Brand", product.brand)
@@ -50,32 +52,19 @@ struct ProductDetailView: View {
             }
             productPageSection(product)
             filesSections
-            RelatedSection(ref: RecordRef(type: .product, id: productId))
+            RelatedSection(ref: RecordRef(type: .product, id: productId), showsWhenEmpty: false)
             Section {
                 Button("Delete product", role: .destructive) { confirmDelete = true }
             }
         }
-        .trackerListStyle()
         .attachmentPresenter($openedAttachment)
         .navigationTitle(product.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Menu {
-                ShareLink(item: shareText(product), subject: Text("Product details: \(product.name)")) {
-                    Label("Share details", systemImage: "text.alignleft")
-                }
-                Button("Claim packet (PDF)", systemImage: "doc.richtext") {
-                    if store.receiptCovering(productId) == nil {
-                        confirmPacketWithoutReceipt = true
-                    } else {
-                        makeClaimPacket()
-                    }
-                }
-                .disabled(preparingPacket)
-            } label: {
-                Label("Share", systemImage: "square.and.arrow.up")
-            }
             Button("Edit") { editor = .product(productId) }
+        }
+        .sheet(isPresented: $linking) {
+            RecordLinkPicker(ref: RecordRef(type: .product, id: productId))
         }
         .editorSheet($editor)
         .sheet(isPresented: $pickingReceipt) {
@@ -121,8 +110,8 @@ struct ProductDetailView: View {
 
     @ViewBuilder
     private var receiptSection: some View {
-        Section {
-            if let receipt = store.receiptCovering(productId) {
+        if let receipt = store.receiptCovering(productId) {
+            Section(overline: "Receipt") {
                 NavigationLink(value: Route.receipt(receipt.id)) {
                     ReceiptRow(receipt: receipt)
                 }
@@ -134,16 +123,55 @@ struct ProductDetailView: View {
                     Button("Change receipt", systemImage: "arrow.triangle.swap") { pickingReceipt = true }
                     Button("Unlink", systemImage: "link.badge.minus", role: .destructive) { link(nil) }
                 }
-            } else {
-                Button("Link a receipt", systemImage: "link") { pickingReceipt = true }
-            }
-        } header: {
-            Overline("Receipt")
-        } footer: {
-            if store.receiptCovering(productId) == nil {
-                Text("Link the purchase receipt so it's ready as proof of purchase for a claim.")
             }
         }
+    }
+
+    /// Adding files, the receipt, links and sharing, so sections only appear once they have something in them.
+    private func actions(_ product: Product) -> some View {
+        Section {
+            TileRow {
+                AttachmentAddMenu(labels: AttachmentLabel.productLabels) { added in
+                    perform { try store.addAttachments(added, to: .product, productId) }
+                } menuLabel: { importing in
+                    ActionTile(title: "Add", symbol: "camera", busy: importing)
+                }
+                .accessibilityLabel("Add photo or file")
+                if let receipt = store.receiptCovering(productId) {
+                    NavigationLink(value: Route.receipt(receipt.id)) {
+                        ActionTile(title: "Receipt", symbol: Receipt.symbol)
+                    }
+                    .accessibilityLabel("Open receipt")
+                } else {
+                    Button { pickingReceipt = true } label: {
+                        ActionTile(title: "Receipt", symbol: Receipt.symbol)
+                    }
+                    .accessibilityLabel("Link a receipt")
+                }
+                Button { linking = true } label: {
+                    ActionTile(title: "Link", symbol: "link")
+                }
+                .accessibilityLabel("Link to another record")
+                Menu {
+                    ShareLink(item: shareText(product), subject: Text("Product details: \(product.name)")) {
+                        Label("Share details", systemImage: "text.alignleft")
+                    }
+                    Button("Claim packet (PDF)", systemImage: "doc.richtext") {
+                        if store.receiptCovering(productId) == nil {
+                            confirmPacketWithoutReceipt = true
+                        } else {
+                            makeClaimPacket()
+                        }
+                    }
+                    .disabled(preparingPacket)
+                } label: {
+                    ActionTile(title: "Share", symbol: "square.and.arrow.up", busy: preparingPacket)
+                }
+            }
+            .buttonStyle(.plain)
+        }
+        .listRowBackground(Color.clear)
+        .listRowInsets(EdgeInsets())
     }
 
     private func link(_ receiptId: Int64?) {
@@ -153,23 +181,28 @@ struct ProductDetailView: View {
     @ViewBuilder
     private func productPageSection(_ product: Product) -> some View {
         let copies = store.attachments(.product, productId).filter { $0.label == .productPage }
-        Section {
-            if let url = URL(string: product.productUrl), !product.productUrl.isEmpty {
-                Link(destination: url) {
-                    Label(url.host() ?? product.productUrl, systemImage: "safari")
+        let url = URL(string: product.productUrl).flatMap { product.productUrl.isEmpty ? nil : $0 }
+        if url != nil || !copies.isEmpty {
+            Section {
+                if let url {
+                    Link(destination: url) {
+                        Label(url.host() ?? product.productUrl, systemImage: "safari")
+                    }
+                    .contextMenu {
+                        Button("Copy link", systemImage: "doc.on.doc") { UIPasteboard.general.url = url }
+                    }
                 }
-                .contextMenu {
-                    Button("Copy link", systemImage: "doc.on.doc") { UIPasteboard.general.url = url }
+                gallery(copies)
+                AttachmentAddMenu(title: "Save a copy of the page", labels: [.productPage]) { added in
+                    perform { try store.addAttachments(added, to: .product, productId) }
+                }
+            } header: {
+                Overline("Product page")
+            } footer: {
+                if copies.isEmpty {
+                    Text("Keep a copy in case the listing disappears: in Safari, tap Share, then Options, choose PDF and share it to petty: Tracker.")
                 }
             }
-            gallery(copies)
-            AttachmentAddMenu(title: "Save a copy of the page", labels: [.productPage]) { added in
-                perform { try store.addAttachments(added, to: .product, productId) }
-            }
-        } header: {
-            Overline("Product page")
-        } footer: {
-            Text("Keep a copy in case the listing disappears: in Safari, tap Share, then Options, choose PDF and share it to petty: Tracker. Or save the PDF to Files and add it here.")
         }
     }
 
@@ -183,17 +216,6 @@ struct ProductDetailView: View {
                     gallery(group)
                 }
             }
-        }
-        Section {
-            if files.isEmpty {
-                Text("Add photos of the item and its parts, the manual or assembly instructions, and the warranty card.")
-                    .foregroundStyle(.secondary)
-            }
-            AttachmentAddMenu(labels: AttachmentLabel.productLabels.filter { $0 != .productPage }) { added in
-                perform { try store.addAttachments(added, to: .product, productId) }
-            }
-        } header: {
-            if files.isEmpty { Overline("Photos and files") }
         }
     }
 
@@ -268,6 +290,11 @@ private struct WarrantyHeader: View {
                 if let expires = product.warrantyExpires {
                     Text(Formats.date(expires)).foregroundStyle(.secondary)
                 }
+            }
+            if product.warrantyExpires == nil {
+                Text("Add the warranty end date with Edit to get a reminder before it runs out.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
             if let expires = product.warrantyExpires {
                 Text(Formats.deadline(.warranty, days: today.days(until: expires)))

@@ -198,6 +198,7 @@ private struct ProductEditForm: View {
                 product, added: attachments.added, removed: attachments.removed, receiptId: form.receiptId
             )
             dismiss()
+            Haptics.success()
             onSaved(id)
         } catch {
             errorMessage = error.localizedDescription

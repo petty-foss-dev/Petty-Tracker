@@ -1,5 +1,4 @@
 import PhotosUI
-import QuickLookThumbnailing
 import SwiftUI
 import VisionKit
 
@@ -196,13 +195,9 @@ struct ReceiptPageThumbnail: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay(RoundedRectangle(cornerRadius: 8).strokeBorder(Color.secondary.opacity(0.2)))
         .task(id: page.fileName) {
-            let request = QLThumbnailGenerator.Request(
-                fileAt: store.attachmentStore.url(for: page.fileName),
-                size: CGSize(width: width, height: height * 2),
-                scale: scale,
-                representationTypes: .thumbnail
+            image = await Thumbnails.load(
+                store.attachmentStore.url(for: page.fileName), size: CGSize(width: width, height: height * 2), scale: scale
             )
-            image = try? await QLThumbnailGenerator.shared.generateBestRepresentation(for: request).uiImage
         }
     }
 }

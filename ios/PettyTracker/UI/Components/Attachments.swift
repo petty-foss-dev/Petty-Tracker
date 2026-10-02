@@ -95,10 +95,11 @@ struct AttachmentEditorSection: View {
 
 /// Copies picked files, library photos or camera shots into the attachment store and hands them back,
 /// labelled with whichever of `labels` the person chose.
-struct AttachmentAddMenu: View {
-    var title: LocalizedStringKey = "Add photo or file"
+struct AttachmentAddMenu<MenuLabel: View>: View {
     var labels: [AttachmentLabel] = [.other]
     let onAdded: ([Attachment]) -> Void
+    /// The menu's face; receives whether files are still being copied in.
+    @ViewBuilder let menuLabel: (_ importing: Bool) -> MenuLabel
     @Environment(TrackerStore.self) private var store
     @State private var pendingLabel = AttachmentLabel.other
 
@@ -124,14 +125,7 @@ struct AttachmentAddMenu: View {
                 }
             }
         } label: {
-            if importing > 0 {
-                HStack {
-                    ProgressView()
-                    Text("Adding…").foregroundStyle(.secondary)
-                }
-            } else {
-                Label(title, systemImage: "paperclip")
-            }
+            menuLabel(importing > 0)
         }
         .disabled(importing > 0)
         .fileImporter(isPresented: $showFiles, allowedContentTypes: [.data], allowsMultipleSelection: true) { result in
@@ -202,6 +196,24 @@ struct AttachmentAddMenu: View {
             } catch {
                 errorMessage = String(localized: "A file could not be added. \(error.localizedDescription)")
             }
+        }
+    }
+}
+
+extension AttachmentAddMenu where MenuLabel == AnyView {
+    /// The standard list-row face: a paperclip label, or progress while files are copied in.
+    init(title: LocalizedStringKey = "Add photo or file", labels: [AttachmentLabel] = [.other], onAdded: @escaping ([Attachment]) -> Void) {
+        self.init(labels: labels, onAdded: onAdded) { importing in
+            AnyView(Group {
+                if importing {
+                    HStack {
+                        ProgressView()
+                        Text("Adding…").foregroundStyle(.secondary)
+                    }
+                } else {
+                    Label(title, systemImage: "paperclip")
+                }
+            })
         }
     }
 }
@@ -304,6 +316,32 @@ private struct AttachmentNameLabel: View {
     }
 }
 
+/// Quick Look thumbnails kept in memory, so rows scrolled back into view don't render them again.
+@MainActor
+enum Thumbnails {
+    private static let cache: NSCache<NSString, UIImage> = {
+        let cache = NSCache<NSString, UIImage>()
+        cache.countLimit = 300
+        return cache
+    }()
+
+    static func cached(_ url: URL, size: CGSize, scale: CGFloat) -> UIImage? {
+        cache.object(forKey: key(url, size, scale))
+    }
+
+    static func load(_ url: URL, size: CGSize, scale: CGFloat) async -> UIImage? {
+        if let image = cached(url, size: size, scale: scale) { return image }
+        let request = QLThumbnailGenerator.Request(fileAt: url, size: size, scale: scale, representationTypes: .thumbnail)
+        guard let image = try? await QLThumbnailGenerator.shared.generateBestRepresentation(for: request).uiImage else { return nil }
+        cache.setObject(image, forKey: key(url, size, scale))
+        return image
+    }
+
+    private static func key(_ url: URL, _ size: CGSize, _ scale: CGFloat) -> NSString {
+        "\(url.lastPathComponent)-\(Int(size.width))x\(Int(size.height))@\(Int(scale))" as NSString
+    }
+}
+
 struct AttachmentThumbnail: View {
     let attachment: Attachment
     let size: CGFloat
@@ -327,13 +365,9 @@ struct AttachmentThumbnail: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .accessibilityHidden(true)
         .task(id: attachment.fileName) {
-            let request = QLThumbnailGenerator.Request(
-                fileAt: store.attachmentStore.url(for: attachment.fileName),
-                size: CGSize(width: size, height: size),
-                scale: scale,
-                representationTypes: .thumbnail
+            image = await Thumbnails.load(
+                store.attachmentStore.url(for: attachment.fileName), size: CGSize(width: size, height: size), scale: scale
             )
-            image = try? await QLThumbnailGenerator.shared.generateBestRepresentation(for: request).uiImage
         }
     }
 }

@@ -24,7 +24,7 @@ struct ReceiptDetailView: View {
 
     private func content(_ receipt: Receipt) -> some View {
         let pages = store.attachments(.receipt, receiptId)
-        return List {
+        return TrackerList {
             Section {
                 ReceiptHeader(receipt: receipt)
             }
@@ -113,7 +113,6 @@ struct ReceiptDetailView: View {
                 Button("Delete receipt", role: .destructive) { confirmDelete = true }
             }
         }
-        .trackerListStyle()
         .quickLookPreview($preview, in: previewPages)
         .sheet(item: $sharedPages) { shared in
             ActivityView(items: shared.urls)
