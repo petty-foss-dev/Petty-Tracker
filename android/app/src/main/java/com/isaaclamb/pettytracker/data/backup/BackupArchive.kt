@@ -4,6 +4,9 @@ import com.isaaclamb.pettytracker.data.Attachment
 import com.isaaclamb.pettytracker.data.Document
 import com.isaaclamb.pettytracker.data.OwnerType
 import com.isaaclamb.pettytracker.data.Product
+import com.isaaclamb.pettytracker.data.RecordLink
+import com.isaaclamb.pettytracker.data.RecordRef
+import com.isaaclamb.pettytracker.data.RecordType
 import com.isaaclamb.pettytracker.data.Settings
 import com.isaaclamb.pettytracker.data.Subscription
 import kotlinx.serialization.Serializable
@@ -25,6 +28,7 @@ data class BackupManifest(
     val subscriptions: List<Subscription> = emptyList(),
     val documents: List<Document> = emptyList(),
     val attachments: List<Attachment> = emptyList(),
+    val links: List<RecordLink> = emptyList(),
     val settings: Settings? = null,
 ) {
     companion object {
@@ -150,6 +154,16 @@ object BackupArchive {
             throw InvalidBackupException("Duplicate attachment files")
         }
         if (manifest.subscriptions.any { it.cycleCount < 1 }) throw InvalidBackupException("Invalid billing cycle")
+        requireUnique(manifest.links.map { it.id }, "link")
+        val subscriptionIds = manifest.subscriptions.map { it.id }.toSet()
+        fun exists(ref: RecordRef) = when (ref.type) {
+            RecordType.PRODUCT -> ref.id in productIds
+            RecordType.SUBSCRIPTION -> ref.id in subscriptionIds
+            RecordType.DOCUMENT -> ref.id in documentIds
+        }
+        if (!manifest.links.all { exists(it.from) && exists(it.to) && it.from != it.to }) {
+            throw InvalidBackupException("Invalid links between records")
+        }
     }
 
     private fun InputStream.readLimited(limit: Long): ByteArray {

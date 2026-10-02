@@ -64,7 +64,7 @@ fun Subscription.matches(query: String) = matchesAny(query, name, notes)
 
 fun Document.matches(query: String) = matchesAny(query, title, issuer, reference, notes)
 
-private fun matchesAny(query: String, vararg fields: String): Boolean {
+fun matchesAny(query: String, vararg fields: String): Boolean {
     val terms = fold(query).split(' ').filter { it.isNotBlank() }
     if (terms.isEmpty()) return true
     val haystack = fields.joinToString(" ") { fold(it) }

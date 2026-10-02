@@ -30,6 +30,7 @@ class BackupManager(
                 subscriptions = dao.allSubscriptions(),
                 documents = dao.allDocuments(),
                 attachments = dao.allAttachments(),
+                links = dao.allLinks(),
                 settings = settings,
             )
         }
@@ -55,6 +56,7 @@ class BackupManager(
             try {
                 database.withTransaction {
                     dao.clearAttachments()
+                    dao.clearLinks()
                     dao.clearProducts()
                     dao.clearSubscriptions()
                     dao.clearDocuments()
@@ -63,6 +65,7 @@ class BackupManager(
                     dao.insertSubscriptions(manifest.subscriptions)
                     dao.insertDocuments(manifest.documents)
                     dao.insertAttachments(manifest.attachments)
+                    dao.insertLinks(manifest.links)
                 }
             } catch (e: Exception) {
                 live.deleteRecursively()

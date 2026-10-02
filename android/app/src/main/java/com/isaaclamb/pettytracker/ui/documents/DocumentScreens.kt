@@ -32,6 +32,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.isaaclamb.pettytracker.R
 import com.isaaclamb.pettytracker.data.Document
+import com.isaaclamb.pettytracker.data.RecordRef
+import com.isaaclamb.pettytracker.data.RecordType
 import com.isaaclamb.pettytracker.domain.DeadlineStatus
 import com.isaaclamb.pettytracker.domain.RecordKind
 import com.isaaclamb.pettytracker.domain.deadlineStatus
@@ -39,9 +41,9 @@ import com.isaaclamb.pettytracker.ui.DocumentDetailRoute
 import com.isaaclamb.pettytracker.ui.DocumentEditRoute
 import com.isaaclamb.pettytracker.ui.Formats
 import com.isaaclamb.pettytracker.ui.components.AttachmentEditor
-import com.isaaclamb.pettytracker.ui.components.DetailAttachments
 import com.isaaclamb.pettytracker.ui.components.ConfirmDialog
 import com.isaaclamb.pettytracker.ui.components.DateField
+import com.isaaclamb.pettytracker.ui.components.DetailAttachments
 import com.isaaclamb.pettytracker.ui.components.DetailCard
 import com.isaaclamb.pettytracker.ui.components.DetailRow
 import com.isaaclamb.pettytracker.ui.components.DetailScaffold
@@ -52,6 +54,7 @@ import com.isaaclamb.pettytracker.ui.components.FormTextField
 import com.isaaclamb.pettytracker.ui.components.KindBadge
 import com.isaaclamb.pettytracker.ui.components.NoMatches
 import com.isaaclamb.pettytracker.ui.components.RecordCard
+import com.isaaclamb.pettytracker.ui.components.RelatedSection
 import com.isaaclamb.pettytracker.ui.components.SearchField
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
 import com.isaaclamb.pettytracker.ui.components.StatusSection
@@ -190,6 +193,7 @@ fun DocumentDetailScreen(navController: NavController) {
             SectionHeader(stringResource(R.string.field_notes))
             SelectionContainer { Text(document.notes, style = MaterialTheme.typography.bodyLarge) }
         }
+        RelatedSection(RecordRef(RecordType.DOCUMENT, document.id), navController)
     }
 
     if (confirmDelete) {

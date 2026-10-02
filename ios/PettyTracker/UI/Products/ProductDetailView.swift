@@ -48,16 +48,9 @@ struct ProductDetailView: View {
                     Text(product.notes).textSelection(.enabled)
                 }
             }
-            Section(overline: "Files and photos") {
-                AttachmentGallery(
-                    attachments: store.attachments(.product, productId),
-                    emptyText: "Add a photo of the product, its serial label or the manual.",
-                    opened: $openedAttachment,
-                    errorMessage: $errorMessage,
-                    onDelete: { removingAttachment = $0 }
-                )
-                AttachmentAddMenu { added in perform { try store.addAttachments(added, to: .product, productId) } }
-            }
+            productPageSection(product)
+            filesSections
+            RelatedSection(ref: RecordRef(type: .product, id: productId))
             Section {
                 Button("Delete product", role: .destructive) { confirmDelete = true }
             }
@@ -157,6 +150,63 @@ struct ProductDetailView: View {
         perform { try store.linkProduct(productId, toReceipt: receiptId) }
     }
 
+    @ViewBuilder
+    private func productPageSection(_ product: Product) -> some View {
+        let copies = store.attachments(.product, productId).filter { $0.label == .productPage }
+        Section {
+            if let url = URL(string: product.productUrl), !product.productUrl.isEmpty {
+                Link(destination: url) {
+                    Label(url.host() ?? product.productUrl, systemImage: "safari")
+                }
+                .contextMenu {
+                    Button("Copy link", systemImage: "doc.on.doc") { UIPasteboard.general.url = url }
+                }
+            }
+            gallery(copies)
+            AttachmentAddMenu(title: "Save a copy of the page", labels: [.productPage]) { added in
+                perform { try store.addAttachments(added, to: .product, productId) }
+            }
+        } header: {
+            Overline("Product page")
+        } footer: {
+            Text("Keep a copy in case the listing disappears: in Safari, tap Share, then Options, choose PDF and share it to petty: Tracker. Or save the PDF to Files and add it here.")
+        }
+    }
+
+    @ViewBuilder
+    private var filesSections: some View {
+        let files = store.attachments(.product, productId).filter { $0.label != .productPage }
+        ForEach(AttachmentLabel.productLabels.filter { $0 != .productPage }, id: \.self) { label in
+            let group = files.filter { $0.label == label }
+            if !group.isEmpty {
+                Section(overline: LocalizedStringKey(label.title)) {
+                    gallery(group)
+                }
+            }
+        }
+        Section {
+            if files.isEmpty {
+                Text("Add photos of the item and its parts, the manual or assembly instructions, and the warranty card.")
+                    .foregroundStyle(.secondary)
+            }
+            AttachmentAddMenu(labels: AttachmentLabel.productLabels.filter { $0 != .productPage }) { added in
+                perform { try store.addAttachments(added, to: .product, productId) }
+            }
+        } header: {
+            if files.isEmpty { Overline("Photos and files") }
+        }
+    }
+
+    private func gallery(_ attachments: [Attachment]) -> some View {
+        AttachmentGallery(
+            attachments: attachments,
+            opened: $openedAttachment,
+            errorMessage: $errorMessage,
+            onDelete: { removingAttachment = $0 },
+            onRelabel: { attachment, label in perform { try store.setLabel(label, forAttachment: attachment.id) } }
+        )
+    }
+
     private func perform(_ action: () throws -> Void) {
         do {
             try action()
@@ -197,6 +247,7 @@ struct ProductDetailView: View {
             product.retailer.isEmpty ? nil : String(localized: "Retailer: \(product.retailer)"),
             product.price.map { String(localized: "Price: \(Money.format($0, currency: product.currency))") },
             product.warrantyExpires.map { String(localized: "Warranty ends: \(Formats.date($0))") },
+            product.productUrl.isEmpty ? nil : String(localized: "Product page: \(product.productUrl)"),
             product.notes.isEmpty ? nil : product.notes,
         ]
         .compactMap { $0 }

@@ -30,6 +30,7 @@ struct BackupService {
             attachments: data.attachments.filter { $0.ownerType != .receipt },
             receipts: data.receipts,
             receiptAttachments: data.attachments.filter { $0.ownerType == .receipt },
+            links: data.links,
             settings: data.settings
         )
         let folder = FileManager.default.temporaryDirectory.appending(path: "export", directoryHint: .isDirectory)
@@ -86,6 +87,7 @@ struct BackupService {
             documents: staged.manifest.documents,
             receipts: staged.manifest.receipts,
             attachments: staged.manifest.attachments + staged.manifest.receiptAttachments,
+            links: staged.manifest.links,
             settings: store.settings
         )
         if var settings = staged.manifest.settings {

@@ -113,7 +113,7 @@ struct ReceiptBackupTests {
         let json = try manifestJSON(in: try await BackupService(store: store).export())
 
         #expect(json["version"] as? Int == 1)
-        #expect(json.keys.sorted() == ["attachments", "documents", "exportedAt", "format", "products", "settings", "subscriptions", "version"])
+        #expect(json.keys.sorted() == ["attachments", "documents", "exportedAt", "format", "links", "products", "settings", "subscriptions", "version"])
     }
 
     @Test func exportWithReceiptsIsVersionThreeAndKeepsVersionOneShapeReadable() async throws {

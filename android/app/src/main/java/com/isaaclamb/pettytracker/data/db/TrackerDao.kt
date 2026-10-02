@@ -9,7 +9,10 @@ import androidx.room.Upsert
 import com.isaaclamb.pettytracker.data.Attachment
 import com.isaaclamb.pettytracker.data.Document
 import com.isaaclamb.pettytracker.data.OwnerType
+import com.isaaclamb.pettytracker.data.AttachmentLabel
 import com.isaaclamb.pettytracker.data.Product
+import com.isaaclamb.pettytracker.data.RecordLink
+import com.isaaclamb.pettytracker.data.RecordType
 import com.isaaclamb.pettytracker.data.SentReminder
 import com.isaaclamb.pettytracker.data.Subscription
 import kotlinx.coroutines.flow.Flow
@@ -80,6 +83,26 @@ interface TrackerDao {
     @Query("DELETE FROM attachments WHERE ownerType = :type AND ownerId = :ownerId")
     suspend fun deleteAttachmentsFor(type: OwnerType, ownerId: Long)
 
+    @Query("UPDATE attachments SET label = :label WHERE id = :id")
+    suspend fun setAttachmentLabel(id: Long, label: AttachmentLabel)
+
+    @Query("SELECT * FROM record_links WHERE (fromType = :type AND fromId = :id) OR (toType = :type AND toId = :id) ORDER BY id")
+    fun links(type: RecordType, id: Long): Flow<List<RecordLink>>
+
+    @Query("SELECT * FROM record_links WHERE (fromType = :aType AND fromId = :aId AND toType = :bType AND toId = :bId) OR (fromType = :bType AND fromId = :bId AND toType = :aType AND toId = :aId)")
+    suspend fun linkBetween(aType: RecordType, aId: Long, bType: RecordType, bId: Long): RecordLink?
+
+    @Query("SELECT * FROM record_links")
+    suspend fun allLinks(): List<RecordLink>
+
+    @Upsert suspend fun upsertLink(link: RecordLink)
+
+    @Query("DELETE FROM record_links WHERE id = :id")
+    suspend fun deleteLink(id: Long)
+
+    @Query("DELETE FROM record_links WHERE (fromType = :type AND fromId = :id) OR (toType = :type AND toId = :id)")
+    suspend fun deleteLinksFor(type: RecordType, id: Long)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun markReminderSent(reminder: SentReminder): Long
 
@@ -89,9 +112,11 @@ interface TrackerDao {
     @Insert suspend fun insertProducts(items: List<Product>)
     @Insert suspend fun insertSubscriptions(items: List<Subscription>)
     @Insert suspend fun insertDocuments(items: List<Document>)
+    @Insert suspend fun insertLinks(items: List<RecordLink>)
 
     @Query("DELETE FROM products") suspend fun clearProducts()
     @Query("DELETE FROM subscriptions") suspend fun clearSubscriptions()
     @Query("DELETE FROM documents") suspend fun clearDocuments()
     @Query("DELETE FROM attachments") suspend fun clearAttachments()
+    @Query("DELETE FROM record_links") suspend fun clearLinks()
 }

@@ -28,9 +28,48 @@ struct AttachmentDraft {
     }
 }
 
+extension AttachmentLabel {
+    var title: String {
+        switch self {
+        case .item: String(localized: "Item photos")
+        case .part: String(localized: "Parts")
+        case .instructions: String(localized: "Instructions")
+        case .productPage: String(localized: "Product page copies")
+        case .warranty: String(localized: "Warranty")
+        case .other: String(localized: "Other files")
+        }
+    }
+
+    /// The menu wording for adding a file with this label.
+    var addTitle: String {
+        switch self {
+        case .item: String(localized: "Photo of the item")
+        case .part: String(localized: "Part")
+        case .instructions: String(localized: "Instructions or manual")
+        case .productPage: String(localized: "Copy of the product page")
+        case .warranty: String(localized: "Warranty card or terms")
+        case .other: String(localized: "Other file")
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .item: "camera"
+        case .part: "puzzlepiece"
+        case .instructions: "book.closed"
+        case .productPage: "globe"
+        case .warranty: "checkmark.shield"
+        case .other: "doc"
+        }
+    }
+
+    static let productLabels: [AttachmentLabel] = [.item, .part, .instructions, .warranty, .productPage, .other]
+}
+
 struct AttachmentEditorSection: View {
     let title: LocalizedStringKey
     @Binding var draft: AttachmentDraft
+    var labels: [AttachmentLabel] = [.other]
     @Environment(TrackerStore.self) private var store
 
     var body: some View {
@@ -38,7 +77,7 @@ struct AttachmentEditorSection: View {
             ForEach(draft.visible, id: \.fileName) { attachment in
                 HStack {
                     AttachmentThumbnail(attachment: attachment, size: 40)
-                    AttachmentLabel(attachment: attachment)
+                    AttachmentNameLabel(attachment: attachment, showsLabel: labels.count > 1)
                     Spacer()
                     Button {
                         draft.remove(attachment, store: store.attachmentStore)
@@ -49,15 +88,19 @@ struct AttachmentEditorSection: View {
                     .accessibilityLabel(String(localized: "Remove \(attachment.displayName)"))
                 }
             }
-            AttachmentAddMenu { draft.added += $0 }
+            AttachmentAddMenu(labels: labels) { draft.added += $0 }
         }
     }
 }
 
-/// Copies picked files, library photos or camera shots into the attachment store and hands them back.
+/// Copies picked files, library photos or camera shots into the attachment store and hands them back,
+/// labelled with whichever of `labels` the person chose.
 struct AttachmentAddMenu: View {
+    var title: LocalizedStringKey = "Add photo or file"
+    var labels: [AttachmentLabel] = [.other]
     let onAdded: ([Attachment]) -> Void
     @Environment(TrackerStore.self) private var store
+    @State private var pendingLabel = AttachmentLabel.other
 
     @State private var showFiles = false
     @State private var showPhotos = false
@@ -69,11 +112,17 @@ struct AttachmentAddMenu: View {
     var body: some View {
         // Presentations hang off this single row; on a Section they would repeat for every row.
         Menu {
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                Button("Take Photo", systemImage: "camera") { showCamera = true }
+            if labels.count == 1 {
+                sources(for: labels[0])
+            } else {
+                ForEach(labels, id: \.self) { label in
+                    Menu {
+                        sources(for: label)
+                    } label: {
+                        Label(label.addTitle, systemImage: label.symbol)
+                    }
+                }
             }
-            Button("Photo Library", systemImage: "photo.on.rectangle") { showPhotos = true }
-            Button("Choose File", systemImage: "folder") { showFiles = true }
         } label: {
             if importing > 0 {
                 HStack {
@@ -81,7 +130,7 @@ struct AttachmentAddMenu: View {
                     Text("Adding…").foregroundStyle(.secondary)
                 }
             } else {
-                Label("Add photo or file", systemImage: "paperclip")
+                Label(title, systemImage: "paperclip")
             }
         }
         .disabled(importing > 0)
@@ -120,13 +169,36 @@ struct AttachmentAddMenu: View {
         .errorAlert($errorMessage)
     }
 
+    @ViewBuilder
+    private func sources(for label: AttachmentLabel) -> some View {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            Button("Take Photo", systemImage: "camera") {
+                pendingLabel = label
+                showCamera = true
+            }
+        }
+        Button("Photo Library", systemImage: "photo.on.rectangle") {
+            pendingLabel = label
+            showPhotos = true
+        }
+        Button("Choose File", systemImage: "folder") {
+            pendingLabel = label
+            showFiles = true
+        }
+    }
+
     private func add(_ work: @escaping @Sendable (AttachmentStore) async throws -> [Attachment]) {
         let attachmentStore = store.attachmentStore
+        let label = pendingLabel
         importing += 1
         Task {
             defer { importing -= 1 }
             do {
-                onAdded(try await work(attachmentStore))
+                onAdded(try await work(attachmentStore).map { attachment in
+                    var labelled = attachment
+                    labelled.label = label
+                    return labelled
+                })
             } catch {
                 errorMessage = String(localized: "A file could not be added. \(error.localizedDescription)")
             }
@@ -138,14 +210,15 @@ struct AttachmentAddMenu: View {
 /// `attachmentPresenter`, since presentation modifiers on rows or sections would repeat per row.
 struct AttachmentGallery: View {
     let attachments: [Attachment]
-    let emptyText: LocalizedStringKey
+    var emptyText: LocalizedStringKey?
     @Binding var opened: OpenedAttachment?
     @Binding var errorMessage: String?
     var onDelete: ((Attachment) -> Void)?
+    var onRelabel: ((Attachment, AttachmentLabel) -> Void)?
     @Environment(TrackerStore.self) private var store
 
     var body: some View {
-        if attachments.isEmpty {
+        if attachments.isEmpty, let emptyText {
             Text(emptyText).foregroundStyle(.secondary)
         }
         ForEach(attachments) { attachment in
@@ -154,7 +227,7 @@ struct AttachmentGallery: View {
             } label: {
                 HStack {
                     AttachmentThumbnail(attachment: attachment, size: 44)
-                    AttachmentLabel(attachment: attachment)
+                    AttachmentNameLabel(attachment: attachment)
                     Spacer()
                 }
             }
@@ -162,6 +235,14 @@ struct AttachmentGallery: View {
             .accessibilityHint("Opens a preview")
             .contextMenu {
                 Button("Share", systemImage: "square.and.arrow.up") { open(attachment, share: true) }
+                if let onRelabel {
+                    Picker("Label", selection: Binding(get: { attachment.label }, set: { onRelabel(attachment, $0) })) {
+                        ForEach(AttachmentLabel.productLabels, id: \.self) { label in
+                            Label(label.title, systemImage: label.symbol).tag(label)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                }
                 if let onDelete {
                     Button("Delete", systemImage: "trash", role: .destructive) { onDelete(attachment) }
                 }
@@ -207,15 +288,16 @@ extension View {
     }
 }
 
-private struct AttachmentLabel: View {
+private struct AttachmentNameLabel: View {
     let attachment: Attachment
+    var showsLabel = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(attachment.displayName)
                 .lineLimit(1)
                 .truncationMode(.middle)
-            Text(Formats.fileSize(attachment.sizeBytes))
+            Text(showsLabel ? "\(attachment.label.title) · \(Formats.fileSize(attachment.sizeBytes))" : Formats.fileSize(attachment.sizeBytes))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

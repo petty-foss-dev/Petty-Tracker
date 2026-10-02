@@ -1,5 +1,6 @@
 package com.isaaclamb.pettytracker.ui.products
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
@@ -19,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,11 +36,15 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.isaaclamb.pettytracker.R
+import com.isaaclamb.pettytracker.data.AttachmentLabel
 import com.isaaclamb.pettytracker.data.Product
+import com.isaaclamb.pettytracker.data.RecordRef
+import com.isaaclamb.pettytracker.data.RecordType
 import com.isaaclamb.pettytracker.domain.DeadlineStatus
 import com.isaaclamb.pettytracker.domain.Money
 import com.isaaclamb.pettytracker.domain.RecordKind
@@ -46,10 +53,10 @@ import com.isaaclamb.pettytracker.ui.Formats
 import com.isaaclamb.pettytracker.ui.ProductDetailRoute
 import com.isaaclamb.pettytracker.ui.ProductEditRoute
 import com.isaaclamb.pettytracker.ui.components.AttachmentEditor
-import com.isaaclamb.pettytracker.ui.components.DetailAttachments
 import com.isaaclamb.pettytracker.ui.components.ConfirmDialog
 import com.isaaclamb.pettytracker.ui.components.CurrencyField
 import com.isaaclamb.pettytracker.ui.components.DateField
+import com.isaaclamb.pettytracker.ui.components.DetailAttachments
 import com.isaaclamb.pettytracker.ui.components.DetailCard
 import com.isaaclamb.pettytracker.ui.components.DetailRow
 import com.isaaclamb.pettytracker.ui.components.DetailScaffold
@@ -59,12 +66,15 @@ import com.isaaclamb.pettytracker.ui.components.FilterChips
 import com.isaaclamb.pettytracker.ui.components.FormTextField
 import com.isaaclamb.pettytracker.ui.components.KindBadge
 import com.isaaclamb.pettytracker.ui.components.NoMatches
+import com.isaaclamb.pettytracker.ui.components.ProductFileLabels
 import com.isaaclamb.pettytracker.ui.components.RecordCard
+import com.isaaclamb.pettytracker.ui.components.RelatedSection
 import com.isaaclamb.pettytracker.ui.components.SearchField
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
 import com.isaaclamb.pettytracker.ui.components.StatusSection
 import com.isaaclamb.pettytracker.ui.components.TabScaffold
 import com.isaaclamb.pettytracker.ui.components.deadlineText
+import com.isaaclamb.pettytracker.ui.components.openLink
 import com.isaaclamb.pettytracker.ui.components.shareText
 import com.isaaclamb.pettytracker.ui.trackerViewModel
 import java.time.LocalDate
@@ -168,8 +178,32 @@ fun ProductDetailScreen(navController: NavController) {
             DetailRow(stringResource(R.string.field_retailer), product.retailer)
             DetailRow(stringResource(R.string.field_price), product.price?.let { Money.format(it, product.currency) })
         }
+        SectionHeader(stringResource(R.string.section_product_page))
+        if (product.productUrl.isNotBlank()) {
+            OutlinedButton(onClick = { openLink(context, product.productUrl) }, modifier = Modifier.fillMaxWidth()) {
+                Icon(Icons.Outlined.OpenInBrowser, contentDescription = null)
+                Text(
+                    Uri.parse(product.productUrl).host ?: product.productUrl,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(start = 8.dp),
+                )
+            }
+        }
+        DetailAttachments(
+            viewModel,
+            state.attachments.filter { it.label == AttachmentLabel.PRODUCT_PAGE },
+            stringResource(R.string.product_page_copy_hint),
+            listOf(AttachmentLabel.PRODUCT_PAGE),
+        )
         SectionHeader(stringResource(R.string.section_attachments))
-        DetailAttachments(viewModel, state.attachments, stringResource(R.string.attachments_none_product))
+        DetailAttachments(
+            viewModel,
+            state.attachments.filter { it.label != AttachmentLabel.PRODUCT_PAGE },
+            stringResource(R.string.attachments_none_product),
+            ProductFileLabels,
+        )
+        RelatedSection(RecordRef(RecordType.PRODUCT, product.id), navController)
         if (product.notes.isNotBlank()) {
             SectionHeader(stringResource(R.string.field_notes))
             SelectionContainer { Text(product.notes, style = MaterialTheme.typography.bodyLarge) }
@@ -330,6 +364,14 @@ fun ProductEditScreen(navController: NavController) {
             )
             CurrencyField(form.currency, { code -> viewModel.edit { it.copy(currency = code) } }, Modifier.weight(1f))
         }
+        FormTextField(
+            form.productUrl,
+            { value -> viewModel.edit { it.copy(productUrl = value) } },
+            stringResource(R.string.field_product_page),
+            error = if (form.urlError) stringResource(R.string.error_product_page) else null,
+            keyboardType = KeyboardType.Uri,
+            capitalization = KeyboardCapitalization.None,
+        )
 
         SectionHeader(stringResource(R.string.section_warranty))
         DateField(
@@ -352,8 +394,8 @@ fun ProductEditScreen(navController: NavController) {
             }
         }
 
-        SectionHeader(stringResource(R.string.section_receipts))
-        AttachmentEditor(viewModel)
+        SectionHeader(stringResource(R.string.section_attachments))
+        AttachmentEditor(viewModel, ProductFileLabels + AttachmentLabel.PRODUCT_PAGE)
 
         SectionHeader(stringResource(R.string.field_notes))
         FormTextField(

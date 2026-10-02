@@ -81,6 +81,7 @@ struct SubscriptionDetailView: View {
                     Text(subscription.notes).textSelection(.enabled)
                 }
             }
+            RelatedSection(ref: RecordRef(type: .subscription, id: subscriptionId))
             Section {
                 Button("Delete subscription", role: .destructive) { confirmDelete = true }
             }

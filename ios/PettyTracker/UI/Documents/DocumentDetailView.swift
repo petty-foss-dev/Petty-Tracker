@@ -61,6 +61,7 @@ struct DocumentDetailView: View {
                 )
                 AttachmentAddMenu { added in perform { try store.addAttachments(added, to: .document, documentId) } }
             }
+            RelatedSection(ref: RecordRef(type: .document, id: documentId))
             Section {
                 Button("Delete document", role: .destructive) { confirmDelete = true }
             }

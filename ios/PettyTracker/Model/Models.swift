@@ -15,6 +15,8 @@ struct Product: Identifiable, Hashable, Sendable {
     var currency: String
     var warrantyExpires: Day?
     var notes = ""
+    /// The product's page on the seller's or maker's site; saved copies of it are attachments labelled `.productPage`.
+    var productUrl = ""
 }
 
 enum CycleUnit: String, Codable, CaseIterable, Sendable {
@@ -140,6 +142,16 @@ enum OwnerType: String, Codable, Sendable {
     case receipt = "RECEIPT"
 }
 
+/// What a file shows, so a product's photos, parts and manuals can be told apart.
+enum AttachmentLabel: String, Codable, CaseIterable, Sendable {
+    case item = "ITEM"
+    case part = "PART"
+    case instructions = "INSTRUCTIONS"
+    case productPage = "PRODUCT_PAGE"
+    case warranty = "WARRANTY"
+    case other = "OTHER"
+}
+
 struct Attachment: Identifiable, Hashable, Sendable {
     var id: Int64 = 0
     var ownerType: OwnerType
@@ -148,8 +160,36 @@ struct Attachment: Identifiable, Hashable, Sendable {
     var mimeType: String
     var fileName: String
     var sizeBytes: Int64
+    var label = AttachmentLabel.other
 
     var isImage: Bool { mimeType.hasPrefix("image/") }
+}
+
+/// Any record a link can point at.
+enum RecordType: String, Codable, Sendable {
+    case product = "PRODUCT"
+    case subscription = "SUBSCRIPTION"
+    case document = "DOCUMENT"
+    case receipt = "RECEIPT"
+}
+
+struct RecordRef: Hashable, Sendable {
+    var type: RecordType
+    var id: Int64
+}
+
+/// A cross-reference between two records, shown on both. `note` says how they relate, such as "Insurance".
+struct RecordLink: Identifiable, Hashable, Sendable {
+    var id: Int64 = 0
+    var from: RecordRef
+    var to: RecordRef
+    var note = ""
+
+    func other(than ref: RecordRef) -> RecordRef? {
+        if from == ref { return to }
+        if to == ref { return from }
+        return nil
+    }
 }
 
 enum ThemeMode: String, Codable, CaseIterable, Sendable {
@@ -237,6 +277,7 @@ extension Product: Codable {
         currency = try c.required("currency")
         warrantyExpires = try c.value("warrantyExpires", default: nil)
         notes = try c.value("notes", default: "")
+        productUrl = try c.value("productUrl", default: "")
     }
 
     func encode(to encoder: Encoder) throws {
@@ -252,6 +293,7 @@ extension Product: Codable {
         try c.put(currency, "currency")
         try c.put(warrantyExpires, "warrantyExpires")
         try c.put(notes, "notes")
+        try c.put(productUrl, "productUrl")
     }
 }
 
@@ -441,6 +483,7 @@ extension Attachment: Codable {
         mimeType = try c.required("mimeType")
         fileName = try c.required("fileName")
         sizeBytes = try c.required("sizeBytes")
+        label = try c.value("label", default: .other)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -452,6 +495,27 @@ extension Attachment: Codable {
         try c.put(mimeType, "mimeType")
         try c.put(fileName, "fileName")
         try c.put(sizeBytes, "sizeBytes")
+        try c.put(label, "label")
+    }
+}
+
+extension RecordLink: Codable {
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: JSONKey.self)
+        id = try c.value("id", default: 0)
+        from = RecordRef(type: try c.required("fromType"), id: try c.required("fromId"))
+        to = RecordRef(type: try c.required("toType"), id: try c.required("toId"))
+        note = try c.value("note", default: "")
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: JSONKey.self)
+        try c.put(id, "id")
+        try c.put(from.type, "fromType")
+        try c.put(from.id, "fromId")
+        try c.put(to.type, "toType")
+        try c.put(to.id, "toId")
+        try c.put(note, "note")
     }
 }
 

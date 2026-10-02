@@ -31,6 +31,7 @@ private struct ProductForm: Equatable {
     var currency: String
     var warrantyExpires: Day?
     var notes = ""
+    var productUrl = ""
     var receiptId: Int64?
 
     init(_ product: Product?, receiptId: Int64?, defaultCurrency: String) {
@@ -46,10 +47,22 @@ private struct ProductForm: Equatable {
         price = product.price.map(Money.formatForInput) ?? ""
         warrantyExpires = product.warrantyExpires
         notes = product.notes
+        productUrl = product.productUrl
     }
 
     var parsedPrice: Decimal? { Money.parse(price) }
     var priceIsValid: Bool { price.trimmingCharacters(in: .whitespaces).isEmpty || parsedPrice != nil }
+
+    /// Accepts "example.com/item" as well as full links; nil when it can't be a web address.
+    var normalizedUrl: String? {
+        let text = productUrl.trimmingCharacters(in: .whitespacesAndNewlines)
+        if text.isEmpty { return "" }
+        let candidate = text.contains("://") ? text : "https://\(text)"
+        guard let url = URL(string: candidate), ["http", "https"].contains(url.scheme?.lowercased()), url.host() != nil else {
+            return nil
+        }
+        return candidate
+    }
 }
 
 private struct ProductEditForm: View {
@@ -100,6 +113,13 @@ private struct ProductEditForm: View {
                     OptionalDateRow(title: String(localized: "Purchase date"), selection: $form.purchaseDate)
                     FormTextField("Retailer", text: $form.retailer)
                     AmountRow(price: $form.price, currency: $form.currency, isInvalid: showErrors && !form.priceIsValid)
+                    FormTextField("Product page", text: $form.productUrl, prompt: "Link")
+                        .keyboardType(.URL)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                    if showErrors && form.normalizedUrl == nil {
+                        FieldError(text: String(localized: "Enter a web address such as example.com/product"))
+                    }
                 }
                 Section {
                     OptionalDateRow(title: String(localized: "Warranty ends"), selection: $form.warrantyExpires)
@@ -140,7 +160,7 @@ private struct ProductEditForm: View {
                 Section(overline: "Notes") {
                     NotesField(text: $form.notes)
                 }
-                AttachmentEditorSection(title: "Files and photos", draft: $attachments)
+                AttachmentEditorSection(title: "Files and photos", draft: $attachments, labels: AttachmentLabel.productLabels)
             }
             .navigationTitle(original == nil ? "New product" : "Edit product")
             .navigationBarTitleDisplayMode(.inline)
@@ -160,7 +180,7 @@ private struct ProductEditForm: View {
     private func save() {
         showErrors = true
         let name = form.name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !name.isEmpty, form.priceIsValid, Money.isValidCurrency(form.currency) else { return }
+        guard !name.isEmpty, form.priceIsValid, Money.isValidCurrency(form.currency), let productUrl = form.normalizedUrl else { return }
         var product = original ?? Product(name: name, currency: form.currency)
         product.name = name
         product.brand = form.brand.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -172,6 +192,7 @@ private struct ProductEditForm: View {
         product.currency = form.currency
         product.warrantyExpires = form.warrantyExpires
         product.notes = form.notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        product.productUrl = productUrl
         do {
             let id = try store.saveProduct(
                 product, added: attachments.added, removed: attachments.removed, receiptId: form.receiptId

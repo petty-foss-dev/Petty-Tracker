@@ -250,6 +250,7 @@ private struct ReceiptEditForm: View {
     @State private var showErrors = false
     @State private var confirmDiscard = false
     @State private var confirmCancelShared = false
+    @State private var savingToProduct = false
     @State private var errorMessage: String?
     @Environment(TrackerStore.self) private var store
     @Environment(QuickCapture.self) private var quickCapture
@@ -328,6 +329,9 @@ private struct ReceiptEditForm: View {
         ToolbarItem(placement: .cancellationAction) {
             Button("Cancel") { confirmCancelShared = true }
                 .confirmationDialog("Keep this shared file?", isPresented: $confirmCancelShared, titleVisibility: .visible) {
+                    if !store.data.products.isEmpty {
+                        Button("Save to a product instead") { savingToProduct = true }
+                    }
                     Button("Review later") {
                         quickCapture.postpone(item)
                         discard()
@@ -337,7 +341,13 @@ private struct ReceiptEditForm: View {
                         quickCapture.finish(item)
                     }
                 } message: {
-                    Text("Review later keeps it under Receipts. Deleting removes it from petty: Tracker.")
+                    Text("Save a product page copy, manual or photo with a product, keep it under Receipts for later, or delete it.")
+                }
+                .sheet(isPresented: $savingToProduct) {
+                    SharedFileProductPicker(file: item.file) {
+                        discard()
+                        quickCapture.finish(item)
+                    }
                 }
         }
         ToolbarItem(placement: .confirmationAction) {

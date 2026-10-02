@@ -24,6 +24,8 @@ data class Product(
     val currency: String,
     val warrantyExpires: LocalDate? = null,
     val notes: String = "",
+    // The product's page on the seller's or maker's site; saved copies are attachments labelled PRODUCT_PAGE.
+    val productUrl: String = "",
 )
 
 @Serializable
@@ -62,6 +64,10 @@ data class Document(
 @Serializable
 enum class OwnerType { PRODUCT, DOCUMENT }
 
+/** What a file shows, so a product's photos, parts and manuals can be told apart. */
+@Serializable
+enum class AttachmentLabel { ITEM, PART, INSTRUCTIONS, PRODUCT_PAGE, WARRANTY, OTHER }
+
 @Serializable
 @Entity(tableName = "attachments", indices = [Index("ownerType", "ownerId")])
 data class Attachment(
@@ -72,8 +78,36 @@ data class Attachment(
     val mimeType: String,
     val fileName: String,
     val sizeBytes: Long,
+    val label: AttachmentLabel = AttachmentLabel.OTHER,
 ) {
     val isImage: Boolean get() = mimeType.startsWith("image/")
+}
+
+/** Any record a link can point at. Receipts exist only on iOS, so Android never sees links to them. */
+@Serializable
+enum class RecordType { PRODUCT, SUBSCRIPTION, DOCUMENT }
+
+data class RecordRef(val type: RecordType, val id: Long)
+
+/** A cross-reference between two records, shown on both. [note] says how they relate, such as "Insurance". */
+@Serializable
+@Entity(tableName = "record_links", indices = [Index("fromType", "fromId"), Index("toType", "toId")])
+data class RecordLink(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val fromType: RecordType,
+    val fromId: Long,
+    val toType: RecordType,
+    val toId: Long,
+    val note: String = "",
+) {
+    val from: RecordRef get() = RecordRef(fromType, fromId)
+    val to: RecordRef get() = RecordRef(toType, toId)
+
+    fun other(than: RecordRef): RecordRef? = when (than) {
+        from -> to
+        to -> from
+        else -> null
+    }
 }
 
 @Entity(tableName = "sent_reminders")

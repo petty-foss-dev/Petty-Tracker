@@ -17,6 +17,7 @@ import com.isaaclamb.pettytracker.domain.deadlineSortKey
 import com.isaaclamb.pettytracker.domain.deadlineStatus
 import com.isaaclamb.pettytracker.domain.sortRank
 import com.isaaclamb.pettytracker.domain.matches
+import com.isaaclamb.pettytracker.domain.normalizeProductUrl
 import com.isaaclamb.pettytracker.ui.AttachmentDraft
 import com.isaaclamb.pettytracker.ui.AttachmentFormViewModel
 import com.isaaclamb.pettytracker.ui.RecordDetailViewModel
@@ -108,9 +109,11 @@ data class ProductForm(
     val currency: String = "",
     val warrantyExpires: LocalDate? = null,
     val notes: String = "",
+    val productUrl: String = "",
     val attachments: AttachmentDraft = AttachmentDraft(),
 ) {
     val nameError get() = showErrors && name.isBlank()
+    val urlError get() = showErrors && normalizeProductUrl(productUrl) == null
     val priceError get() = showErrors && price.isNotBlank() && Money.parse(price) == null
     val warrantyBeforePurchase get() =
         purchaseDate != null && warrantyExpires != null && warrantyExpires.isBefore(purchaseDate)
@@ -152,6 +155,7 @@ class ProductEditViewModel(private val app: TrackerApplication, handle: SavedSta
                         currency = product.currency,
                         warrantyExpires = product.warrantyExpires,
                         notes = product.notes,
+                        productUrl = product.productUrl,
                         attachments = AttachmentDraft(current = attachments),
                     )
                 }
@@ -168,10 +172,11 @@ class ProductEditViewModel(private val app: TrackerApplication, handle: SavedSta
     fun save(onSaved: (id: Long, isNew: Boolean) -> Unit) {
         val form = form
         val price = form.price.takeIf { it.isNotBlank() }?.let(Money::parse)
+        val productUrl = normalizeProductUrl(form.productUrl)
         val invalid = form.name.isBlank() ||
             (form.price.isNotBlank() && price == null) ||
             Money.currency(form.currency) == null
-        if (invalid) {
+        if (invalid || productUrl == null) {
             update { it.copy(showErrors = true) }
             return
         }
@@ -190,6 +195,7 @@ class ProductEditViewModel(private val app: TrackerApplication, handle: SavedSta
                 currency = form.currency,
                 warrantyExpires = form.warrantyExpires,
                 notes = form.notes.trim(),
+                productUrl = productUrl,
             )
             val savedId = app.container.repository.saveProduct(product, form.attachments.added, form.attachments.removed)
             saved = true

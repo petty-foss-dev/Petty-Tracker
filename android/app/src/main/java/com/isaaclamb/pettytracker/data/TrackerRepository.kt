@@ -36,11 +36,35 @@ class TrackerRepository(
         return if (subscription.id == 0L) id else subscription.id
     }
 
-    suspend fun deleteProduct(id: Long) = deleteWithAttachments(OwnerType.PRODUCT, id) { dao.deleteProduct(id) }
+    suspend fun deleteProduct(id: Long) = deleteWithAttachments(OwnerType.PRODUCT, id) {
+        dao.deleteProduct(id)
+        dao.deleteLinksFor(RecordType.PRODUCT, id)
+    }
 
-    suspend fun deleteDocument(id: Long) = deleteWithAttachments(OwnerType.DOCUMENT, id) { dao.deleteDocument(id) }
+    suspend fun deleteDocument(id: Long) = deleteWithAttachments(OwnerType.DOCUMENT, id) {
+        dao.deleteDocument(id)
+        dao.deleteLinksFor(RecordType.DOCUMENT, id)
+    }
 
-    suspend fun deleteSubscription(id: Long) = dao.deleteSubscription(id)
+    suspend fun deleteSubscription(id: Long) = database.withTransaction {
+        dao.deleteSubscription(id)
+        dao.deleteLinksFor(RecordType.SUBSCRIPTION, id)
+    }
+
+    fun links(ref: RecordRef) = dao.links(ref.type, ref.id)
+
+    /** Links two records once; linking a pair again only updates the note. */
+    suspend fun addLink(from: RecordRef, to: RecordRef, note: String) {
+        if (from == to) return
+        database.withTransaction {
+            val existing = dao.linkBetween(from.type, from.id, to.type, to.id)
+            dao.upsertLink(existing?.copy(note = note) ?: RecordLink(fromType = from.type, fromId = from.id, toType = to.type, toId = to.id, note = note))
+        }
+    }
+
+    suspend fun unlink(linkId: Long) = dao.deleteLink(linkId)
+
+    suspend fun setLabel(attachmentId: Long, label: AttachmentLabel) = dao.setAttachmentLabel(attachmentId, label)
 
     suspend fun updateSubscription(id: Long, transform: (Subscription) -> Subscription) {
         database.withTransaction {

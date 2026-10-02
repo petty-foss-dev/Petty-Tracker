@@ -70,7 +70,9 @@ struct BackupArchiveTests {
         let restored = try BackupArchive.read(from: Fixtures.url("android-device-backup.zip"), staging: staging)
         let original = #"{"format":"enve-keep-backup","version":1,"exportedAt":"2026-09-30T04:33:49.794202Z","products":[],"subscriptions":[],"documents":[{"id":1,"title":"Passport","issuer":"","reference":"","issuedOn":null,"expiresOn":"2026-09-29","notes":""}],"attachments":[],"settings":{"themeMode":"SYSTEM","remindersEnabled":true,"warrantyLeadDays":30,"subscriptionLeadDays":7,"documentLeadDays":60,"defaultCurrency":"USD","reminderPromptDismissed":true}}"#
         let reencoded = try JSONSerialization.jsonObject(with: BackupArchive.encodeManifest(restored)) as! NSDictionary
-        let expected = try JSONSerialization.jsonObject(with: Data(original.utf8)) as! NSDictionary
+        // A backup from before links existed gains only the empty links list.
+        let expected = try JSONSerialization.jsonObject(with: Data(original.utf8), options: .mutableContainers) as! NSMutableDictionary
+        expected["links"] = [Any]()
         #expect(reencoded == expected)
     }
 
@@ -82,8 +84,8 @@ struct BackupArchiveTests {
         #expect(product["purchaseDate"] as? String == "2025-03-01")
         #expect(product["model"] as? String == "")
         #expect(product.keys.sorted() == [
-            "brand", "currency", "id", "model", "name", "notes", "price", "purchaseDate", "retailer", "serialNumber",
-            "warrantyExpires",
+            "brand", "currency", "id", "model", "name", "notes", "price", "productUrl", "purchaseDate", "retailer",
+            "serialNumber", "warrantyExpires",
         ])
         let subscription = (json["subscriptions"] as! [[String: Any]])[0]
         #expect(subscription["cycleUnit"] as? String == "MONTHS")
@@ -95,6 +97,7 @@ struct BackupArchiveTests {
         let attachment = (json["attachments"] as! [[String: Any]])[0]
         #expect(attachment["ownerType"] as? String == "PRODUCT")
         #expect(attachment["sizeBytes"] as? Int == 4)
+        #expect(attachment["label"] as? String == "OTHER")
         let settings = json["settings"] as! [String: Any]
         #expect(settings["themeMode"] as? String == "SYSTEM")
         #expect(settings["documentLeadDays"] as? Int == 90)

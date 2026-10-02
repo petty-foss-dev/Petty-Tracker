@@ -11,6 +11,11 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import com.isaaclamb.pettytracker.data.AttachmentLabel
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material.icons.automirrored.outlined.Label
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -89,6 +94,7 @@ fun AttachmentThumbnail(attachment: Attachment, store: AttachmentStore, modifier
 private fun AttachmentRow(
     attachment: Attachment,
     store: AttachmentStore,
+    caption: String? = null,
     onClick: () -> Unit,
     actions: @Composable () -> Unit,
 ) {
@@ -102,7 +108,7 @@ private fun AttachmentRow(
             Column(Modifier.weight(1f)) {
                 Text(attachment.displayName, maxLines = 2, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodyLarge)
                 Text(
-                    Formats.fileSize(attachment.sizeBytes),
+                    listOfNotNull(caption, Formats.fileSize(attachment.sizeBytes)).joinToString(" · "),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -112,43 +118,127 @@ private fun AttachmentRow(
     }
 }
 
+/** The labels a product's files can carry, in the order the product screen groups them. */
+val ProductFileLabels = listOf(
+    AttachmentLabel.ITEM,
+    AttachmentLabel.PART,
+    AttachmentLabel.INSTRUCTIONS,
+    AttachmentLabel.WARRANTY,
+    AttachmentLabel.OTHER,
+)
+
+val AttachmentLabel.title: Int
+    get() = when (this) {
+        AttachmentLabel.ITEM -> R.string.label_item
+        AttachmentLabel.PART -> R.string.label_part
+        AttachmentLabel.INSTRUCTIONS -> R.string.label_instructions
+        AttachmentLabel.PRODUCT_PAGE -> R.string.label_product_page
+        AttachmentLabel.WARRANTY -> R.string.label_warranty
+        AttachmentLabel.OTHER -> R.string.label_other
+    }
+
+private val AttachmentLabel.chip: Int
+    get() = when (this) {
+        AttachmentLabel.ITEM -> R.string.label_chip_item
+        AttachmentLabel.PART -> R.string.label_chip_part
+        AttachmentLabel.INSTRUCTIONS -> R.string.label_chip_instructions
+        AttachmentLabel.PRODUCT_PAGE -> R.string.label_chip_product_page
+        AttachmentLabel.WARRANTY -> R.string.label_chip_warranty
+        AttachmentLabel.OTHER -> R.string.label_chip_other
+    }
+
 @Composable
-fun AttachmentEditor(viewModel: AttachmentFormViewModel<*>) {
+fun AttachmentEditor(viewModel: AttachmentFormViewModel<*>, labels: List<AttachmentLabel> = listOf(AttachmentLabel.OTHER)) {
     val context = LocalContext.current
+    var label by rememberSaveable { mutableStateOf(labels.first()) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         viewModel.attachments.forEach { attachment ->
-            AttachmentRow(attachment, viewModel.attachmentStore, onClick = { viewAttachment(context, viewModel.attachmentStore, attachment) }) {
+            AttachmentRow(
+                attachment,
+                viewModel.attachmentStore,
+                caption = if (labels.size > 1) stringResource(attachment.label.title) else null,
+                onClick = { viewAttachment(context, viewModel.attachmentStore, attachment) },
+            ) {
                 IconButton(onClick = { viewModel.remove(attachment) }) {
                     Icon(Icons.Outlined.Delete, contentDescription = stringResource(R.string.action_remove_named, attachment.displayName))
                 }
             }
         }
         if (viewModel.importing) LinearProgressIndicator(Modifier.fillMaxWidth())
-        AttachmentButtons(viewModel.attachmentStore, onFiles = viewModel::addFiles, onPhoto = viewModel::onPhotoResult)
+        if (labels.size > 1) LabelChips(labels, label) { label = it }
+        AttachmentButtons(
+            viewModel.attachmentStore,
+            onFiles = { viewModel.addFiles(it, label) },
+            onPhoto = { name, success -> viewModel.onPhotoResult(name, success, label) },
+        )
     }
 }
 
-/** A detail screen's attachments, added and removed in place rather than through the editor. */
+/**
+ * A detail screen's attachments, added and removed in place rather than through the editor. With more than
+ * one label, files are grouped under their labels and new files take the label chosen above the buttons.
+ */
 @Composable
-fun DetailAttachments(viewModel: RecordDetailViewModel, attachments: List<Attachment>, emptyText: String) {
+fun DetailAttachments(
+    viewModel: RecordDetailViewModel,
+    attachments: List<Attachment>,
+    emptyText: String,
+    labels: List<AttachmentLabel> = listOf(AttachmentLabel.OTHER),
+) {
     val context = LocalContext.current
     var pendingRemoval by remember { mutableStateOf<Attachment?>(null) }
+    var relabeling by remember { mutableStateOf<Attachment?>(null) }
+    var label by rememberSaveable { mutableStateOf(labels.first()) }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         if (attachments.isEmpty()) {
             Text(emptyText, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        attachments.forEach { attachment ->
-            AttachmentRow(attachment, viewModel.attachmentStore, onClick = { viewAttachment(context, viewModel.attachmentStore, attachment) }) {
-                IconButton(onClick = { shareAttachment(context, viewModel.attachmentStore, attachment) }) {
-                    Icon(Icons.Outlined.Share, contentDescription = stringResource(R.string.action_share_named, attachment.displayName))
-                }
-                IconButton(onClick = { pendingRemoval = attachment }) {
-                    Icon(Icons.Outlined.Delete, contentDescription = stringResource(R.string.action_remove_named, attachment.displayName))
+        val groups = if (labels.size > 1) labels.map { it to attachments.filter { a -> a.label == it } } else listOf(labels.first() to attachments)
+        groups.filter { it.second.isNotEmpty() }.forEach { (groupLabel, group) ->
+            if (labels.size > 1) {
+                Text(
+                    stringResource(groupLabel.title),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 4.dp),
+                )
+            }
+            group.forEach { attachment ->
+                AttachmentRow(attachment, viewModel.attachmentStore, onClick = { viewAttachment(context, viewModel.attachmentStore, attachment) }) {
+                    if (labels.size > 1) {
+                        Box {
+                            IconButton(onClick = { relabeling = attachment }) {
+                                Icon(Icons.AutoMirrored.Outlined.Label, contentDescription = stringResource(R.string.action_change_label_named, attachment.displayName))
+                            }
+                            DropdownMenu(expanded = relabeling == attachment, onDismissRequest = { relabeling = null }) {
+                                labels.forEach { option ->
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(option.title)) },
+                                        onClick = {
+                                            relabeling = null
+                                            viewModel.relabel(attachment, option)
+                                        },
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    IconButton(onClick = { shareAttachment(context, viewModel.attachmentStore, attachment) }) {
+                        Icon(Icons.Outlined.Share, contentDescription = stringResource(R.string.action_share_named, attachment.displayName))
+                    }
+                    IconButton(onClick = { pendingRemoval = attachment }) {
+                        Icon(Icons.Outlined.Delete, contentDescription = stringResource(R.string.action_remove_named, attachment.displayName))
+                    }
                 }
             }
         }
         if (viewModel.importing) LinearProgressIndicator(Modifier.fillMaxWidth())
-        AttachmentButtons(viewModel.attachmentStore, onFiles = viewModel::addFiles, onPhoto = viewModel::onPhotoResult)
+        if (labels.size > 1) LabelChips(labels, label) { label = it }
+        AttachmentButtons(
+            viewModel.attachmentStore,
+            onFiles = { viewModel.addFiles(it, label) },
+            onPhoto = { name, success -> viewModel.onPhotoResult(name, success, label) },
+        )
     }
     val message = viewModel.message
     LaunchedEffect(message) {
@@ -165,6 +255,18 @@ fun DetailAttachments(viewModel: RecordDetailViewModel, attachments: List<Attach
             onConfirm = { viewModel.remove(attachment) },
             onDismiss = { pendingRemoval = null },
         )
+    }
+}
+
+@Composable
+private fun LabelChips(labels: List<AttachmentLabel>, selected: AttachmentLabel, onSelect: (AttachmentLabel) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(
+            stringResource(R.string.label_add_as),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        FilterChips(labels, selected, label = { stringResource(it.chip) }, onSelect = onSelect)
     }
 }
 
@@ -231,6 +333,15 @@ fun shareAttachment(context: Context, store: AttachmentStore, attachment: Attach
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     intent.clipData = ClipData.newUri(context.contentResolver, attachment.displayName, uri)
     context.startActivity(Intent.createChooser(intent, null))
+}
+
+/** Opens a web link in the person's browser; the app itself never goes online. */
+fun openLink(context: Context, url: String) {
+    try {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    } catch (_: ActivityNotFoundException) {
+        Toast.makeText(context, R.string.error_no_browser, Toast.LENGTH_SHORT).show()
+    }
 }
 
 fun shareText(context: Context, subject: String, text: String) {

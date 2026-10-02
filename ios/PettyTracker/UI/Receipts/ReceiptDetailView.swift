@@ -108,6 +108,7 @@ struct ReceiptDetailView: View {
                     Text("Read on this iPhone when the page was added. It may contain mistakes.")
                 }
             }
+            RelatedSection(ref: RecordRef(type: .receipt, id: receiptId))
             Section {
                 Button("Delete receipt", role: .destructive) { confirmDelete = true }
             }

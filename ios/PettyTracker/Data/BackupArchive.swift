@@ -19,13 +19,14 @@ struct BackupManifest: Hashable, Sendable {
     var attachments: [Attachment] = []
     var receipts: [Receipt] = []
     var receiptAttachments: [Attachment] = []
+    var links: [RecordLink] = []
     var settings: Settings?
 }
 
 extension BackupManifest: Codable {
     private enum CodingKeys: String, CodingKey {
         case format, version, exportedAt, products, subscriptions, documents, attachments, receipts,
-             receiptAttachments, settings
+             receiptAttachments, links, settings
     }
 
     init(from decoder: Decoder) throws {
@@ -39,6 +40,7 @@ extension BackupManifest: Codable {
         attachments = try c.decodeIfPresent([Attachment].self, forKey: .attachments) ?? []
         receipts = try c.decodeIfPresent([Receipt].self, forKey: .receipts) ?? []
         receiptAttachments = try c.decodeIfPresent([Attachment].self, forKey: .receiptAttachments) ?? []
+        links = try c.decodeIfPresent([RecordLink].self, forKey: .links) ?? []
         settings = try c.decodeIfPresent(Settings.self, forKey: .settings)
     }
 
@@ -55,6 +57,7 @@ extension BackupManifest: Codable {
             try c.encode(receipts, forKey: .receipts)
             try c.encode(receiptAttachments, forKey: .receiptAttachments)
         }
+        try c.encode(links, forKey: .links)
         try c.encode(settings, forKey: .settings)
     }
 }
@@ -243,6 +246,19 @@ enum BackupArchive {
         let linkedProducts = manifest.receipts.flatMap(\.productIds)
         guard Set(linkedProducts).count == linkedProducts.count, Set(linkedProducts).isSubset(of: productIds) else {
             throw BackupError.invalid("Invalid receipt links")
+        }
+        try requireUnique(manifest.links.map(\.id), "link")
+        let subscriptionIds = Set(manifest.subscriptions.map(\.id))
+        func exists(_ ref: RecordRef) -> Bool {
+            switch ref.type {
+            case .product: productIds.contains(ref.id)
+            case .subscription: subscriptionIds.contains(ref.id)
+            case .document: documentIds.contains(ref.id)
+            case .receipt: receiptIds.contains(ref.id)
+            }
+        }
+        guard manifest.links.allSatisfy({ exists($0.from) && exists($0.to) && $0.from != $0.to }) else {
+            throw BackupError.invalid("Invalid links between records")
         }
     }
 }

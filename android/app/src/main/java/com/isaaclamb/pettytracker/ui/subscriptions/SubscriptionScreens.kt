@@ -43,6 +43,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.isaaclamb.pettytracker.R
 import com.isaaclamb.pettytracker.data.CycleUnit
+import com.isaaclamb.pettytracker.data.RecordRef
+import com.isaaclamb.pettytracker.data.RecordType
 import com.isaaclamb.pettytracker.data.Subscription
 import com.isaaclamb.pettytracker.domain.DeadlineStatus
 import com.isaaclamb.pettytracker.domain.Money
@@ -64,6 +66,7 @@ import com.isaaclamb.pettytracker.ui.components.FormTextField
 import com.isaaclamb.pettytracker.ui.components.KindBadge
 import com.isaaclamb.pettytracker.ui.components.NoMatches
 import com.isaaclamb.pettytracker.ui.components.RecordCard
+import com.isaaclamb.pettytracker.ui.components.RelatedSection
 import com.isaaclamb.pettytracker.ui.components.SearchField
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
 import com.isaaclamb.pettytracker.ui.components.TabScaffold
@@ -267,6 +270,7 @@ fun SubscriptionDetailScreen(navController: NavController) {
             SectionHeader(stringResource(R.string.field_notes))
             SelectionContainer { Text(subscription.notes, style = MaterialTheme.typography.bodyLarge) }
         }
+        RelatedSection(RecordRef(RecordType.SUBSCRIPTION, subscription.id), navController)
     }
 
     if (confirmCancel) {

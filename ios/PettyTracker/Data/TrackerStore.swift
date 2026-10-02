@@ -7,15 +7,16 @@ struct TrackerData: Codable, Hashable, Sendable {
     var documents: [Document] = []
     var receipts: [Receipt] = []
     var attachments: [Attachment] = []
+    var links: [RecordLink] = []
     var settings = Settings()
 
     private enum CodingKeys: String, CodingKey {
-        case products, subscriptions, documents, receipts, attachments, settings
+        case products, subscriptions, documents, receipts, attachments, links, settings
     }
 }
 
 extension TrackerData {
-    // tracker.json files written before receipts existed have no "receipts" key.
+    // tracker.json files written before receipts or links existed have no "receipts" or "links" key.
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         products = try c.decode([Product].self, forKey: .products)
@@ -23,6 +24,7 @@ extension TrackerData {
         documents = try c.decode([Document].self, forKey: .documents)
         receipts = try c.decodeIfPresent([Receipt].self, forKey: .receipts) ?? []
         attachments = try c.decode([Attachment].self, forKey: .attachments)
+        links = try c.decodeIfPresent([RecordLink].self, forKey: .links) ?? []
         settings = try c.decode(Settings.self, forKey: .settings)
     }
 }
@@ -84,6 +86,20 @@ final class TrackerStore {
         data.attachments.filter { $0.ownerType == ownerType && $0.ownerId == ownerId }
     }
 
+    /// Every record linked to `ref`, with the link that joins them.
+    func related(to ref: RecordRef) -> [(link: RecordLink, other: RecordRef)] {
+        data.links.compactMap { link in link.other(than: ref).map { (link, $0) } }
+    }
+
+    func exists(_ ref: RecordRef) -> Bool {
+        switch ref.type {
+        case .product: product(ref.id) != nil
+        case .subscription: subscription(ref.id) != nil
+        case .document: document(ref.id) != nil
+        case .receipt: receipt(ref.id) != nil
+        }
+    }
+
     func receiptCovering(_ productId: Int64) -> Receipt? {
         data.receipts.first { $0.productIds.contains(productId) }
     }
@@ -120,6 +136,29 @@ final class TrackerStore {
 
     func removeAttachment(_ attachment: Attachment) throws {
         _ = try saveOwned(attachment.ownerType, added: [], removed: [attachment]) { _ in attachment.ownerId }
+    }
+
+    func setLabel(_ label: AttachmentLabel, forAttachment attachmentId: Int64) throws {
+        try mutate { data in
+            guard let index = data.attachments.firstIndex(where: { $0.id == attachmentId }) else { return }
+            data.attachments[index].label = label
+        }
+    }
+
+    /// Links two records once; linking a pair again only updates the note.
+    func addLink(_ from: RecordRef, to: RecordRef, note: String) throws {
+        guard from != to else { return }
+        try mutate { data in
+            if let index = data.links.firstIndex(where: { $0.other(than: from) == to }) {
+                data.links[index].note = note
+            } else {
+                data.links.append(RecordLink(id: nextId(data.links), from: from, to: to, note: note))
+            }
+        }
+    }
+
+    func unlink(_ linkId: Int64) throws {
+        try mutate { $0.links.removeAll { $0.id == linkId } }
     }
 
     func linkProduct(_ productId: Int64, toReceipt receiptId: Int64?) throws {
@@ -179,19 +218,29 @@ final class TrackerStore {
         try deleteOwned(.product, id) { data in
             data.products.removeAll { $0.id == id }
             link(id, to: nil, in: &data)
+            data.removeLinks(to: RecordRef(type: .product, id: id))
         }
     }
 
     func deleteDocument(_ id: Int64) throws {
-        try deleteOwned(.document, id) { $0.documents.removeAll { $0.id == id } }
+        try deleteOwned(.document, id) { data in
+            data.documents.removeAll { $0.id == id }
+            data.removeLinks(to: RecordRef(type: .document, id: id))
+        }
     }
 
     func deleteReceipt(_ id: Int64) throws {
-        try deleteOwned(.receipt, id) { $0.receipts.removeAll { $0.id == id } }
+        try deleteOwned(.receipt, id) { data in
+            data.receipts.removeAll { $0.id == id }
+            data.removeLinks(to: RecordRef(type: .receipt, id: id))
+        }
     }
 
     func deleteSubscription(_ id: Int64) throws {
-        try mutate { $0.subscriptions.removeAll { $0.id == id } }
+        try mutate { data in
+            data.subscriptions.removeAll { $0.id == id }
+            data.removeLinks(to: RecordRef(type: .subscription, id: id))
+        }
     }
 
     func updateSettings(_ transform: (inout Settings) -> Void) throws {
@@ -273,6 +322,12 @@ final class TrackerStore {
             delete(&data)
         }
         attachmentStore.delete(files)
+    }
+}
+
+private extension TrackerData {
+    mutating func removeLinks(to ref: RecordRef) {
+        links.removeAll { $0.other(than: ref) != nil }
     }
 }
 

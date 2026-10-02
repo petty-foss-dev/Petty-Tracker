@@ -1,6 +1,9 @@
 package com.isaaclamb.pettytracker
 
 import com.isaaclamb.pettytracker.data.Attachment
+import com.isaaclamb.pettytracker.data.AttachmentLabel
+import com.isaaclamb.pettytracker.data.RecordLink
+import com.isaaclamb.pettytracker.data.RecordType
 import com.isaaclamb.pettytracker.data.CycleUnit
 import com.isaaclamb.pettytracker.data.Document
 import com.isaaclamb.pettytracker.data.OwnerType
@@ -90,6 +93,44 @@ class BackupArchiveTest {
         assertEquals(manifest, restored)
         assertArrayEquals(byteArrayOf(1, 2, 3, 4), File(staging, "attachments/0f1e2d3c.pdf").readBytes())
         assertArrayEquals(byteArrayOf(9, 8, 7), File(staging, "attachments/a1b2c3.jpg").readBytes())
+    }
+
+    @Test
+    fun roundTripsLinksLabelsAndProductPages() {
+        val source = temp.newFolder("source")
+        File(source, "0f1e2d3c.pdf").writeBytes(byteArrayOf(1, 2, 3, 4))
+        File(source, "a1b2c3.jpg").writeBytes(byteArrayOf(9, 8, 7))
+        val linked = manifest.copy(
+            products = manifest.products.map { it.copy(productUrl = "https://example.com/espresso") },
+            attachments = manifest.attachments.map { if (it.id == 5L) it.copy(label = AttachmentLabel.INSTRUCTIONS) else it },
+            links = listOf(RecordLink(id = 1, fromType = RecordType.PRODUCT, fromId = 3, toType = RecordType.DOCUMENT, toId = 2, note = "Insured")),
+        )
+        val archive = ByteArrayOutputStream().also { BackupArchive.write(linked, source, it) }.toByteArray()
+
+        assertEquals(linked, BackupArchive.read(ByteArrayInputStream(archive), temp.newFolder("staging")))
+    }
+
+    @Test
+    fun rejectsLinksToMissingRecords() {
+        val dangling = manifest.copy(
+            attachments = emptyList(),
+            links = listOf(RecordLink(id = 1, fromType = RecordType.PRODUCT, fromId = 3, toType = RecordType.SUBSCRIPTION, toId = 99)),
+        )
+        assertThrows(InvalidBackupException::class.java) {
+            BackupArchive.read(ByteArrayInputStream(zip(BackupArchive.MANIFEST to manifestJson(dangling))), temp.newFolder())
+        }
+    }
+
+    @Test
+    fun readsFilesAndProductsSavedBeforeLabelsAndPages() {
+        val json = """{"format":"petty-tracker-backup","exportedAt":"x","products":[{"id":3,"name":"Desk","currency":"USD"}],"attachments":[{"id":5,"ownerType":"PRODUCT","ownerId":3,"displayName":"a","mimeType":"image/jpeg","fileName":"a.jpg","sizeBytes":1}]}"""
+        val restored = BackupArchive.read(
+            ByteArrayInputStream(zip(BackupArchive.MANIFEST to json.toByteArray(), "attachments/a.jpg" to byteArrayOf(1))),
+            temp.newFolder(),
+        )
+        assertEquals(AttachmentLabel.OTHER, restored.attachments.single().label)
+        assertEquals("", restored.products.single().productUrl)
+        assertEquals(emptyList<RecordLink>(), restored.links)
     }
 
     @Test

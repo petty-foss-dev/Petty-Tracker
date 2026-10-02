@@ -16,13 +16,13 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.isaaclamb.pettytracker.TrackerApplication
 import com.isaaclamb.pettytracker.R
 import com.isaaclamb.pettytracker.data.Attachment
+import com.isaaclamb.pettytracker.data.AttachmentLabel
 import com.isaaclamb.pettytracker.data.AttachmentStore
 import com.isaaclamb.pettytracker.data.OwnerType
 import kotlinx.coroutines.launch
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import java.io.File
 
 @Composable
 inline fun <reified VM : ViewModel> trackerViewModel(
@@ -83,12 +83,12 @@ abstract class AttachmentFormViewModel<F : Any>(
 
     protected var saved = false
 
-    fun addFiles(uris: List<Uri>) {
+    fun addFiles(uris: List<Uri>, label: AttachmentLabel = AttachmentLabel.OTHER) {
         if (uris.isEmpty()) return
         viewModelScope.launch {
             importing = true
             uris.forEach { uri ->
-                runCatching { attachmentStore.import(uri, ownerType) }
+                runCatching { attachmentStore.import(uri, ownerType).copy(label = label) }
                     .onSuccess(::add)
                     .onFailure { message = R.string.attachment_import_failed }
             }
@@ -96,10 +96,8 @@ abstract class AttachmentFormViewModel<F : Any>(
         }
     }
 
-    fun newPhotoFile(): File = attachmentStore.newPhotoFile()
-
-    fun onPhotoResult(fileName: String, success: Boolean) {
-        attachmentStore.capturedPhoto(fileName, success, ownerType)?.let(::add)
+    fun onPhotoResult(fileName: String, success: Boolean, label: AttachmentLabel = AttachmentLabel.OTHER) {
+        attachmentStore.capturedPhoto(fileName, success, ownerType)?.let { add(it.copy(label = label)) }
     }
 
     fun remove(attachment: Attachment) {
@@ -136,12 +134,12 @@ abstract class RecordDetailViewModel(
 
     var message by mutableStateOf<Int?>(null)
 
-    fun addFiles(uris: List<Uri>) {
+    fun addFiles(uris: List<Uri>, label: AttachmentLabel = AttachmentLabel.OTHER) {
         if (uris.isEmpty()) return
         viewModelScope.launch {
             importing = true
             val imported = uris.mapNotNull { uri ->
-                runCatching { attachmentStore.import(uri, ownerType) }
+                runCatching { attachmentStore.import(uri, ownerType).copy(label = label) }
                     .onFailure { message = R.string.attachment_import_failed }
                     .getOrNull()
             }
@@ -150,12 +148,17 @@ abstract class RecordDetailViewModel(
         }
     }
 
-    fun onPhotoResult(fileName: String, success: Boolean) {
-        attachmentStore.capturedPhoto(fileName, success, ownerType)?.let { viewModelScope.launch { attach(listOf(it)) } }
+    fun onPhotoResult(fileName: String, success: Boolean, label: AttachmentLabel = AttachmentLabel.OTHER) {
+        attachmentStore.capturedPhoto(fileName, success, ownerType)
+            ?.let { viewModelScope.launch { attach(listOf(it.copy(label = label))) } }
     }
 
     fun remove(attachment: Attachment) {
         viewModelScope.launch { app.container.repository.removeAttachment(attachment) }
+    }
+
+    fun relabel(attachment: Attachment, label: AttachmentLabel) {
+        viewModelScope.launch { app.container.repository.setLabel(attachment.id, label) }
     }
 
     private suspend fun attach(attachments: List<Attachment>) {

@@ -121,3 +121,77 @@ struct ProductLinkPicker: View {
         }
     }
 }
+
+/// Files a shared photo or PDF with a product instead of making a receipt from it.
+struct SharedFileProductPicker: View {
+    let file: URL
+    let onSaved: () -> Void
+    @Environment(TrackerStore.self) private var store
+    @Environment(\.dismiss) private var dismiss
+    @State private var query = ""
+    @State private var label = AttachmentLabel.productPage
+    @State private var saving = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        let products = store.data.products
+            .filter { $0.matches(query) }
+            .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        NavigationStack {
+            TrackerList {
+                Section {
+                    Picker("Save as", selection: $label) {
+                        ForEach(AttachmentLabel.productLabels, id: \.self) { label in
+                            Label(label.addTitle, systemImage: label.symbol).tag(label)
+                        }
+                    }
+                }
+                Section {
+                    ForEach(products) { product in
+                        Button {
+                            save(to: product.id)
+                        } label: {
+                            Label(product.name, systemImage: RecordKind.warranty.symbol)
+                        }
+                        .foregroundStyle(.primary)
+                        .disabled(saving)
+                    }
+                } header: {
+                    Overline("Product")
+                }
+            }
+            .overlay {
+                if store.data.products.isEmpty {
+                    ContentUnavailableView("No products yet", systemImage: RecordKind.warranty.symbol)
+                } else if products.isEmpty {
+                    ContentUnavailableView.search(text: query)
+                }
+            }
+            .navigationTitle("Save to a product")
+            .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search products")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
+            .errorAlert($errorMessage)
+        }
+    }
+
+    private func save(to productId: Int64) {
+        saving = true
+        Task {
+            defer { saving = false }
+            do {
+                var attachment = try await store.attachmentStore.importFile(at: file)
+                attachment.label = label
+                try store.addAttachments([attachment], to: .product, productId)
+                dismiss()
+                onSaved()
+            } catch {
+                errorMessage = String(localized: "The file could not be saved. \(error.localizedDescription)")
+            }
+        }
+    }
+}

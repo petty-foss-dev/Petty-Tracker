@@ -162,7 +162,8 @@ struct ReceiptLinkBackupTests {
 
         let product = (json["products"] as! [[String: Any]])[0]
         #expect(product.keys.sorted() == [
-            "brand", "currency", "id", "model", "name", "notes", "price", "purchaseDate", "retailer", "serialNumber", "warrantyExpires",
+            "brand", "currency", "id", "model", "name", "notes", "price", "productUrl", "purchaseDate", "retailer", "serialNumber",
+            "warrantyExpires",
         ])
         let receipt = (json["receipts"] as! [[String: Any]])[0]
         #expect(receipt["productIds"] as? [Int] == [1])

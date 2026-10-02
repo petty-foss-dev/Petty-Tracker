@@ -19,6 +19,7 @@
 		1BE0DE55DB938E55FEA68AC9 /* ReceiptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEFAF7AC753A124EBFAB94E /* ReceiptParser.swift */; };
 		21EB2506B9014A2ED581BFC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 133F8C46CF4957530E7F82EA /* Assets.xcassets */; };
 		26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */; };
+		2B495F7443511758372634BB /* Related.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF3F03FB6BE6A4C96E88E5E /* Related.swift */; };
 		329B59C781EAD13D480FD1FC /* TextRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4787F1346DD6F964B1CDD005 /* TextRecognizer.swift */; };
 		4648B040828196EACFD30EE4 /* ReceiptFieldEditors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */; };
 		489CC4C29098603C5AF44B5E /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC765701130338823562782 /* Money.swift */; };
@@ -58,6 +59,7 @@
 		B2368EA696B5C456CD25AA95 /* Receipts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F752C01AAD8B13C8012E76 /* Receipts.swift */; };
 		B9A28DDBF1A5728E91739811 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BE437E0D13A7F55A0EE317 /* ShareViewController.swift */; };
 		BA402DC5E1054FF291C228D9 /* Deadlines.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAABF33E8BFAF20A5C2C701D /* Deadlines.swift */; };
+		BF4A8629976200E0C6547894 /* RecordLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30255E295681541D992E052 /* RecordLinkTests.swift */; };
 		C52C748010F107A57E748A61 /* ProductListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7802548D6F8C10BF7564F7F5 /* ProductListView.swift */; };
 		C96B6F0C1311728F2B013187 /* android-device-backup.zip in Resources */ = {isa = PBXBuildFile; fileRef = D5C0067D34445B13A98C4DD3 /* android-device-backup.zip */; };
 		CC03FD1371FDBCC14A0E8EE1 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E577936CF1F9C3B03D79D1 /* BackupService.swift */; };
@@ -125,6 +127,7 @@
 		252D02E1266A72C787F49ADC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2C3A63D488712C29A0CA424C /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		2C3D908FBCACE255DA70D93E /* ReceiptDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDetailView.swift; sourceTree = "<group>"; };
+		2DF3F03FB6BE6A4C96E88E5E /* Related.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Related.swift; sourceTree = "<group>"; };
 		2E3259F6B70F0DD20770BC43 /* Editors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Editors.swift; sourceTree = "<group>"; };
 		349CF38A0C49D5C9F4D735A9 /* ImportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTests.swift; sourceTree = "<group>"; };
 		3554AFB7F51691C675E39B28 /* AttachmentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentStore.swift; sourceTree = "<group>"; };
@@ -170,6 +173,7 @@
 		BDB78A75D76D0954B00D159C /* PettyTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PettyTrackerApp.swift; sourceTree = "<group>"; };
 		BE24AABA1D9E4FF65B815922 /* ProductEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductEditView.swift; sourceTree = "<group>"; };
 		C19FF1F3983415627A025F1E /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		C30255E295681541D992E052 /* RecordLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordLinkTests.swift; sourceTree = "<group>"; };
 		C7B09F8FE5CD22642A95F0B5 /* PettyTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PettyTracker.entitlements; sourceTree = "<group>"; };
 		C8ADA30CC84B3DBC90236BFB /* SubscriptionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionListView.swift; sourceTree = "<group>"; };
 		CAF53A92A1ED4D9EC3613059 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -314,6 +318,7 @@
 				17942690A3FCC74A9FAFD7D0 /* ReceiptLinkTests.swift */,
 				0C6480EC73B8A5652AEB36A9 /* ReceiptParserTests.swift */,
 				F7A47A29E1781757B19F2091 /* ReceiptReviewTests.swift */,
+				C30255E295681541D992E052 /* RecordLinkTests.swift */,
 				0C30510C168446D4076E11C9 /* RenewalsTests.swift */,
 				95A2D6BE3C67D2B227A18CD4 /* TestSupport.swift */,
 				AA2A498EF029183D1C7EA957 /* TextRecognizerTests.swift */,
@@ -436,6 +441,7 @@
 				A50A13B8129CBBEE086C6E9C /* Attachments.swift */,
 				5E8DD2B899F07C337008FB06 /* Common.swift */,
 				2E3259F6B70F0DD20770BC43 /* Editors.swift */,
+				2DF3F03FB6BE6A4C96E88E5E /* Related.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -599,6 +605,7 @@
 				EF8FBF66C628A6F7BF4CB7B1 /* ReceiptLinkTests.swift in Sources */,
 				9CAE6D06D8E8F8280A2DA3B6 /* ReceiptParserTests.swift in Sources */,
 				4BCCA3AEA09175F55C28BB97 /* ReceiptReviewTests.swift in Sources */,
+				BF4A8629976200E0C6547894 /* RecordLinkTests.swift in Sources */,
 				65E63CF07E0F559C10DCF94C /* RenewalsTests.swift in Sources */,
 				DE271AF01D389A2CA5C66F29 /* TestSupport.swift in Sources */,
 				63C2CF032BAE3F556C21BD71 /* TextRecognizerTests.swift in Sources */,
@@ -651,6 +658,7 @@
 				8AFE4CC7CCD280FEF747D10B /* ReceiptReview.swift in Sources */,
 				6B2669EEED1CFC4387E82B30 /* ReceiptReviewViews.swift in Sources */,
 				B2368EA696B5C456CD25AA95 /* Receipts.swift in Sources */,
+				2B495F7443511758372634BB /* Related.swift in Sources */,
 				79A516101DB51DE7B61FDAC4 /* ReminderScheduler.swift in Sources */,
 				CE079256E85D8C48F79B32E6 /* Renewals.swift in Sources */,
 				6BB23F773BA2850F402BB8F0 /* RootView.swift in Sources */,
