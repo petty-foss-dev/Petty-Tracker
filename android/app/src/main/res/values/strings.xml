@@ -305,4 +305,19 @@
     <string name="search_records">Search records</string>
     <string name="link_nothing_to_link">Nothing to link. Add more records, or try a different search.</string>
     <string name="record_product">Product</string>
+    <string name="settings_export">Export</string>
+    <string name="settings_export_body">The calendar file adds every upcoming warranty end, renewal and expiry date to Google Calendar, Outlook or any calendar app, with an alert at your reminder lead time. The spreadsheet opens in Excel, Google Sheets or LibreOffice.</string>
+    <string name="action_export_calendar">Save dates as a calendar file</string>
+    <string name="action_export_spreadsheet">Save a spreadsheet of all records</string>
+    <string name="export_saved">Saved</string>
+    <string name="export_failed">The file could not be saved.</string>
+    <string name="export_warranty_ends">Warranty ends: %1$s</string>
+    <string name="export_expires">Expires: %1$s</string>
+    <string name="export_renews">Renews: %1$s</string>
+    <string name="export_renews_price">Renews: %1$s (%2$s)</string>
+    <string name="export_serial_number">Serial number: %1$s</string>
+    <string name="export_document_number">Number: %1$s</string>
+    <string name="export_status_no_date">No date</string>
+    <string name="export_status_due_soon">Due soon</string>
+    <string name="export_status_overdue">Renewal overdue</string>
 </resources>

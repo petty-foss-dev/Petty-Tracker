@@ -17,7 +17,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.TableChart
 import androidx.compose.material.icons.outlined.Upload
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -59,12 +61,16 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.isaaclamb.pettytracker.TrackerApplication
 import com.isaaclamb.pettytracker.R
+import com.isaaclamb.pettytracker.TrackerApplication
 import com.isaaclamb.pettytracker.data.Settings
 import com.isaaclamb.pettytracker.data.ThemeMode
 import com.isaaclamb.pettytracker.data.backup.InvalidBackupException
+import com.isaaclamb.pettytracker.domain.CalendarExport
+import com.isaaclamb.pettytracker.domain.ExportRecords
+import com.isaaclamb.pettytracker.domain.ExportText
 import com.isaaclamb.pettytracker.domain.Money
+import com.isaaclamb.pettytracker.domain.RecordsCsv
 import com.isaaclamb.pettytracker.reminders.ReminderNotifications
 import com.isaaclamb.pettytracker.reminders.ReminderScheduler
 import com.isaaclamb.pettytracker.ui.components.BackButton
@@ -72,13 +78,19 @@ import com.isaaclamb.pettytracker.ui.components.ConfirmDialog
 import com.isaaclamb.pettytracker.ui.components.CurrencyField
 import com.isaaclamb.pettytracker.ui.components.SectionHeader
 import com.isaaclamb.pettytracker.ui.trackerViewModel
-import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 sealed interface SettingsMessage {
     data object Exported : SettingsMessage
     data class Imported(val records: Int, val attachments: Int) : SettingsMessage
     data class Failed(val invalid: Boolean) : SettingsMessage
+    data object FileSaved : SettingsMessage
+    data object ExportFailed : SettingsMessage
 }
 
 class SettingsViewModel(private val app: TrackerApplication) : ViewModel() {
@@ -112,6 +124,38 @@ class SettingsViewModel(private val app: TrackerApplication) : ViewModel() {
         SettingsMessage.Imported(summary.products + summary.subscriptions + summary.documents, summary.attachments)
     }
 
+    fun exportCalendar(uri: Uri) = runExport(uri) { records, text ->
+        CalendarExport.make(records, LocalDate.now(), Instant.now(), text)
+    }
+
+    // The byte order mark lets Excel detect UTF-8.
+    fun exportRecords(uri: Uri) = runExport(uri) { records, text -> "\uFEFF" + RecordsCsv.make(records, LocalDate.now(), text) }
+
+    private fun runExport(uri: Uri, build: (ExportRecords, ExportText) -> String) {
+        if (busy) return
+        busy = true
+        viewModelScope.launch {
+            message = try {
+                val container = app.container
+                val records = ExportRecords(
+                    container.repository.products.first(),
+                    container.repository.subscriptions.first(),
+                    container.repository.documents.first(),
+                    container.settingsRepository.current(),
+                )
+                val content = build(records, ResourceExportText(app.resources))
+                withContext(Dispatchers.IO) {
+                    val output = app.contentResolver.openOutputStream(uri, "wt") ?: error("Unable to open $uri")
+                    output.use { it.write(content.toByteArray(Charsets.UTF_8)) }
+                }
+                SettingsMessage.FileSaved
+            } catch (e: Exception) {
+                SettingsMessage.ExportFailed
+            }
+            busy = false
+        }
+    }
+
     private fun runBackupTask(task: suspend () -> SettingsMessage) {
         if (busy) return
         busy = true
@@ -143,6 +187,12 @@ fun SettingsScreen(navController: NavController) {
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri ->
         uri?.let(viewModel::export)
     }
+    val calendarLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/calendar")) { uri ->
+        uri?.let(viewModel::exportCalendar)
+    }
+    val spreadsheetLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
+        uri?.let(viewModel::exportRecords)
+    }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         pendingImport = uri?.toString()
     }
@@ -156,6 +206,8 @@ fun SettingsScreen(navController: NavController) {
             pluralStringResource(R.plurals.attachments_count, message.attachments, message.attachments),
         )
         is SettingsMessage.Failed -> stringResource(if (message.invalid) R.string.backup_invalid else R.string.backup_failed)
+        SettingsMessage.FileSaved -> stringResource(R.string.export_saved)
+        SettingsMessage.ExportFailed -> stringResource(R.string.export_failed)
     }
     LaunchedEffect(messageText) {
         if (messageText != null) {
@@ -232,6 +284,29 @@ fun SettingsScreen(navController: NavController) {
                 currency = code
                 if (Money.currency(code) != null) viewModel.update({ it.copy(defaultCurrency = code) })
             })
+
+            SectionHeader(stringResource(R.string.settings_export))
+            Text(
+                stringResource(R.string.settings_export_body),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            OutlinedButton(
+                onClick = { calendarLauncher.launch("Petty Tracker dates ${LocalDate.now()}.ics") },
+                enabled = !viewModel.busy,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Icon(Icons.Outlined.CalendarMonth, contentDescription = null)
+                Text(stringResource(R.string.action_export_calendar), modifier = Modifier.padding(start = 8.dp))
+            }
+            OutlinedButton(
+                onClick = { spreadsheetLauncher.launch("Petty Tracker records ${LocalDate.now()}.csv") },
+                enabled = !viewModel.busy,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Icon(Icons.Outlined.TableChart, contentDescription = null)
+                Text(stringResource(R.string.action_export_spreadsheet), modifier = Modifier.padding(start = 8.dp))
+            }
 
             SectionHeader(stringResource(R.string.settings_backup))
             Text(

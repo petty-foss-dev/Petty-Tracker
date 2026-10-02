@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State private var busy = false
     @State private var notice: String?
     @State private var errorMessage: String?
+    @State private var exported: OpenedAttachment?
     @AppStorage(Appearance.pureBlackKey) private var pureBlack = false
 
     var body: some View {
@@ -72,6 +73,23 @@ struct SettingsView: View {
             }
 
             Section {
+                Button("Add dates to a calendar", systemImage: "calendar.badge.plus") {
+                    shareExport(preview: true) { try CalendarExport.write(store.data, today: store.today) }
+                }
+                Button("Spreadsheet of all records", systemImage: "tablecells") {
+                    shareExport { try RecordsCSV.write(store.data, today: store.today) }
+                }
+                if !store.data.receipts.isEmpty {
+                    Button("Spreadsheet of receipts", systemImage: "doc.text") {
+                        shareExport { try ReceiptCSV.write(store.data.receipts, today: store.today) }
+                    }
+                }
+            } header: {
+                Overline("Export")
+            } footer: {
+                Text("The calendar file adds every upcoming warranty end, renewal and expiry date to Apple Calendar, Google Calendar or Outlook, with an alert at your reminder lead time. Spreadsheets open in Numbers, Excel or Google Sheets.")
+            }
+            Section {
                 Button {
                     export()
                 } label: {
@@ -123,6 +141,7 @@ struct SettingsView: View {
             }
         }
         .trackerListStyle()
+        .attachmentPresenter($exported)
         .navigationTitle("Settings")
         .task(id: scenePhase) { notificationStatus = await reminders?.authorizationStatus() }
         .confirmationDialog("Replace all data?", isPresented: stagedBinding, titleVisibility: .visible, presenting: staged) { staged in
@@ -135,6 +154,14 @@ struct SettingsView: View {
             Button("OK") {}
         }
         .errorAlert($errorMessage)
+    }
+
+    private func shareExport(preview: Bool = false, _ write: () throws -> URL) {
+        do {
+            exported = OpenedAttachment(url: try write(), share: !preview)
+        } catch {
+            errorMessage = String(localized: "The file could not be created. \(error.localizedDescription)")
+        }
     }
 
     private var stagedBinding: Binding<Bool> {

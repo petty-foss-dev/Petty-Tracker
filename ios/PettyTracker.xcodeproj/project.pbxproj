@@ -17,8 +17,10 @@
 		18F5146CEE4F1F8EEE9D9A79 /* ClaimPacketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */; };
 		1A7B62BE1B0E7CA7FFBB62ED /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74ADF3E9F4F4F11DD5167B04 /* ProductDetailView.swift */; };
 		1BE0DE55DB938E55FEA68AC9 /* ReceiptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEFAF7AC753A124EBFAB94E /* ReceiptParser.swift */; };
+		1BF90E973B8F21770AF80297 /* RecordsCSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F2B4FA6981C6B1B45B5589 /* RecordsCSV.swift */; };
 		21EB2506B9014A2ED581BFC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 133F8C46CF4957530E7F82EA /* Assets.xcassets */; };
 		26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */; };
+		28C83CCD7C3E3B49AFE452F9 /* ExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B115636A03CFCFD0087AC998 /* ExportTests.swift */; };
 		2B495F7443511758372634BB /* Related.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF3F03FB6BE6A4C96E88E5E /* Related.swift */; };
 		329B59C781EAD13D480FD1FC /* TextRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4787F1346DD6F964B1CDD005 /* TextRecognizer.swift */; };
 		4648B040828196EACFD30EE4 /* ReceiptFieldEditors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */; };
@@ -48,6 +50,7 @@
 		85F1CBE7E3729D4479414152 /* AttachmentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3554AFB7F51691C675E39B28 /* AttachmentStore.swift */; };
 		8AFE4CC7CCD280FEF747D10B /* ReceiptReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36730EC5233FEB885009096B /* ReceiptReview.swift */; };
 		916C1A54F4F6EEBA2A0E105D /* LinkPickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD47AA4C03CD37A60881D18 /* LinkPickers.swift */; };
+		9627FDA9D827140FF7D9446C /* CalendarExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF7903C4D4CEA9458E00ED2 /* CalendarExport.swift */; };
 		9C9970FCCAC275C8AC92ACF2 /* ReceiptBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A0A510A4EF1DA0CCC4432D /* ReceiptBrowseView.swift */; };
 		9CAE6D06D8E8F8280A2DA3B6 /* ReceiptParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6480EC73B8A5652AEB36A9 /* ReceiptParserTests.swift */; };
 		9F1A28112830BE71AC6797CC /* Day.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D19DA1DC93D2497D145C854 /* Day.swift */; };
@@ -129,6 +132,7 @@
 		2C3D908FBCACE255DA70D93E /* ReceiptDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDetailView.swift; sourceTree = "<group>"; };
 		2DF3F03FB6BE6A4C96E88E5E /* Related.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Related.swift; sourceTree = "<group>"; };
 		2E3259F6B70F0DD20770BC43 /* Editors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Editors.swift; sourceTree = "<group>"; };
+		32F2B4FA6981C6B1B45B5589 /* RecordsCSV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsCSV.swift; sourceTree = "<group>"; };
 		349CF38A0C49D5C9F4D735A9 /* ImportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportTests.swift; sourceTree = "<group>"; };
 		3554AFB7F51691C675E39B28 /* AttachmentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentStore.swift; sourceTree = "<group>"; };
 		36730EC5233FEB885009096B /* ReceiptReview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReview.swift; sourceTree = "<group>"; };
@@ -167,6 +171,7 @@
 		AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimPacketTests.swift; sourceTree = "<group>"; };
 		AFBCFEA9FBB2DFC1B841FFF5 /* ReceiptCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptCapture.swift; sourceTree = "<group>"; };
 		AFD8AF70E806AECBC5928181 /* QuickCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCaptureTests.swift; sourceTree = "<group>"; };
+		B115636A03CFCFD0087AC998 /* ExportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportTests.swift; sourceTree = "<group>"; };
 		B1F752C01AAD8B13C8012E76 /* Receipts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Receipts.swift; sourceTree = "<group>"; };
 		B5B6AA85061AC0BF719BAB38 /* DocumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 		B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFieldEditors.swift; sourceTree = "<group>"; };
@@ -191,6 +196,7 @@
 		F7763D328B4E00C9E87E9AE5 /* SharedInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedInbox.swift; sourceTree = "<group>"; };
 		F7A47A29E1781757B19F2091 /* ReceiptReviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReviewTests.swift; sourceTree = "<group>"; };
 		F92F6B4F8BEF6978789E80D7 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
+		FCF7903C4D4CEA9458E00ED2 /* CalendarExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarExport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -307,6 +313,7 @@
 				189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */,
 				AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */,
 				18C7CD587A6965BBD3F305AA /* DashboardSummaryTests.swift */,
+				B115636A03CFCFD0087AC998 /* ExportTests.swift */,
 				349CF38A0C49D5C9F4D735A9 /* ImportTests.swift */,
 				562ACB569D2A6A78D7DFC1A7 /* MoneyTests.swift */,
 				AFD8AF70E806AECBC5928181 /* QuickCaptureTests.swift */,
@@ -383,8 +390,10 @@
 		9F7BB01BA82F01D31E6C84F5 /* Export */ = {
 			isa = PBXGroup;
 			children = (
+				FCF7903C4D4CEA9458E00ED2 /* CalendarExport.swift */,
 				EF78F17F99786D081179174B /* ClaimPacket.swift */,
 				40F6BAF4441A19B9AEE72364 /* ReceiptCSV.swift */,
+				32F2B4FA6981C6B1B45B5589 /* RecordsCSV.swift */,
 			);
 			path = Export;
 			sourceTree = "<group>";
@@ -594,6 +603,7 @@
 				26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */,
 				18F5146CEE4F1F8EEE9D9A79 /* ClaimPacketTests.swift in Sources */,
 				F1CBF1A20DA8704C6D5EF834 /* DashboardSummaryTests.swift in Sources */,
+				28C83CCD7C3E3B49AFE452F9 /* ExportTests.swift in Sources */,
 				5464EB03A1CA7AC546DDAE3A /* ImportTests.swift in Sources */,
 				6B0866DDEA36CF89C78A491F /* MoneyTests.swift in Sources */,
 				1094F623C373F08E5A3B6405 /* QuickCaptureTests.swift in Sources */,
@@ -629,6 +639,7 @@
 				E2FB0DA149CE74C0700E9B8B /* Attachments.swift in Sources */,
 				EC1C33F122489816C4F3D88A /* BackupArchive.swift in Sources */,
 				CC03FD1371FDBCC14A0E8EE1 /* BackupService.swift in Sources */,
+				9627FDA9D827140FF7D9446C /* CalendarExport.swift in Sources */,
 				AEEC5E1B68092A9E774ED76A /* ClaimPacket.swift in Sources */,
 				A23250FC24927D31411913F1 /* Common.swift in Sources */,
 				77C572042537CF7B1671AA7A /* DashboardView.swift in Sources */,
@@ -658,6 +669,7 @@
 				8AFE4CC7CCD280FEF747D10B /* ReceiptReview.swift in Sources */,
 				6B2669EEED1CFC4387E82B30 /* ReceiptReviewViews.swift in Sources */,
 				B2368EA696B5C456CD25AA95 /* Receipts.swift in Sources */,
+				1BF90E973B8F21770AF80297 /* RecordsCSV.swift in Sources */,
 				2B495F7443511758372634BB /* Related.swift in Sources */,
 				79A516101DB51DE7B61FDAC4 /* ReminderScheduler.swift in Sources */,
 				CE079256E85D8C48F79B32E6 /* Renewals.swift in Sources */,
