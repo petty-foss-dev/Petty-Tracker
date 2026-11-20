@@ -110,7 +110,7 @@ struct ReceiptBackupTests {
 
     @Test func exportWithoutReceiptsStaysAndroidVersionOne() async throws {
         let store = try storeWithProductAndReceipt(receipt: false)
-        let json = try manifestJSON(in: try await BackupService(store: store).export())
+        let json = try manifestJSON(in: try await BackupService(store: store).export().url)
 
         #expect(json["version"] as? Int == 1)
         #expect(json.keys.sorted() == ["attachments", "documents", "exportedAt", "format", "links", "products", "settings", "subscriptions", "version"])
@@ -118,7 +118,7 @@ struct ReceiptBackupTests {
 
     @Test func exportWithReceiptsIsVersionThreeAndKeepsVersionOneShapeReadable() async throws {
         let store = try storeWithProductAndReceipt(receipt: true)
-        let json = try manifestJSON(in: try await BackupService(store: store).export())
+        let json = try manifestJSON(in: try await BackupService(store: store).export().url)
 
         #expect(json["version"] as? Int == 3)
         // Android's version 1 decoder must still parse every known key so it reaches its version check.
@@ -136,8 +136,8 @@ struct ReceiptBackupTests {
     @Test func versionThreeRoundTripsThroughImport() async throws {
         let store = try storeWithProductAndReceipt(receipt: true)
         let service = BackupService(store: store)
-        let exported = try await service.export()
-        let snapshot = store.data
+        let exported = try await service.export().url
+        var snapshot = store.data
 
         try store.deleteReceipt(store.data.receipts[0].id)
         try store.deleteProduct(store.data.products[0].id)
@@ -146,6 +146,7 @@ struct ReceiptBackupTests {
         #expect(staged.attachmentCount == 2)
         try service.commit(staged)
 
+        snapshot.backupHistory = store.data.backupHistory
         #expect(store.data == snapshot)
         #expect(try Data(contentsOf: store.attachmentStore.url(for: "scan.jpg")) == Data([9, 9]))
         #expect(TrackerStore(root: store.root).data == snapshot)

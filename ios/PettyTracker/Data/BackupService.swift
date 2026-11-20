@@ -11,6 +11,16 @@ struct StagedImport: Identifiable, Sendable {
     var attachmentCount: Int { manifest.attachments.count + manifest.receiptAttachments.count }
 }
 
+struct PreparedBackup: Sendable {
+    let url: URL
+    let fingerprint: BackupFingerprint
+    let created: Date
+
+    func discard() {
+        try? FileManager.default.removeItem(at: url.deletingLastPathComponent())
+    }
+}
+
 @MainActor
 struct BackupService {
     let store: TrackerStore
@@ -19,11 +29,12 @@ struct BackupService {
     private nonisolated static let previousName = "attachments-previous"
 
     /// Writes Android-compatible version 1 without receipts; detailed receipts use version 3.
-    func export() async throws -> URL {
+    func export() async throws -> PreparedBackup {
         let data = store.data
+        let created = Date.now
         let manifest = BackupManifest(
             version: data.receipts.isEmpty ? BackupManifest.androidVersion : BackupManifest.detailsVersion,
-            exportedAt: Date.now.formatted(.iso8601),
+            exportedAt: created.formatted(.iso8601),
             products: data.products,
             subscriptions: data.subscriptions,
             documents: data.documents,
@@ -33,15 +44,25 @@ struct BackupService {
             links: data.links,
             settings: data.settings
         )
-        let folder = FileManager.default.temporaryDirectory.appending(path: "export", directoryHint: .isDirectory)
+        let folder = FileManager.default.temporaryDirectory.appending(path: "tracker-export-\(UUID().uuidString)", directoryHint: .isDirectory)
         let destination = folder.appending(path: "petty-tracker-backup-\(store.today.iso).zip")
         let attachmentsDirectory = store.attachmentStore.directory
-        try await Task.detached(priority: .userInitiated) {
+        let pinned = folder.appending(path: "attachments", directoryHint: .isDirectory)
+        do {
+            // Pin immutable attachment files before yielding so edits and restores cannot change this ZIP.
+            try FileManager.default.createDirectory(at: pinned, withIntermediateDirectories: true)
+            for name in Set(data.attachments.map(\.fileName)) {
+                try FileManager.default.linkItem(at: attachmentsDirectory.appending(path: name), to: pinned.appending(path: name))
+            }
+            return try await Task.detached(priority: .userInitiated) {
+                defer { try? FileManager.default.removeItem(at: pinned) }
+                try BackupArchive.write(manifest, attachmentsDirectory: pinned, to: destination)
+                return try PreparedBackup(url: destination, fingerprint: BackupFingerprint(data), created: created)
+            }.value
+        } catch {
             try? FileManager.default.removeItem(at: folder)
-            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-            try BackupArchive.write(manifest, attachmentsDirectory: attachmentsDirectory, to: destination)
-        }.value
-        return destination
+            throw error
+        }
     }
 
     /// Reads and validates a picked archive into a staging folder without touching live data.

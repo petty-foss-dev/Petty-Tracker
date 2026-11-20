@@ -50,13 +50,14 @@ struct ImportTests {
     @Test func exportThenImportRestoresAttachments() async throws {
         let (store, receipt) = try storeWithReceipt()
         let service = BackupService(store: store)
-        let exported = try await service.export()
-        let snapshot = store.data
+        let exported = try await service.export().url
+        var snapshot = store.data
 
         try store.deleteProduct(store.data.products[0].id)
         #expect(store.data.attachments.isEmpty)
 
         try service.commit(try await service.stage(exported))
+        snapshot.backupHistory = store.data.backupHistory
         #expect(store.data == snapshot)
         #expect(try Data(contentsOf: store.attachmentStore.url(for: receipt.fileName)) == Data([7, 7, 7]))
     }

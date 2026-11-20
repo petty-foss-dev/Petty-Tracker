@@ -41,7 +41,7 @@ struct RecordLinkTests {
         let (store, product, document) = try store()
         try store.addLink(product, to: document, note: "Insured")
         let staging = try temporaryDirectory()
-        let manifest = try BackupArchive.read(from: try await BackupService(store: store).export(), staging: staging)
+        let manifest = try BackupArchive.read(from: try await BackupService(store: store).export().url, staging: staging)
 
         #expect(manifest.links.map(\.note) == ["Insured"])
         #expect(manifest.links.first.map { [$0.from, $0.to] } == [product, document])

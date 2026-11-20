@@ -20,10 +20,12 @@
 		1BF90E973B8F21770AF80297 /* RecordsCSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F2B4FA6981C6B1B45B5589 /* RecordsCSV.swift */; };
 		21EB2506B9014A2ED581BFC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 133F8C46CF4957530E7F82EA /* Assets.xcassets */; };
 		26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */; };
+		28876FDEAF9BCE5578CB2117 /* BackupHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40BB0359EE17455BC281126 /* BackupHistory.swift */; };
 		28C83CCD7C3E3B49AFE452F9 /* ExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B115636A03CFCFD0087AC998 /* ExportTests.swift */; };
 		2B495F7443511758372634BB /* Related.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DF3F03FB6BE6A4C96E88E5E /* Related.swift */; };
 		329B59C781EAD13D480FD1FC /* TextRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4787F1346DD6F964B1CDD005 /* TextRecognizer.swift */; };
 		4648B040828196EACFD30EE4 /* ReceiptFieldEditors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */; };
+		46BE6A26BB0B5B111A90D98A /* BackupExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5292A6060E252642A9D6361 /* BackupExportButton.swift */; };
 		489CC4C29098603C5AF44B5E /* Money.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC765701130338823562782 /* Money.swift */; };
 		4B3040FD6BBB9090A7013503 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447635949807BBF2ADF1A3A5 /* Theme.swift */; };
 		4BCCA3AEA09175F55C28BB97 /* ReceiptReviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A47A29E1781757B19F2091 /* ReceiptReviewTests.swift */; };
@@ -44,6 +46,7 @@
 		74EDBCA1065B8B6C5B08A7B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DB220C6A2F7141F5BCEFAF9 /* Assets.xcassets */; };
 		77C572042537CF7B1671AA7A /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FF1F3983415627A025F1E /* DashboardView.swift */; };
 		79A516101DB51DE7B61FDAC4 /* ReminderScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0F9DB4AA9CD5E5FCA7520 /* ReminderScheduler.swift */; };
+		7DB8EDD2BD0311F6A8F4760E /* BackupHistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2434372D58B5EB51A225A84 /* BackupHistoryTests.swift */; };
 		7F84144E8CE7BC269CAB0038 /* PettyTrackerShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DACF2FAEEA2E24CA42A4EB60 /* PettyTrackerShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8051B8B70B2AC8D3C65974D1 /* ReceiptListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5FAC8A9473FC0548486933 /* ReceiptListView.swift */; };
 		808F54BC5B87199FA7615736 /* DocumentEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEBE76CF504FFC77017AF3E /* DocumentEditView.swift */; };
@@ -162,6 +165,7 @@
 		95A2D6BE3C67D2B227A18CD4 /* TestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSupport.swift; sourceTree = "<group>"; };
 		96FD09985644FA4753159FCF /* SearchResultsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsSection.swift; sourceTree = "<group>"; };
 		A02A087AC662771064F078F9 /* PettyTracker.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PettyTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2434372D58B5EB51A225A84 /* BackupHistoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupHistoryTests.swift; sourceTree = "<group>"; };
 		A4CEC552921A078D164C5024 /* ReceiptReviewViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReviewViews.swift; sourceTree = "<group>"; };
 		A50A13B8129CBBEE086C6E9C /* Attachments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachments.swift; sourceTree = "<group>"; };
 		A910F35E059DEFC72759E64E /* ReceiptDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptDataTests.swift; sourceTree = "<group>"; };
@@ -173,6 +177,7 @@
 		AFD8AF70E806AECBC5928181 /* QuickCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickCaptureTests.swift; sourceTree = "<group>"; };
 		B115636A03CFCFD0087AC998 /* ExportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportTests.swift; sourceTree = "<group>"; };
 		B1F752C01AAD8B13C8012E76 /* Receipts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Receipts.swift; sourceTree = "<group>"; };
+		B5292A6060E252642A9D6361 /* BackupExportButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupExportButton.swift; sourceTree = "<group>"; };
 		B5B6AA85061AC0BF719BAB38 /* DocumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 		B65161459211F1B1D289371C /* ReceiptFieldEditors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptFieldEditors.swift; sourceTree = "<group>"; };
 		BDB78A75D76D0954B00D159C /* PettyTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PettyTrackerApp.swift; sourceTree = "<group>"; };
@@ -192,6 +197,7 @@
 		ED2AADA41FA7E45CA965A8A4 /* BackupArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupArchive.swift; sourceTree = "<group>"; };
 		EF78F17F99786D081179174B /* ClaimPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaimPacket.swift; sourceTree = "<group>"; };
 		F05B964A2D79A8C2CECED02A /* Formats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formats.swift; sourceTree = "<group>"; };
+		F40BB0359EE17455BC281126 /* BackupHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupHistory.swift; sourceTree = "<group>"; };
 		F505274184253C20475A62E9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F7763D328B4E00C9E87E9AE5 /* SharedInbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedInbox.swift; sourceTree = "<group>"; };
 		F7A47A29E1781757B19F2091 /* ReceiptReviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReviewTests.swift; sourceTree = "<group>"; };
@@ -214,6 +220,7 @@
 		06446C7A56794B76C88EA011 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				B5292A6060E252642A9D6361 /* BackupExportButton.swift */,
 				F505274184253C20475A62E9 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -311,6 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				189472AC2954E1A03E9FB40F /* BackupArchiveTests.swift */,
+				A2434372D58B5EB51A225A84 /* BackupHistoryTests.swift */,
 				AD9DAD999BAC998A42BC61A4 /* ClaimPacketTests.swift */,
 				18C7CD587A6965BBD3F305AA /* DashboardSummaryTests.swift */,
 				B115636A03CFCFD0087AC998 /* ExportTests.swift */,
@@ -437,6 +445,7 @@
 			children = (
 				3554AFB7F51691C675E39B28 /* AttachmentStore.swift */,
 				ED2AADA41FA7E45CA965A8A4 /* BackupArchive.swift */,
+				F40BB0359EE17455BC281126 /* BackupHistory.swift */,
 				63E577936CF1F9C3B03D79D1 /* BackupService.swift */,
 				4787F1346DD6F964B1CDD005 /* TextRecognizer.swift */,
 				F92F6B4F8BEF6978789E80D7 /* TrackerStore.swift */,
@@ -601,6 +610,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				26CF8D5540AB91F93D37D373 /* BackupArchiveTests.swift in Sources */,
+				7DB8EDD2BD0311F6A8F4760E /* BackupHistoryTests.swift in Sources */,
 				18F5146CEE4F1F8EEE9D9A79 /* ClaimPacketTests.swift in Sources */,
 				F1CBF1A20DA8704C6D5EF834 /* DashboardSummaryTests.swift in Sources */,
 				28C83CCD7C3E3B49AFE452F9 /* ExportTests.swift in Sources */,
@@ -638,6 +648,8 @@
 				85F1CBE7E3729D4479414152 /* AttachmentStore.swift in Sources */,
 				E2FB0DA149CE74C0700E9B8B /* Attachments.swift in Sources */,
 				EC1C33F122489816C4F3D88A /* BackupArchive.swift in Sources */,
+				46BE6A26BB0B5B111A90D98A /* BackupExportButton.swift in Sources */,
+				28876FDEAF9BCE5578CB2117 /* BackupHistory.swift in Sources */,
 				CC03FD1371FDBCC14A0E8EE1 /* BackupService.swift in Sources */,
 				9627FDA9D827140FF7D9446C /* CalendarExport.swift in Sources */,
 				AEEC5E1B68092A9E774ED76A /* ClaimPacket.swift in Sources */,
@@ -759,7 +771,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -864,7 +876,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

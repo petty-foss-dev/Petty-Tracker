@@ -140,15 +140,16 @@ struct ReceiptLinkBackupTests {
     @Test func versionThreeRoundTripsLinksAndReviewState() async throws {
         let store = try linkedStore()
         let service = BackupService(store: store)
-        let exported = try await service.export()
+        let exported = try await service.export().url
         let staging = try temporaryDirectory()
         #expect(try BackupArchive.read(from: exported, staging: staging).version == BackupManifest.detailsVersion)
-        let snapshot = store.data
+        var snapshot = store.data
 
         try store.deleteProduct(store.data.products[0].id)
         try store.deleteReceipt(store.data.receipts[0].id)
         try service.commit(try await service.stage(exported))
 
+        snapshot.backupHistory = store.data.backupHistory
         #expect(store.data == snapshot)
         #expect(store.data.receipts[0].productIds == [store.data.products[0].id])
         #expect(store.data.receipts[0].resolvedFlags == ["uncertain-text:scan.jpg"])
@@ -157,7 +158,7 @@ struct ReceiptLinkBackupTests {
     @Test func productJSONKeepsAndroidShapeWhenLinked() async throws {
         let store = try linkedStore()
         let staging = try temporaryDirectory()
-        let manifest = try BackupArchive.read(from: try await BackupService(store: store).export(), staging: staging)
+        let manifest = try BackupArchive.read(from: try await BackupService(store: store).export().url, staging: staging)
         let json = try JSONSerialization.jsonObject(with: BackupArchive.encodeManifest(manifest)) as! [String: Any]
 
         let product = (json["products"] as! [[String: Any]])[0]

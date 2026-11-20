@@ -70,6 +70,7 @@ struct DashboardView: View {
             } else {
                 SummaryTiles(summary: summary)
                 QuickAddSection(onAdd: { editor = Editor(new: $0) }, onScanReceipt: quickCapture.requestScan)
+                Section(overline: "Backup") { BackupExportButton() }
                 if showReminderPrompt {
                     ReminderPromptSection(onAllow: allowReminders, onDismiss: dismissReminderPrompt)
                 }
@@ -90,6 +91,9 @@ struct DashboardView: View {
                     }
                 }
                 RecentReceiptsSection()
+            }
+            if query.isEmpty && summary.isEmpty && store.data.backupHistory != nil {
+                Section(overline: "Backup") { BackupExportButton() }
             }
         }
         .trackerListStyle()

@@ -9,9 +9,10 @@ struct TrackerData: Codable, Hashable, Sendable {
     var attachments: [Attachment] = []
     var links: [RecordLink] = []
     var settings = Settings()
+    var backupHistory: BackupHistory?
 
     private enum CodingKeys: String, CodingKey {
-        case products, subscriptions, documents, receipts, attachments, links, settings
+        case products, subscriptions, documents, receipts, attachments, links, settings, backupHistory
     }
 }
 
@@ -26,6 +27,7 @@ extension TrackerData {
         attachments = try c.decode([Attachment].self, forKey: .attachments)
         links = try c.decodeIfPresent([RecordLink].self, forKey: .links) ?? []
         settings = try c.decode(Settings.self, forKey: .settings)
+        backupHistory = try c.decodeIfPresent(BackupHistory.self, forKey: .backupHistory)
     }
 }
 
@@ -34,8 +36,12 @@ extension TrackerData {
 @Observable
 final class TrackerStore {
     private(set) var data: TrackerData {
-        didSet { index = Index(data) }
+        didSet {
+            index = Index(data)
+            revision += 1
+        }
     }
+    private(set) var revision = 0
     private(set) var today = Day.today()
     /// Lookups rebuilt whenever `data` changes, so list rows don't scan every attachment and receipt.
     private var index: Index
@@ -252,7 +258,22 @@ final class TrackerStore {
 
     /// Swaps in imported records; the caller has already put the matching attachment files in place.
     func replaceAll(with imported: TrackerData) throws {
-        try mutate { $0 = imported }
+        let baseline = try BackupFingerprint(imported)
+        try mutate { current in
+            let lastExport = current.backupHistory?.lastExport
+            current = imported
+            current.backupHistory = BackupHistory(lastExport: lastExport, restored: .now, baseline: baseline)
+        }
+    }
+
+    func recordExport(_ exported: PreparedBackup, at date: Date = .now) throws {
+        try mutate {
+            if let history = $0.backupHistory, let restore = history.restored, restore > exported.created {
+                $0.backupHistory = BackupHistory(lastExport: date, restored: restore, baseline: history.baseline)
+            } else {
+                $0.backupHistory = BackupHistory(lastExport: date, restored: nil, baseline: exported.fingerprint)
+            }
+        }
     }
 
     func deleteOrphanedAttachments() {

@@ -10,8 +10,6 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
     @State private var notificationStatus: UNAuthorizationStatus?
-    @State private var exportFile: BackupFile?
-    @State private var showExporter = false
     @State private var showImporter = false
     @State private var staged: StagedImport?
     @State private var busy = false
@@ -90,22 +88,7 @@ struct SettingsView: View {
                 Text("The calendar file adds every upcoming warranty end, renewal and expiry date to Apple Calendar, Google Calendar or Outlook, with an alert at your reminder lead time. Spreadsheets open in Numbers, Excel or Google Sheets.")
             }
             Section {
-                Button {
-                    export()
-                } label: {
-                    Label("Export backup", systemImage: "square.and.arrow.up")
-                }
-                .fileExporter(
-                    isPresented: $showExporter,
-                    document: exportFile,
-                    contentType: .zip,
-                    defaultFilename: exportFile?.url.deletingPathExtension().lastPathComponent
-                ) { result in
-                    switch result {
-                    case .success: notice = String(localized: "Backup saved")
-                    case .failure(let error): errorMessage = error.localizedDescription
-                    }
-                }
+                BackupExportButton()
                 Button {
                     showImporter = true
                 } label: {
@@ -206,19 +189,6 @@ struct SettingsView: View {
         }
     }
 
-    private func export() {
-        busy = true
-        Task {
-            defer { busy = false }
-            do {
-                exportFile = BackupFile(url: try await BackupService(store: store).export())
-                showExporter = true
-            } catch {
-                errorMessage = String(localized: "The backup could not be completed. \(error.localizedDescription)")
-            }
-        }
-    }
-
     private func stage(_ url: URL) {
         busy = true
         Task {
@@ -241,21 +211,5 @@ struct SettingsView: View {
         } catch {
             errorMessage = String(localized: "The backup could not be restored. Nothing was changed. \(error.localizedDescription)")
         }
-    }
-}
-
-struct BackupFile: FileDocument {
-    static var readableContentTypes: [UTType] { [.zip] }
-
-    let url: URL
-
-    init(url: URL) { self.url = url }
-
-    init(configuration: ReadConfiguration) throws {
-        throw CocoaError(.featureUnsupported)
-    }
-
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        try FileWrapper(url: url)
     }
 }

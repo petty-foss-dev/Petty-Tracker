@@ -80,7 +80,7 @@ OCR can make mistakes, especially with handwriting. Every extracted field is edi
 
 The iOS app makes no network requests, and the Android app does not request Internet permission. Your records and attachments live in local storage; Apple Vision processes iOS receipt images on the device. Files shared into iOS wait in the app's local shared inbox until you save or discard them.
 
-**Export backups regularly.** Records and attachments are excluded from automatic cloud backups on both platforms and from Android device-to-device transfer. You choose when to share a file or export a ZIP backup.
+**Export backups regularly.** On iOS, Home and Settings show the last successful export and how many records were added, edited, or removed. Tap **Export backup** to save a new ZIP. Records and attachments are excluded from automatic cloud backups on both platforms and from Android device-to-device transfer. You choose when to share a file or export a ZIP backup.
 
 Backups without receipts use the shared version 1 format. Receipt backups use version 3 and can be restored by current iOS builds. Existing version 2 iOS backups still import. Android does not currently support receipts and rejects receipt backups. See the [backup reference](docs/ios-reference.md#backup-format) for details.
 
